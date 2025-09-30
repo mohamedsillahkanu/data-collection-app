@@ -618,6 +618,46 @@
                 <form id="dataForm">
                     <div class="form-row">
                         <div class="form-group">
+                            <label class="form-label">Year <span class="required">*</span></label>
+                            <select class="form-select" name="year" required>
+                                <option value="">Select year...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Month <span class="required">*</span></label>
+                            <select class="form-select" name="month" required>
+                                <option value="">Select month...</option>
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">GPS Latitude</label>
+                            <input type="text" class="form-input" name="latitude" placeholder="e.g. 8.4657">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">GPS Longitude</label>
+                            <input type="text" class="form-input" name="longitude" placeholder="e.g. -13.2317">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
                             <label class="form-label">Region <span class="required">*</span></label>
                             <select class="form-select" name="region" id="regionSelect" required>
                                 <option value="">Select region...</option>
@@ -653,46 +693,7 @@
                         </div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Allout <span class="required">*</span></label>
-                            <input type="number" class="form-input" name="allout" min="0" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Susp <span class="required">*</span></label>
-                            <input type="number" class="form-input" name="susp" min="0" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Test <span class="required">*</span></label>
-                            <input type="number" class="form-input" name="test" min="0" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Conf <span class="required">*</span></label>
-                            <input type="number" class="form-input" name="conf" min="0" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Maltreat <span class="required">*</span></label>
-                            <input type="number" class="form-input" name="maltreat" min="0" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Maladm <span class="required">*</span></label>
-                            <input type="number" class="form-input" name="maladm" min="0" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Maldth <span class="required">*</span></label>
-                        <input type="number" class="form-input" name="maldth" min="0" required>
-                    </div>
+                    <div id="variableFields"></div>
 
                     <div class="button-group">
                         <button type="button" class="btn btn-secondary" id="clearBtn">Clear Form</button>
@@ -714,6 +715,59 @@
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxWQeuq2PhYYWAK1YXns_Vgc4dIA-NR6J067ECZlEtvkBU-yZZwIIKlK22fnF9638IFhQ/exec';
         const LOGIN_USERNAME = 'admin';
         const LOGIN_PASSWORD = 'password123';
+        
+        // Variable names - edit these to change field labels
+        const VARIABLES = {
+            allout_u5: 'OPD (New and follow-up curative) 0-59m',
+            allout_ov5: 'OPD (New and follow-up curative) 5+y',
+            maladm_u5: 'Admission - Child with malaria 0-59 months',
+            maladm_5_14: 'Admission - Child with malaria 5-14 years',
+            maladm_ov15: 'Admission - Malaria 15+ years',
+            maldth_1_59m: 'Child death - Malaria 1-59m',
+            maldth_10_14: 'Child death - Malaria 10-14y',
+            maldth_5_9: 'Child death - Malaria 5-9y',
+            maldth_fem_ov15: 'Death malaria 15+ years Female',
+            maldth_mal_ov15: 'Death malaria 15+ years Male',
+            maldth_u5: 'Separation - Child with malaria 0-59 months Death',
+            maldth_5_14: 'Separation - Child with malaria 5-14 years Death',
+            maldth_ov15: 'Separation - Malaria 15+ years Death',
+            susp_u5_hf: 'Fever case - suspected Malaria 0-59m',
+            susp_5_14_hf: 'Fever case - suspected Malaria 5-14y',
+            susp_ov15_hf: 'Fever case - suspected Malaria 15+y',
+            susp_u5_com: 'Fever case in community (Suspected Malaria) 0-59m',
+            susp_5_14_com: 'Fever case in community (Suspected Malaria) 5-14y',
+            susp_ov15_com: 'Fever case in community (Suspected Malaria) 15+y',
+            tes_neg_rdt_u5_com: 'Fever case in community tested for Malaria (RDT) - Negative 0-59m',
+            tes_pos_rdt_u5_com: 'Fever case in community tested for Malaria (RDT) - Positive 0-59m',
+            tes_neg_rdt_5_14_com: 'Fever case in community tested for Malaria (RDT) - Negative 5-14y',
+            tes_pos_rdt_5_14_com: 'Fever case in community tested for Malaria (RDT) - Positive 5-14y',
+            tes_neg_rdt_ov15_com: 'Fever case in community tested for Malaria (RDT) - Negative 15+y',
+            tes_pos_rdt_ov15_com: 'Fever case in community tested for Malaria (RDT) - Positive 15+y',
+            test_neg_mic_u5_hf: 'Fever case tested for Malaria (Microscopy) - Negative 0-59m',
+            test_pos_mic_u5_hf: 'Fever case tested for Malaria (Microscopy) - Positive 0-59m',
+            test_neg_mic_5_14_hf: 'Fever case tested for Malaria (Microscopy) - Negative 5-14y',
+            test_pos_mic_5_14_hf: 'Fever case tested for Malaria (Microscopy) - Positive 5-14y',
+            test_neg_mic_ov15_hf: 'Fever case tested for Malaria (Microscopy) - Negative 15+y',
+            test_pos_mic_ov15_hf: 'Fever case tested for Malaria (Microscopy) - Positive 15+y',
+            tes_neg_rdt_u5_hf: 'Fever case tested for Malaria (RDT) - Negative 0-59m',
+            tes_pos_rdt_u5_hf: 'Fever case tested for Malaria (RDT) - Positive 0-59m',
+            tes_neg_rdt_5_14_hf: 'Fever case tested for Malaria (RDT) - Negative 5-14y',
+            tes_pos_rdt_5_14_hf: 'Fever case tested for Malaria (RDT) - Positive 5-14y',
+            tes_neg_rdt_ov15_hf: 'Fever case tested for Malaria (RDT) - Negative 15+y',
+            tes_pos_rdt_ov15_hf: 'Fever case tested for Malaria (RDT) - Positive 15+y',
+            maltreat_u24_u5_com: 'Malaria treated in community with ACT <24 hours 0-59m',
+            maltreat_ov24_u5_com: 'Malaria treated in community with ACT >24 hours 0-59m',
+            maltreat_u24_5_14_com: 'Malaria treated in community with ACT <24 hours 5-14y',
+            maltreat_ov24_5_14_com: 'Malaria treated in community with ACT >24 hours 5-14y',
+            maltreat_u24_ov15_com: 'Malaria treated in community with ACT <24 hours 15+y',
+            maltreat_ov24_ov15_com: 'Malaria treated in community with ACT >24 hours 15+y',
+            maltreat_u24_u5_hf: 'Malaria treated with ACT <24 hours 0-59m',
+            maltreat_ov24_u5_hf: 'Malaria treated with ACT >24 hours 0-59m',
+            maltreat_u24_5_14_hf: 'Malaria treated with ACT <24 hours 5-14y',
+            maltreat_ov24_5_14_hf: 'Malaria treated with ACT >24 hours 5-14y',
+            maltreat_u24_ov15_hf: 'Malaria treated with ACT <24 hours 15+y',
+            maltreat_ov24_ov15_hf: 'Malaria treated with ACT >24 hours 15+y'
+        };
         
         // Cascading data in pipe-delimited format
         const CASCADING_DATA = `Eastern Region||Kailahun District
@@ -2743,12 +2797,62 @@ West 3 Zone||Wilberforce CHC`;
             // Parse cascading data
             parseCascadingData();
             
+            // Populate year dropdown
+            populateYearDropdown();
+            
+            // Generate variable fields
+            generateVariableFields();
+            
             if (state.isLoggedIn) {
                 showMainContent();
             }
 
             // Setup event listeners
             setupEventListeners();
+        }
+
+        function populateYearDropdown() {
+            const yearSelect = document.querySelector('select[name="year"]');
+            const currentYear = new Date().getFullYear();
+            
+            // Add years from current year back to 2020
+            for (let year = currentYear; year >= 2020; year--) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            }
+        }
+
+        function generateVariableFields() {
+            const container = document.getElementById('variableFields');
+            let html = '';
+            let count = 0;
+            
+            for (const [fieldName, label] of Object.entries(VARIABLES)) {
+                if (count % 2 === 0) {
+                    html += '<div class="form-row">';
+                }
+                
+                html += `
+                    <div class="form-group">
+                        <label class="form-label">${label} <span class="required">*</span></label>
+                        <input type="number" class="form-input" name="${fieldName}" min="0" required>
+                    </div>
+                `;
+                
+                count++;
+                if (count % 2 === 0) {
+                    html += '</div>';
+                }
+            }
+            
+            // Close last row if odd number of fields
+            if (count % 2 !== 0) {
+                html += '</div>';
+            }
+            
+            container.innerHTML = html;
         }
 
         function parseCascadingData() {
@@ -2975,20 +3079,24 @@ West 3 Zone||Wilberforce CHC`;
             e.preventDefault();
 
             const formData = new FormData(e.target);
+            
+            // Build data object dynamically from all form fields
             const data = {
                 timestamp: new Date().toISOString(),
+                year: formData.get('year'),
+                month: formData.get('month'),
+                latitude: formData.get('latitude') || 'N/A',
+                longitude: formData.get('longitude') || 'N/A',
                 region: formData.get('region'),
                 district: formData.get('district'),
                 chiefdom: formData.get('chiefdom'),
-                healthFacility: formData.get('healthFacility'),
-                allout: formData.get('allout'),
-                susp: formData.get('susp'),
-                test: formData.get('test'),
-                conf: formData.get('conf'),
-                maltreat: formData.get('maltreat'),
-                maladm: formData.get('maladm'),
-                maldth: formData.get('maldth')
+                healthFacility: formData.get('healthFacility')
             };
+            
+            // Add all variable fields dynamically
+            for (const fieldName of Object.keys(VARIABLES)) {
+                data[fieldName] = formData.get(fieldName);
+            }
 
             if (state.isOnline) {
                 await submitToServer(data);
