@@ -669,15 +669,15 @@
         <div class="login-card">
             <div class="logo-container">
                 <div class="logo-box">
-                    <img src="NMCP.png" alt="Logo Left" class="logo-img">
+                    <img src="logo-left.png" alt="Logo Left" class="logo-img">
                 </div>
                 <div class="logo-box">
-                    <img src="ICF-SL.jpg" alt="Logo Right" class="logo-img">
+                    <img src="logo-right.png" alt="Logo Right" class="logo-img">
                 </div>
             </div>
 
             <div class="login-header">
-                <h1>Welcome to Malaria Routine Data Collection Offline Tool</h1>
+                <h1>Welcome</h1>
                 <p>Please login to access the data collection form</p>
             </div>
 
@@ -2918,7 +2918,7 @@ West 3 Zone||St Mark Evangelical Lutheran Health Centre Clinic
 West 3 Zone||Stella Maris Clinic
 West 3 Zone||Sunshine MCHP
 West 3 Zone||Thompson Bay MCHP
-West 3 Zone||UN Joint Medical Services Clinic  
+West 3 Zone||UN Joint Medical Services Clinic
 West 3 Zone||Well Woman Clinic
 West 3 Zone||Wellness (West 3) Clinic
 West 3 Zone||Wilberforce 34 Military Hospital
@@ -3114,7 +3114,7 @@ West 3 Zone||Wilberforce CHC`;
                         }
                     }
                     // Check if this looks like District||Chiefdom
-                    else if (parent.includes('District')) {
+                    else if (child.includes('Chiefdom') || child.includes('City') || child.includes('Town') || child.includes('Zone')) {
                         if (!districtChiefdomMap[parent]) {
                             districtChiefdomMap[parent] = [];
                         }
@@ -3153,17 +3153,26 @@ West 3 Zone||Wilberforce CHC`;
             // Main form
             document.getElementById('dataForm').addEventListener('submit', handleFormSubmit);
 
-            // Clear button
-            document.getElementById('clearBtn').addEventListener('click', clearForm);
-
-            // Region-District-Chiefdom-Facility cascade
-            document.getElementById('regionSelect').addEventListener('change', handleRegionChange);
-            document.getElementById('districtSelect').addEventListener('change', handleDistrictChange);
-            document.getElementById('chiefdomSelect').addEventListener('change', handleChiefdomChange);
-
             // Online/offline events
             window.addEventListener('online', handleOnlineEvent);
             window.addEventListener('offline', handleOfflineEvent);
+        }
+
+        function setupCascadingListeners() {
+            // Region-District-Chiefdom-Facility cascade
+            const regionSelect = document.getElementById('regionSelect');
+            const districtSelect = document.getElementById('districtSelect');
+            const chiefdomSelect = document.getElementById('chiefdomSelect');
+            
+            if (regionSelect) {
+                regionSelect.addEventListener('change', handleRegionChange);
+            }
+            if (districtSelect) {
+                districtSelect.addEventListener('change', handleDistrictChange);
+            }
+            if (chiefdomSelect) {
+                chiefdomSelect.addEventListener('change', handleChiefdomChange);
+            }
         }
 
         function handleViewData() {
@@ -3201,6 +3210,9 @@ West 3 Zone||Wilberforce CHC`;
             document.getElementById('mainContent').classList.add('show');
             updateOnlineStatus();
             updatePendingCount();
+            
+            // Setup cascading listeners after content is shown
+            setupCascadingListeners();
             
             // Sync if online and has pending submissions
             if (state.isOnline && state.pendingSubmissions.length > 0) {
