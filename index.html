@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Collection Form - Offline Enabled</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background-color: #0d1117;
+            color: #e6edf3;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #58a6ff;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #8b949e;
+            font-size: 18px;
+        }
+
+        .status-bar {
+            background: rgba(13, 17, 23, 0.6);
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            animation: fadeIn 0.6s ease-out 0.2s both;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-indicator.online {
+            background: #2ea043;
+            box-shadow: 0 0 0 3px rgba(46, 160, 67, 0.3);
+        }
+
+        .status-indicator.offline {
+            background: #f85149;
+            box-shadow: 0 0 0 3px rgba(248, 81, 73, 0.3);
+        }
+
+        .status-text {
+            font-weight: 600;
+            font-size: 14px;
+            color: #e6edf3;
+        }
+
+        .pending-count {
+            background: #58a6ff;
+            color: #ffffff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .form-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease-out 0.3s both;
+        }
+
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2ea043, #58a6ff, #7c3aed);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #e6edf3;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-label .required {
+            color: #f85149;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #e6edf3;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 10px 16px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .checkbox-label:hover {
+            border-color: #58a6ff;
+            background: rgba(88, 166, 255, 0.1);
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: #58a6ff;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #388bfd;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(88, 166, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #8b949e;
+            border: 1px solid #30363d;
+        }
+
+        .btn-secondary:hover {
+            background: #30363d;
+            border-color: #58a6ff;
+            color: #e6edf3;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            animation: slideInRight 0.3s ease-out;
+            max-width: 400px;
+        }
+
+        .notification.show {
+            display: flex;
+        }
+
+        .notification.success {
+            border-left: 4px solid #2ea043;
+        }
+
+        .notification.error {
+            border-left: 4px solid #f85149;
+        }
+
+        .notification.info {
+            border-left: 4px solid #58a6ff;
+        }
+
+        .notification-text {
+            color: #e6edf3;
+            font-size: 14px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @media (max-width: 768px) {
+            .form-card {
+                padding: 25px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .status-bar {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .notification {
+                left: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Data Collection Form</h1>
+            <p>Works offline - Data syncs automatically when online</p>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-item">
+                <div class="status-indicator" id="statusIndicator"></div>
+                <span class="status-text" id="statusText">Checking...</span>
+            </div>
+            <div class="status-item">
+                <span style="color: #8b949e; font-size: 14px;">Pending submissions:</span>
+                <span class="pending-count" id="pendingCount">0</span>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <form id="dataForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Full Name <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-input" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Email Address <span class="required">*</span>
+                        </label>
+                        <input type="email" class="form-input" name="email" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Phone Number
+                        </label>
+                        <input type="tel" class="form-input" name="phone" placeholder="+232 76 123456">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Category <span class="required">*</span>
+                        </label>
+                        <select class="form-select" name="category" required>
+                            <option value="">Select category...</option>
+                            <option value="Individual">Individual</option>
+                            <option value="Business">Business</option>
+                            <option value="Organization">Organization</option>
+                            <option value="Government">Government</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Priority Level <span class="required">*</span>
+                    </label>
+                    <select class="form-select" name="priority" required>
+                        <option value="">Select priority...</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Urgent">Urgent</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Services Interested In
+                    </label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="services" value="Consultation">
+                            <span>Consultation</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="services" value="Training">
+                            <span>Training</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="services" value="Support">
+                            <span>Support</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="services" value="Development">
+                            <span>Development</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Additional Comments
+                    </label>
+                    <textarea class="form-textarea" name="comments" placeholder="Enter any additional information..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear Form</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Submit Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <span class="notification-text" id="notificationText"></span>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION - PASTE YOUR GOOGLE SHEETS URL HERE
+        // ============================================
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzlWjMMxIIChnAldOCMNGV7vgZGkGL2aElauEimZryC/dev';
+        // ============================================
+
+        let pendingSubmissions = JSON.parse(localStorage.getItem('pendingSubmissions') || '[]');
+        let isOnline = navigator.onLine;
+
+        updateOnlineStatus();
+        updatePendingCount();
+
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+
+        document.getElementById('dataForm').addEventListener('submit', handleSubmit);
+
+        function handleOnline() {
+            isOnline = true;
+            updateOnlineStatus();
+            showNotification('Back online - Syncing data...', 'info');
+            syncPendingSubmissions();
+        }
+
+        function handleOffline() {
+            isOnline = false;
+            updateOnlineStatus();
+            showNotification('You are offline - Data will be saved locally', 'info');
+        }
+
+        function updateOnlineStatus() {
+            const indicator = document.getElementById('statusIndicator');
+            const text = document.getElementById('statusText');
+            
+            if (isOnline) {
+                indicator.className = 'status-indicator online';
+                text.textContent = 'Online';
+            } else {
+                indicator.className = 'status-indicator offline';
+                text.textContent = 'Offline';
+            }
+        }
+
+        function updatePendingCount() {
+            document.getElementById('pendingCount').textContent = pendingSubmissions.length;
+        }
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = {
+                timestamp: new Date().toISOString(),
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone') || 'N/A',
+                category: formData.get('category'),
+                priority: formData.get('priority'),
+                services: formData.getAll('services').join(', ') || 'None',
+                comments: formData.get('comments') || 'N/A'
+            };
+
+            if (isOnline) {
+                await submitToGoogleSheets(data);
+            } else {
+                saveOffline(data);
+            }
+        }
+
+        async function submitToGoogleSheets(data) {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                showNotification('Data submitted successfully', 'success');
+                resetForm();
+            } catch (error) {
+                console.error('Submit error:', error);
+                showNotification('Failed to submit - Saved offline', 'error');
+                saveOffline(data);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Data';
+            }
+        }
+
+        function saveOffline(data) {
+            pendingSubmissions.push(data);
+            localStorage.setItem('pendingSubmissions', JSON.stringify(pendingSubmissions));
+            updatePendingCount();
+            showNotification('Data saved offline - Will sync when online', 'info');
+            resetForm();
+        }
+
+        async function syncPendingSubmissions() {
+            if (!isOnline || pendingSubmissions.length === 0) return;
+
+            showNotification(`Syncing ${pendingSubmissions.length} submission(s)...`, 'info');
+
+            const successfulSyncs = [];
+
+            for (let i = 0; i < pendingSubmissions.length; i++) {
+                try {
+                    await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(pendingSubmissions[i])
+                    });
+                    successfulSyncs.push(i);
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                } catch (error) {
+                    console.error('Sync error:', error);
+                    break;
+                }
+            }
+
+            if (successfulSyncs.length > 0) {
+                pendingSubmissions = pendingSubmissions.filter((_, index) => !successfulSyncs.includes(index));
+                localStorage.setItem('pendingSubmissions', JSON.stringify(pendingSubmissions));
+                updatePendingCount();
+                showNotification(`Successfully synced ${successfulSyncs.length} submission(s)`, 'success');
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('dataForm').reset();
+        }
+
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            
+            notification.className = `notification ${type} show`;
+            text.textContent = message;
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        if (isOnline && pendingSubmissions.length > 0) {
+            syncPendingSubmissions();
+        }
+    </script>
+</body>
+</html>
