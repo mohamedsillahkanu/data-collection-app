@@ -67,21 +67,26 @@
             width: 120px;
             height: 120px;
             background: #21262d;
-            border: 2px dashed #30363d;
+            border: 2px solid #30363d;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #8b949e;
-            font-size: 12px;
-            text-align: center;
             padding: 10px;
+            overflow: hidden;
             transition: all 0.3s ease;
         }
 
         .logo-box:hover {
             border-color: #58a6ff;
             background: rgba(88, 166, 255, 0.05);
+            transform: scale(1.05);
+        }
+
+        .logo-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
 
         .login-header {
@@ -329,6 +334,12 @@
             box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
         }
 
+        .form-select:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #161b22;
+        }
+
         .form-textarea {
             resize: vertical;
             min-height: 100px;
@@ -549,8 +560,12 @@
     <div class="login-screen" id="loginScreen">
         <div class="login-card">
             <div class="logo-container">
-                <div class="logo-box">Logo Left<br>(Replace with image)</div>
-                <div class="logo-box">Logo Right<br>(Replace with image)</div>
+                <div class="logo-box">
+                    <img src="logo-left.png" alt="Logo Left" class="logo-img">
+                </div>
+                <div class="logo-box">
+                    <img src="logo-right.png" alt="Logo Right" class="logo-img">
+                </div>
             </div>
 
             <div class="login-header">
@@ -584,7 +599,7 @@
             </div>
 
             <div class="header">
-                <h1>Data Collection Form</h1>
+                <h1>Health Data Collection Form</h1>
                 <p>Works offline - Data syncs automatically when online</p>
             </div>
 
@@ -603,70 +618,78 @@
                 <form id="dataForm">
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Full Name <span class="required">*</span></label>
-                            <input type="text" class="form-input" name="name" required>
+                            <label class="form-label">Region <span class="required">*</span></label>
+                            <select class="form-select" name="region" id="regionSelect" required>
+                                <option value="">Select region...</option>
+                                <option value="Eastern Region">Eastern Region</option>
+                                <option value="Northern Region">Northern Region</option>
+                                <option value="North West Region">North West Region</option>
+                                <option value="Southern Region">Southern Region</option>
+                                <option value="Western Area">Western Area</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Email Address <span class="required">*</span></label>
-                            <input type="email" class="form-input" name="email" required>
+                            <label class="form-label">District <span class="required">*</span></label>
+                            <select class="form-select" name="district" id="districtSelect" required disabled>
+                                <option value="">Select region first...</option>
+                            </select>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Phone Number</label>
-                            <input type="tel" class="form-input" name="phone" placeholder="+232 76 123456">
+                            <label class="form-label">Chiefdom <span class="required">*</span></label>
+                            <select class="form-select" name="chiefdom" id="chiefdomSelect" required disabled>
+                                <option value="">Select district first...</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Category <span class="required">*</span></label>
-                            <select class="form-select" name="category" required>
-                                <option value="">Select category...</option>
-                                <option value="Individual">Individual</option>
-                                <option value="Business">Business</option>
-                                <option value="Organization">Organization</option>
-                                <option value="Government">Government</option>
-                            </select>
+                            <label class="form-label">Health Facility <span class="required">*</span></label>
+                            <input type="text" class="form-input" name="healthFacility" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Allout <span class="required">*</span></label>
+                            <input type="number" class="form-input" name="allout" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Susp <span class="required">*</span></label>
+                            <input type="number" class="form-input" name="susp" min="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Test <span class="required">*</span></label>
+                            <input type="number" class="form-input" name="test" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Conf <span class="required">*</span></label>
+                            <input type="number" class="form-input" name="conf" min="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Maltreat <span class="required">*</span></label>
+                            <input type="number" class="form-input" name="maltreat" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Maladm <span class="required">*</span></label>
+                            <input type="number" class="form-input" name="maladm" min="0" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Priority Level <span class="required">*</span></label>
-                        <select class="form-select" name="priority" required>
-                            <option value="">Select priority...</option>
-                            <option value="Low">Low</option>
-                            <option value="Medium">Medium</option>
-                            <option value="High">High</option>
-                            <option value="Urgent">Urgent</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Services Interested In</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="services" value="Consultation">
-                                <span>Consultation</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="services" value="Training">
-                                <span>Training</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="services" value="Support">
-                                <span>Support</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="services" value="Development">
-                                <span>Development</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Additional Comments</label>
-                        <textarea class="form-textarea" name="comments" placeholder="Enter any additional information..."></textarea>
+                        <label class="form-label">Maldth <span class="required">*</span></label>
+                        <input type="number" class="form-input" name="maldth" min="0" required>
                     </div>
 
                     <div class="button-group">
@@ -689,6 +712,56 @@
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxWQeuq2PhYYWAK1YXns_Vgc4dIA-NR6J067ECZlEtvkBU-yZZwIIKlK22fnF9638IFhQ/exec';
         const LOGIN_USERNAME = 'admin';
         const LOGIN_PASSWORD = 'password123';
+
+        // Region-District mapping
+        const regionDistrictMap = {
+            'Eastern Region': [
+                'Kailahun District',
+                'Kenema District',
+                'Kono District'
+            ],
+            'Northern Region': [
+                'Bombali District',
+                'Falaba District',
+                'Koinadugu District',
+                'Tonkolili District'
+            ],
+            'North West Region': [
+                'Kambia District',
+                'Karene District',
+                'Port Loko District'
+            ],
+            'Southern Region': [
+                'Bo District',
+                'Bonthe District',
+                'Moyamba District',
+                'Pujehun District'
+            ],
+            'Western Area': [
+                'Western Area Urban District',
+                'Western Area Rural District'
+            ]
+        };
+
+        // District-Chiefdom mapping
+        const districtChiefdomMap = {
+            'Bo District': ['Bo City', 'Badjia Chiefdom', 'Bagbwe Chiefdom', 'Baoma Chiefdom', 'Bargbo Chiefdom', 'Bongor Chiefdom', 'Bumpe Ngao Chiefdom', 'Gbo Chiefdom', 'Jaiama Chiefdom', 'Kakua Chiefdom', 'Komboya Chiefdom', 'Lugbu Chiefdom', 'Niawa Lenga Chiefdom', 'Selenga Chiefdom', 'Tikonko Chiefdom', 'Valunia Chiefdom', 'Wonde Chiefdom'],
+            'Bombali District': ['Biriwa Chiefdom', 'Bombali Sebora Chiefdom', 'Bombali Serry Chiefdom', 'Gbanti (Bombali) Chiefdom', 'Gbendembu Chiefdom', 'Kamaranka Chiefdom', 'Magbaimba Ndohahun Chiefdom', 'Makarie Chiefdom', 'Mara Chiefdom', 'Ngowahun Chiefdom', 'Paki Masabong Chiefdom', 'Safroko Limba Chiefdom', 'Makeni City'],
+            'Bonthe District': ['Bendu-Cha Chiefdom', 'Bum Chiefdom', 'Dema Chiefdom', 'Imperi Chiefdom', 'Jong Chiefdom', 'Kpanda Kemoh Chiefdom', 'Kwamebai Krim Chiefdom', 'Nongoba Bullom Chiefdom', 'Sittia Chiefdom', 'Sogbini Chiefdom', 'Yawbeko Chiefdom', 'Bonthe Town'],
+            'Falaba District': ['Barawa Wollay Chiefdom', 'Delmandugu Chiefdom', 'Dembelia-Sinkunia Chiefdom', 'Folosaba Dembelia Chiefdom', 'Folosaba Kamba Chiefdom', 'Kabelia Chiefdom', 'Kamadugu Yiraia Chiefdom', 'Kulor Saradu Chiefdom', 'Mongo Chiefdom', 'Morifindu Chiefdom', 'Neya Chiefdom', 'Nyedu Chiefdom', 'Sulima Chiefdom'],
+            'Kailahun District': ['Dea Chiefdom', 'Jahn Chiefdom', 'Jawei Chiefdom', 'Kissi Kama Chiefdom', 'Kissi Teng Chiefdom', 'Kissi Tongi Chiefdom', 'Luawa Chiefdom', 'Malema Chiefdom', 'Mandu Chiefdom', 'Njaluahun Chiefdom', 'Peje Bongre Chiefdom', 'Peje West Chiefdom', 'Penguia Chiefdom', 'Upper Bambara Chiefdom', 'Yawei Chiefdom'],
+            'Kambia District': ['Bramaia Chiefdom', 'Dixon Chiefdom', 'Gbinleh Chiefdom', 'Konimaka Chiefdom', 'Magbema Chiefdom', 'Mambolo Chiefdom', 'Masumgbala Chiefdom', 'Munu Thalla Chiefdom', 'Samu Chiefdom', 'Tonko Limba Chiefdom'],
+            'Karene District': ['Buya Chiefdom', 'Dibia Chiefdom', 'Gbanti (Karene) Chiefdom', 'Gormbahun Chiefdom', 'Mafonda Makerembay Chiefdom', 'Romende Chiefdom', 'Safroko Chiefdom', 'Sanda Loko Chiefdom', 'Sanda Magbolonthor Chiefdom', 'Sanda Tendaren Chiefdom', 'Sella Limba Chiefdom', 'Tambaka Simibungie Chiefdom', 'Tambaka Yobangie Chiefdom'],
+            'Kenema District': ['Kenema City', 'Dama Chiefdom', 'Dodo Chiefdom', 'Gaura Chiefdom', 'Gorama Mende Chiefdom', 'Kandu Leppiama Chiefdom', 'Koya (Kenema) Chiefdom', 'Langroma Chiefdom', 'Lower Bambara Chiefdom', 'Malegohun Chiefdom', 'Niawa Chiefdom', 'Nomo Chiefdom', 'Nongowa Chiefdom', 'Simbaru Chiefdom', 'Small Bo Chiefdom', 'Tunkia Chiefdom', 'Wandor Chiefdom'],
+            'Koinadugu District': ['Diang Chiefdom', 'Gbonkorbor Kayaka Chiefdom', 'Kallian Chiefdom', 'Kamukeh Chiefdom', 'Kasunko Kakellay Chiefdom', 'Nieni Chiefdom', 'Sengbeh Chiefdom', 'Thamiso Chiefdom', 'Wara Wara Bafodia Chiefdom', 'Wara Wara Yagala Chiefdom'],
+            'Kono District': ['Koidu New Sembehun City', 'Fiama Chiefdom', 'Gbane Chiefdom', 'Gbane Kandor Chiefdom', 'Gbense Chiefdom', 'Gorama Kono Chiefdom', 'Kamara Chiefdom', 'Lei Chiefdom', 'Mafindor Chiefdom', 'Nimikoro Chiefdom', 'Nimiyama Chiefdom', 'Sandor Chiefdom', 'Soa Chiefdom', 'Tankoro Chiefdom', 'Toli Chiefdom'],
+            'Moyamba District': ['Bagruwa Chiefdom', 'Bumpeh Chiefdom', 'Dasse Chiefdom', 'Fakunya Chiefdom', 'Kaiyamba Chiefdom', 'Kamajei Chiefdom', 'Kargboro Chiefdom', 'Kongbora Chiefdom', 'Kori Chiefdom', 'Kowa Chiefdom', 'Lower Banta Chiefdom', 'Ribbi Chiefdom', 'Timdale Chiefdom', 'Upper Banta Chiefdom'],
+            'Port Loko District': ['Port Loko City', 'Bake-Loko Chiefdom', 'Bureh Chiefdom', 'Kaffu Bullom Chiefdom', 'Kamasondo Chiefdom', 'Kasseh Chiefdom', 'Koya (Port Loko) Chiefdom', 'Lokomasama Chiefdom', 'Maconteh Chiefdom', 'Maforki Chiefdom', 'Makama Chiefdom', 'Marampa Chiefdom', 'Masimera Chiefdom', 'Tainkatopa Chiefdom'],
+            'Pujehun District': ['Barri Chiefdom', 'Galliness Chiefdom', 'Kabonde Chiefdom', 'Kpaka Chiefdom', 'Kpanga Chiefdom', 'Kpanga Krim Chiefdom', 'Makpele Chiefdom', 'Malen Chiefdom', 'Mano Sakrim Chiefdom', 'Peje Chiefdom', 'Perri Chiefdom', 'Soro Gbeima Chiefdom', 'Sowa Chiefdom', 'Yakemoh Kpukumu Krim Chiefdom'],
+            'Tonkolili District': ['Dansogoia Chiefdom', 'Gbokolenken Masankong Chiefdom', 'Gbokolenken Mayeppoh Chiefdom', 'Gbokolenken Polie Chiefdom', 'Gbokolenken Yele Chiefdom', 'Kafe Chiefdom', 'Kalantuba Chiefdom', 'Kholifa Mabang Chiefdom', 'Kholifa Mamuntha Chiefdom', 'Kholifa Rowalla Chiefdom', 'Kunike Barina Chiefdom', 'Kunike Fulawusu Chiefdom', 'Kunike Sanda Chiefdom', 'Malal Chiefdom', 'Sambaya Bendugu Chiefdom', 'Simiria Chiefdom', 'Tane Chiefdom', 'Yoni Mabanta Chiefdom', 'Yoni Mamala Chiefdom'],
+            'Western Area Rural District': ['Koya Rural Zone', 'Mountain Rural Zone', 'Waterloo Rural Zone', 'York Rural Zone'],
+            'Western Area Urban District': ['Central 1 Zone', 'Central 2 Zone', 'East 1 Zone', 'East 2 Zone', 'East 3 Zone', 'West 1 Zone', 'West 2 Zone', 'West 3 Zone']
+        };
         // ============================================
 
         // State variables
@@ -734,6 +807,10 @@
             // Clear button
             document.getElementById('clearBtn').addEventListener('click', clearForm);
 
+            // Region-District-Chiefdom cascade
+            document.getElementById('regionSelect').addEventListener('change', handleRegionChange);
+            document.getElementById('districtSelect').addEventListener('change', handleDistrictChange);
+
             // Online/offline events
             window.addEventListener('online', handleOnlineEvent);
             window.addEventListener('offline', handleOfflineEvent);
@@ -777,6 +854,59 @@
             }
         }
 
+        function handleRegionChange(e) {
+            const region = e.target.value;
+            const districtSelect = document.getElementById('districtSelect');
+            const chiefdomSelect = document.getElementById('chiefdomSelect');
+            
+            // Clear existing options
+            districtSelect.innerHTML = '<option value="">Select district...</option>';
+            chiefdomSelect.innerHTML = '<option value="">Select district first...</option>';
+            chiefdomSelect.disabled = true;
+            
+            if (region && regionDistrictMap[region]) {
+                // Enable district select
+                districtSelect.disabled = false;
+                
+                // Add districts for selected region
+                regionDistrictMap[region].forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                });
+            } else {
+                // Disable district select if no region selected
+                districtSelect.disabled = true;
+                districtSelect.innerHTML = '<option value="">Select region first...</option>';
+            }
+        }
+
+        function handleDistrictChange(e) {
+            const district = e.target.value;
+            const chiefdomSelect = document.getElementById('chiefdomSelect');
+            
+            // Clear existing options
+            chiefdomSelect.innerHTML = '<option value="">Select chiefdom...</option>';
+            
+            if (district && districtChiefdomMap[district]) {
+                // Enable chiefdom select
+                chiefdomSelect.disabled = false;
+                
+                // Add chiefdoms for selected district
+                districtChiefdomMap[district].forEach(chiefdom => {
+                    const option = document.createElement('option');
+                    option.value = chiefdom;
+                    option.textContent = chiefdom;
+                    chiefdomSelect.appendChild(option);
+                });
+            } else {
+                // Disable chiefdom select if no district selected
+                chiefdomSelect.disabled = true;
+                chiefdomSelect.innerHTML = '<option value="">Select district first...</option>';
+            }
+        }
+
         function handleOnlineEvent() {
             state.isOnline = true;
             updateOnlineStatus();
@@ -813,13 +943,17 @@
             const formData = new FormData(e.target);
             const data = {
                 timestamp: new Date().toISOString(),
-                name: formData.get('name'),
-                email: formData.get('email'),
-                phone: formData.get('phone') || 'N/A',
-                category: formData.get('category'),
-                priority: formData.get('priority'),
-                services: formData.getAll('services').join(', ') || 'None',
-                comments: formData.get('comments') || 'N/A'
+                region: formData.get('region'),
+                district: formData.get('district'),
+                chiefdom: formData.get('chiefdom'),
+                healthFacility: formData.get('healthFacility'),
+                allout: formData.get('allout'),
+                susp: formData.get('susp'),
+                test: formData.get('test'),
+                conf: formData.get('conf'),
+                maltreat: formData.get('maltreat'),
+                maladm: formData.get('maladm'),
+                maldth: formData.get('maldth')
             };
 
             if (state.isOnline) {
