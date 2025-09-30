@@ -310,6 +310,98 @@
             background: linear-gradient(90deg, #2ea043, #58a6ff, #7c3aed);
         }
 
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #30363d;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #58a6ff;
+            margin-bottom: 5px;
+        }
+
+        .section-description {
+            color: #8b949e;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            background: #21262d;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #2ea043, #58a6ff, #7c3aed);
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #8b949e;
+            font-size: 12px;
+            margin-top: 8px;
+            margin-bottom: 20px;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn-nav {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-back {
+            background: transparent;
+            color: #8b949e;
+            border: 1px solid #30363d;
+        }
+
+        .btn-back:hover {
+            background: #30363d;
+            border-color: #58a6ff;
+            color: #e6edf3;
+        }
+
+        .btn-next {
+            background: #58a6ff;
+            color: #ffffff;
+        }
+
+        .btn-next:hover {
+            background: #388bfd;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(88, 166, 255, 0.3);
+        }
+
         .form-group {
             margin-bottom: 25px;
         }
@@ -585,7 +677,7 @@
             </div>
 
             <div class="login-header">
-                <h1>Welcome</h1>
+                <h1>Welcome to Malaria Routine Data Collection Offline Tool</h1>
                 <p>Please login to access the data collection form</p>
             </div>
 
@@ -632,64 +724,78 @@
             </div>
 
             <div class="form-card">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="progressText">Section 1 of 12</div>
+
                 <form id="dataForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Year <span class="required">*</span></label>
-                            <input type="text" class="form-input" name="year" value="2025" readonly>
+                    <!-- Section 1: Location & Time -->
+                    <div class="form-section active" data-section="1">
+                        <div class="section-header">
+                            <h2 class="section-title">Location & Time Information</h2>
+                            <p class="section-description">Basic facility and reporting information</p>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Month <span class="required">*</span></label>
-                            <select class="form-select" name="month" id="monthSelect" required>
-                                <option value="">Select month...</option>
-                            </select>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Year <span class="required">*</span></label>
+                                <input type="text" class="form-input" name="year" value="2025" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Month <span class="required">*</span></label>
+                                <select class="form-select" name="month" id="monthSelect" required>
+                                    <option value="">Select month...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Region <span class="required">*</span></label>
+                                <select class="form-select" name="region" id="regionSelect" required>
+                                    <option value="">Select region...</option>
+                                    <option value="Eastern Region">Eastern Region</option>
+                                    <option value="Northern Region">Northern Region</option>
+                                    <option value="North West Region">North West Region</option>
+                                    <option value="Southern Region">Southern Region</option>
+                                    <option value="Western Area">Western Area</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">District <span class="required">*</span></label>
+                                <select class="form-select" name="district" id="districtSelect" required disabled>
+                                    <option value="">Select region first...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Chiefdom <span class="required">*</span></label>
+                                <select class="form-select" name="chiefdom" id="chiefdomSelect" required disabled>
+                                    <option value="">Select district first...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Health Facility <span class="required">*</span></label>
+                                <select class="form-select" name="healthFacility" id="healthFacilitySelect" required disabled>
+                                    <option value="">Select chiefdom first...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="navigation-buttons">
+                            <button type="button" class="btn-nav btn-next" onclick="nextSection()">Next Section →</button>
                         </div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Region <span class="required">*</span></label>
-                            <select class="form-select" name="region" id="regionSelect" required>
-                                <option value="">Select region...</option>
-                                <option value="Eastern Region">Eastern Region</option>
-                                <option value="Northern Region">Northern Region</option>
-                                <option value="North West Region">North West Region</option>
-                                <option value="Southern Region">Southern Region</option>
-                                <option value="Western Area">Western Area</option>
-                            </select>
-                        </div>
+                    <!-- Dynamic sections will be inserted here -->
+                    <div id="dynamicSections"></div>
 
-                        <div class="form-group">
-                            <label class="form-label">District <span class="required">*</span></label>
-                            <select class="form-select" name="district" id="districtSelect" required disabled>
-                                <option value="">Select region first...</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Chiefdom <span class="required">*</span></label>
-                            <select class="form-select" name="chiefdom" id="chiefdomSelect" required disabled>
-                                <option value="">Select district first...</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Health Facility <span class="required">*</span></label>
-                            <select class="form-select" name="healthFacility" id="healthFacilitySelect" required disabled>
-                                <option value="">Select chiefdom first...</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div id="variableFields"></div>
-
-                    <div class="button-group">
-                        <button type="button" class="btn btn-secondary" id="clearBtn">Clear Form</button>
-                        <button type="submit" class="btn btn-primary" id="submitBtn">Submit Data</button>
-                    </div>
                 </form>
             </div>
         </div>
@@ -708,58 +814,118 @@
         const LOGIN_USERNAME = 'admin';
         const LOGIN_PASSWORD = 'password123';
         
-        // Variable names - edit these to change field labels
-        const VARIABLES = {
-            allout_u5: 'OPD (New and follow-up curative) 0-59m',
-            allout_ov5: 'OPD (New and follow-up curative) 5+y',
-            maladm_u5: 'Admission - Child with malaria 0-59 months',
-            maladm_5_14: 'Admission - Child with malaria 5-14 years',
-            maladm_ov15: 'Admission - Malaria 15+ years',
-            maldth_1_59m: 'Child death - Malaria 1-59m',
-            maldth_10_14: 'Child death - Malaria 10-14y',
-            maldth_5_9: 'Child death - Malaria 5-9y',
-            maldth_fem_ov15: 'Death malaria 15+ years Female',
-            maldth_mal_ov15: 'Death malaria 15+ years Male',
-            maldth_u5: 'Separation - Child with malaria 0-59 months Death',
-            maldth_5_14: 'Separation - Child with malaria 5-14 years Death',
-            maldth_ov15: 'Separation - Malaria 15+ years Death',
-            susp_u5_hf: 'Fever case - suspected Malaria 0-59m',
-            susp_5_14_hf: 'Fever case - suspected Malaria 5-14y',
-            susp_ov15_hf: 'Fever case - suspected Malaria 15+y',
-            susp_u5_com: 'Fever case in community (Suspected Malaria) 0-59m',
-            susp_5_14_com: 'Fever case in community (Suspected Malaria) 5-14y',
-            susp_ov15_com: 'Fever case in community (Suspected Malaria) 15+y',
-            tes_neg_rdt_u5_com: 'Fever case in community tested for Malaria (RDT) - Negative 0-59m',
-            tes_pos_rdt_u5_com: 'Fever case in community tested for Malaria (RDT) - Positive 0-59m',
-            tes_neg_rdt_5_14_com: 'Fever case in community tested for Malaria (RDT) - Negative 5-14y',
-            tes_pos_rdt_5_14_com: 'Fever case in community tested for Malaria (RDT) - Positive 5-14y',
-            tes_neg_rdt_ov15_com: 'Fever case in community tested for Malaria (RDT) - Negative 15+y',
-            tes_pos_rdt_ov15_com: 'Fever case in community tested for Malaria (RDT) - Positive 15+y',
-            test_neg_mic_u5_hf: 'Fever case tested for Malaria (Microscopy) - Negative 0-59m',
-            test_pos_mic_u5_hf: 'Fever case tested for Malaria (Microscopy) - Positive 0-59m',
-            test_neg_mic_5_14_hf: 'Fever case tested for Malaria (Microscopy) - Negative 5-14y',
-            test_pos_mic_5_14_hf: 'Fever case tested for Malaria (Microscopy) - Positive 5-14y',
-            test_neg_mic_ov15_hf: 'Fever case tested for Malaria (Microscopy) - Negative 15+y',
-            test_pos_mic_ov15_hf: 'Fever case tested for Malaria (Microscopy) - Positive 15+y',
-            tes_neg_rdt_u5_hf: 'Fever case tested for Malaria (RDT) - Negative 0-59m',
-            tes_pos_rdt_u5_hf: 'Fever case tested for Malaria (RDT) - Positive 0-59m',
-            tes_neg_rdt_5_14_hf: 'Fever case tested for Malaria (RDT) - Negative 5-14y',
-            tes_pos_rdt_5_14_hf: 'Fever case tested for Malaria (RDT) - Positive 5-14y',
-            tes_neg_rdt_ov15_hf: 'Fever case tested for Malaria (RDT) - Negative 15+y',
-            tes_pos_rdt_ov15_hf: 'Fever case tested for Malaria (RDT) - Positive 15+y',
-            maltreat_u24_u5_com: 'Malaria treated in community with ACT <24 hours 0-59m',
-            maltreat_ov24_u5_com: 'Malaria treated in community with ACT >24 hours 0-59m',
-            maltreat_u24_5_14_com: 'Malaria treated in community with ACT <24 hours 5-14y',
-            maltreat_ov24_5_14_com: 'Malaria treated in community with ACT >24 hours 5-14y',
-            maltreat_u24_ov15_com: 'Malaria treated in community with ACT <24 hours 15+y',
-            maltreat_ov24_ov15_com: 'Malaria treated in community with ACT >24 hours 15+y',
-            maltreat_u24_u5_hf: 'Malaria treated with ACT <24 hours 0-59m',
-            maltreat_ov24_u5_hf: 'Malaria treated with ACT >24 hours 0-59m',
-            maltreat_u24_5_14_hf: 'Malaria treated with ACT <24 hours 5-14y',
-            maltreat_ov24_5_14_hf: 'Malaria treated with ACT >24 hours 5-14y',
-            maltreat_u24_ov15_hf: 'Malaria treated with ACT <24 hours 15+y',
-            maltreat_ov24_ov15_hf: 'Malaria treated with ACT >24 hours 15+y'
+        // Variable names organized by sections
+        const VARIABLE_SECTIONS = {
+            'Location & Time': {
+                description: 'Basic facility and reporting information',
+                fields: {} // These are handled separately in the form
+            },
+            'OPD Attendance': {
+                description: 'Outpatient Department visits (new and follow-up)',
+                fields: {
+                    allout_u5: 'OPD (New and follow-up curative) 0-59m',
+                    allout_ov5: 'OPD (New and follow-up curative) 5+y'
+                }
+            },
+            'Admissions': {
+                description: 'Malaria admissions by age group',
+                fields: {
+                    maladm_u5: 'Admission - Child with malaria 0-59 months',
+                    maladm_5_14: 'Admission - Child with malaria 5-14 years',
+                    maladm_ov15: 'Admission - Malaria 15+ years'
+                }
+            },
+            'Deaths': {
+                description: 'Malaria-related deaths by age and gender',
+                fields: {
+                    maldth_1_59m: 'Child death - Malaria 1-59m',
+                    maldth_5_9: 'Child death - Malaria 5-9y',
+                    maldth_10_14: 'Child death - Malaria 10-14y',
+                    maldth_u5: 'Separation - Child with malaria 0-59 months Death',
+                    maldth_5_14: 'Separation - Child with malaria 5-14 years Death',
+                    maldth_ov15: 'Separation - Malaria 15+ years Death',
+                    maldth_fem_ov15: 'Death malaria 15+ years Female',
+                    maldth_mal_ov15: 'Death malaria 15+ years Male'
+                }
+            },
+            'Suspected Cases - Health Facility': {
+                description: 'Fever cases suspected as malaria at health facility',
+                fields: {
+                    susp_u5_hf: 'Fever case - suspected Malaria 0-59m',
+                    susp_5_14_hf: 'Fever case - suspected Malaria 5-14y',
+                    susp_ov15_hf: 'Fever case - suspected Malaria 15+y'
+                }
+            },
+            'Suspected Cases - Community': {
+                description: 'Fever cases suspected as malaria in community',
+                fields: {
+                    susp_u5_com: 'Fever case in community (Suspected Malaria) 0-59m',
+                    susp_5_14_com: 'Fever case in community (Suspected Malaria) 5-14y',
+                    susp_ov15_com: 'Fever case in community (Suspected Malaria) 15+y'
+                }
+            },
+            'Testing - RDT Health Facility': {
+                description: 'RDT testing results at health facility',
+                fields: {
+                    tes_neg_rdt_u5_hf: 'Fever case tested for Malaria (RDT) - Negative 0-59m',
+                    tes_pos_rdt_u5_hf: 'Fever case tested for Malaria (RDT) - Positive 0-59m',
+                    tes_neg_rdt_5_14_hf: 'Fever case tested for Malaria (RDT) - Negative 5-14y',
+                    tes_pos_rdt_5_14_hf: 'Fever case tested for Malaria (RDT) - Positive 5-14y',
+                    tes_neg_rdt_ov15_hf: 'Fever case tested for Malaria (RDT) - Negative 15+y',
+                    tes_pos_rdt_ov15_hf: 'Fever case tested for Malaria (RDT) - Positive 15+y'
+                }
+            },
+            'Testing - RDT Community': {
+                description: 'RDT testing results in community',
+                fields: {
+                    tes_neg_rdt_u5_com: 'Fever case in community tested for Malaria (RDT) - Negative 0-59m',
+                    tes_pos_rdt_u5_com: 'Fever case in community tested for Malaria (RDT) - Positive 0-59m',
+                    tes_neg_rdt_5_14_com: 'Fever case in community tested for Malaria (RDT) - Negative 5-14y',
+                    tes_pos_rdt_5_14_com: 'Fever case in community tested for Malaria (RDT) - Positive 5-14y',
+                    tes_neg_rdt_ov15_com: 'Fever case in community tested for Malaria (RDT) - Negative 15+y',
+                    tes_pos_rdt_ov15_com: 'Fever case in community tested for Malaria (RDT) - Positive 15+y'
+                }
+            },
+            'Testing - Microscopy': {
+                description: 'Microscopy testing results at health facility',
+                fields: {
+                    test_neg_mic_u5_hf: 'Fever case tested for Malaria (Microscopy) - Negative 0-59m',
+                    test_pos_mic_u5_hf: 'Fever case tested for Malaria (Microscopy) - Positive 0-59m',
+                    test_neg_mic_5_14_hf: 'Fever case tested for Malaria (Microscopy) - Negative 5-14y',
+                    test_pos_mic_5_14_hf: 'Fever case tested for Malaria (Microscopy) - Positive 5-14y',
+                    test_neg_mic_ov15_hf: 'Fever case tested for Malaria (Microscopy) - Negative 15+y',
+                    test_pos_mic_ov15_hf: 'Fever case tested for Malaria (Microscopy) - Positive 15+y'
+                }
+            },
+            'Treatment - Health Facility': {
+                description: 'Malaria treatment with ACT at health facility',
+                fields: {
+                    maltreat_u24_u5_hf: 'Malaria treated with ACT <24 hours 0-59m',
+                    maltreat_ov24_u5_hf: 'Malaria treated with ACT >24 hours 0-59m',
+                    maltreat_u24_5_14_hf: 'Malaria treated with ACT <24 hours 5-14y',
+                    maltreat_ov24_5_14_hf: 'Malaria treated with ACT >24 hours 5-14y',
+                    maltreat_u24_ov15_hf: 'Malaria treated with ACT <24 hours 15+y',
+                    maltreat_ov24_ov15_hf: 'Malaria treated with ACT >24 hours 15+y'
+                }
+            },
+            'Treatment - Community': {
+                description: 'Malaria treatment with ACT in community',
+                fields: {
+                    maltreat_u24_u5_com: 'Malaria treated in community with ACT <24 hours 0-59m',
+                    maltreat_ov24_u5_com: 'Malaria treated in community with ACT >24 hours 0-59m',
+                    maltreat_u24_5_14_com: 'Malaria treated in community with ACT <24 hours 5-14y',
+                    maltreat_ov24_5_14_com: 'Malaria treated in community with ACT >24 hours 5-14y',
+                    maltreat_u24_ov15_com: 'Malaria treated in community with ACT <24 hours 15+y',
+                    maltreat_ov24_ov15_com: 'Malaria treated in community with ACT >24 hours 15+y'
+                }
+            }
         };
+
+        // For backwards compatibility - flatten all fields
+        const VARIABLES = {};
+        Object.values(VARIABLE_SECTIONS).forEach(section => {
+            Object.assign(VARIABLES, section.fields);
+        });
         
         // Cascading data in pipe-delimited format
         const CASCADING_DATA = `Eastern Region||Kailahun District
@@ -2768,7 +2934,9 @@ West 3 Zone||Wilberforce CHC`;
         const state = {
             pendingSubmissions: [],
             isOnline: navigator.onLine,
-            isLoggedIn: false
+            isLoggedIn: false,
+            currentSection: 1,
+            totalSections: 12
         };
 
         // Initialize
@@ -2827,34 +2995,104 @@ West 3 Zone||Wilberforce CHC`;
         }
 
         function generateVariableFields() {
-            const container = document.getElementById('variableFields');
+            const container = document.getElementById('dynamicSections');
             let html = '';
-            let count = 0;
+            let sectionNum = 2;
             
-            for (const [fieldName, label] of Object.entries(VARIABLES)) {
-                if (count % 2 === 0) {
-                    html += '<div class="form-row">';
-                }
+            // Skip the first section (Location & Time) as it's already created
+            const sectionKeys = Object.keys(VARIABLE_SECTIONS).slice(1);
+            
+            sectionKeys.forEach((sectionTitle, index) => {
+                const section = VARIABLE_SECTIONS[sectionTitle];
+                const isLastSection = index === sectionKeys.length - 1;
                 
                 html += `
-                    <div class="form-group">
-                        <label class="form-label">${label} <span class="required">*</span></label>
-                        <input type="number" class="form-input" name="${fieldName}" min="0" required>
-                    </div>
+                    <div class="form-section" data-section="${sectionNum}">
+                        <div class="section-header">
+                            <h2 class="section-title">${sectionTitle}</h2>
+                            <p class="section-description">${section.description}</p>
+                        </div>
                 `;
                 
-                count++;
-                if (count % 2 === 0) {
+                // Add fields in rows of 2
+                const fields = Object.entries(section.fields);
+                for (let i = 0; i < fields.length; i += 2) {
+                    html += '<div class="form-row">';
+                    
+                    for (let j = i; j < Math.min(i + 2, fields.length); j++) {
+                        const [fieldName, label] = fields[j];
+                        html += `
+                            <div class="form-group">
+                                <label class="form-label">${label} <span class="required">*</span></label>
+                                <input type="number" class="form-input" name="${fieldName}" min="0" required>
+                            </div>
+                        `;
+                    }
+                    
                     html += '</div>';
                 }
-            }
-            
-            // Close last row if odd number of fields
-            if (count % 2 !== 0) {
-                html += '</div>';
-            }
+                
+                // Navigation buttons
+                html += `
+                    <div class="navigation-buttons">
+                        <button type="button" class="btn-nav btn-back" onclick="previousSection()">← Back</button>
+                        ${isLastSection 
+                            ? '<button type="submit" class="btn-nav btn-primary" id="submitBtn">Submit Data ✓</button>'
+                            : '<button type="button" class="btn-nav btn-next" onclick="nextSection()">Next Section →</button>'
+                        }
+                    </div>
+                </div>`;
+                
+                sectionNum++;
+            });
             
             container.innerHTML = html;
+            state.totalSections = sectionNum - 1;
+        }
+
+        function nextSection() {
+            // Validate current section
+            const currentSectionEl = document.querySelector(`.form-section[data-section="${state.currentSection}"]`);
+            const inputs = currentSectionEl.querySelectorAll('input[required], select[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!input.value) {
+                    isValid = false;
+                    input.style.borderColor = '#f85149';
+                    setTimeout(() => input.style.borderColor = '', 3000);
+                }
+            });
+            
+            if (!isValid) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Move to next section
+            if (state.currentSection < state.totalSections) {
+                currentSectionEl.classList.remove('active');
+                state.currentSection++;
+                document.querySelector(`.form-section[data-section="${state.currentSection}"]`).classList.add('active');
+                updateProgress();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function previousSection() {
+            if (state.currentSection > 1) {
+                document.querySelector(`.form-section[data-section="${state.currentSection}"]`).classList.remove('active');
+                state.currentSection--;
+                document.querySelector(`.form-section[data-section="${state.currentSection}"]`).classList.add('active');
+                updateProgress();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function updateProgress() {
+            const progress = (state.currentSection / state.totalSections) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `Section ${state.currentSection} of ${state.totalSections}`;
         }
 
         function parseCascadingData() {
@@ -3183,7 +3421,13 @@ West 3 Zone||Wilberforce CHC`;
         }
 
         function clearForm() {
-            document.getElementById('dataForm').reset();
+            if (confirm('Are you sure you want to clear all form data?')) {
+                document.getElementById('dataForm').reset();
+                state.currentSection = 1;
+                document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active'));
+                document.querySelector('.form-section[data-section="1"]').classList.add('active');
+                updateProgress();
+            }
         }
 
         function showNotification(message, type) {
