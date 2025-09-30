@@ -3396,31 +3396,35 @@ West 3 Zone||Wilberforce CHC`;
             showNotification('Data saved offline - Will sync when online', 'info');
             clearForm();
         }
-
-        async function syncPendingSubmissions() {
-            if (!state.isOnline || state.pendingSubmissions.length === 0) return;
-
-            showNotification(`Syncing ${state.pendingSubmissions.length} submission(s)...`, 'info');
-
-            const successfulSyncs = [];
-
-            for (let i = 0; i < state.pendingSubmissions.length; i++) {
-                try {
-                    await fetch(SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(state.pendingSubmissions[i])
-                    });
-                    successfulSyncs.push(i);
-                    await new Promise(resolve => setTimeout(resolve, 500));
-                } catch (error) {
-                    console.error('Sync error:', error);
-                    break;
-                }
+        async function submitToServer(data) {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+        
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+        
+                showNotification('✓ Data submitted successfully! Form has been reset.', 'success');
+                setTimeout(() => {
+                    clearForm();
+                }, 1500); // Wait 1.5 seconds before clearing so user sees the message
+            } catch (error) {
+                console.error('Submit error:', error);
+                showNotification('Failed to submit - Saved offline', 'error');
+                saveOffline(data);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Data ✓';
             }
+        }
+
 
             if (successfulSyncs.length > 0) {
                 state.pendingSubmissions = state.pendingSubmissions.filter((_, index) => 
@@ -3433,13 +3437,12 @@ West 3 Zone||Wilberforce CHC`;
         }
 
         function clearForm() {
-            if (confirm('Are you sure you want to clear all form data?')) {
-                document.getElementById('dataForm').reset();
-                state.currentSection = 1;
-                document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active'));
-                document.querySelector('.form-section[data-section="1"]').classList.add('active');
-                updateProgress();
-            }
+            document.getElementById('dataForm').reset();
+            state.currentSection = 1;
+            document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active'));
+            document.querySelector('.form-section[data-section="1"]').classList.add('active');
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function showNotification(message, type) {
