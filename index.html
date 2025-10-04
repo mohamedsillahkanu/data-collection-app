@@ -958,9 +958,12 @@
             </div>
 
             <div class="data-card">
-                <div class="section-header">
-                    <h2 class="section-title">Data Records</h2>
-                    <p class="section-description">Click on photos to view larger version</p>
+                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h2 class="section-title">Data Records</h2>
+                        <p class="section-description">Click on photos to view larger version. Total records: <span id="totalRecords">0</span></p>
+                    </div>
+                    <button class="btn-small danger" onclick="clearAllData()" style="padding: 10px 16px; font-size: 14px;">Clear All Data</button>
                 </div>
 
                 <div class="data-table-container" id="dataTableContainer">
@@ -1191,11 +1194,17 @@ Waterloo Rural Zone||Grafton CHC`;
         function loadDataTable() {
             const container = document.getElementById('dataTableContainer');
             
+            // Update total records count
+            const totalRecordsSpan = document.getElementById('totalRecords');
+            if (totalRecordsSpan) {
+                totalRecordsSpan.textContent = state.submittedData.length;
+            }
+            
             if (state.submittedData.length === 0) {
                 container.innerHTML = `
                     <div class="no-data">
                         <h3>No data submitted yet</h3>
-                        <p>Submit a form to see data here</p>
+                        <p>Submit a form to see data here. Data is saved permanently in your browser.</p>
                     </div>
                 `;
                 return;
@@ -1205,6 +1214,7 @@ Waterloo Rural Zone||Grafton CHC`;
                 <table class="data-table">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>Date/Time</th>
                             <th>Region</th>
                             <th>District</th>
@@ -1225,6 +1235,7 @@ Waterloo Rural Zone||Grafton CHC`;
                 
                 html += `
                     <tr>
+                        <td>${index + 1}</td>
                         <td>${formattedDate}</td>
                         <td>${record.region}</td>
                         <td>${record.district}</td>
@@ -1244,6 +1255,15 @@ Waterloo Rural Zone||Grafton CHC`;
             `;
 
             container.innerHTML = html;
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to delete ALL submitted data? This cannot be undone!')) {
+                state.submittedData = [];
+                localStorage.setItem('submittedData', JSON.stringify(state.submittedData));
+                loadDataTable();
+                showNotification('All data cleared successfully', 'info');
+            }
         }
 
         function openPhotoModal(src) {
@@ -1485,11 +1505,11 @@ Waterloo Rural Zone||Grafton CHC`;
                     body: JSON.stringify(data)
                 });
         
-                // Save to local submitted data
+                // IMPORTANT: Save to local submitted data immediately
                 state.submittedData.push(data);
                 localStorage.setItem('submittedData', JSON.stringify(state.submittedData));
                 
-                showNotification('Data submitted successfully!', 'success');
+                showNotification('Data submitted and saved successfully!', 'success');
                 clearForm();
                 
             } catch (error) {
@@ -1503,8 +1523,11 @@ Waterloo Rural Zone||Grafton CHC`;
         }
 
         function saveOffline(data) {
+            // Save to pending for sync AND to submitted data for viewing
             state.pendingSubmissions.push(data);
+            state.submittedData.push(data);
             localStorage.setItem('pendingSubmissions', JSON.stringify(state.pendingSubmissions));
+            localStorage.setItem('submittedData', JSON.stringify(state.submittedData));
             updatePendingCount();
             showNotification('Data saved offline - Will sync when online', 'info');
             clearForm();
