@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Collection Form - Photo Upload</title>
+    
+    <!-- Load GitHub config from external file -->
+    <script src="config.js"></script>
     <style>
         * {
             margin: 0;
@@ -552,6 +555,7 @@
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #30363d;
+            white-space: nowrap;
         }
 
         .data-table th {
@@ -560,6 +564,12 @@
             font-weight: 600;
             position: sticky;
             top: 0;
+            white-space: nowrap;
+        }
+
+        .data-table td.photo-cell {
+            text-align: center;
+            min-width: 100px;
         }
 
         .data-table tr:hover {
@@ -958,12 +968,16 @@
             </div>
 
             <div class="data-card">
-                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
                     <div>
                         <h2 class="section-title">Data Records</h2>
                         <p class="section-description">Click on photos to view larger version. Total records: <span id="totalRecords">0</span></p>
                     </div>
-                    <button class="btn-small danger" onclick="clearAllData()" style="padding: 10px 16px; font-size: 14px;">Clear All Data</button>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-small" onclick="downloadDataAsCSV()" style="padding: 10px 16px; font-size: 14px; background: #2ea043;">Download CSV</button>
+                        <button class="btn-small" onclick="deleteOldGitHubFiles()" style="padding: 10px 16px; font-size: 14px; background: #7c3aed;" id="githubCleanBtn">Clean GitHub (7+ days old)</button>
+                        <button class="btn-small danger" onclick="clearAllData()" style="padding: 10px 16px; font-size: 14px;">Clear All Data</button>
+                    </div>
                 </div>
 
                 <div class="data-table-container" id="dataTableContainer">
@@ -989,6 +1003,13 @@
         const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/13N7EZsv32f1K9N0BjCTxGeRjIOil_A8_cyJ5zgI9bEM/edit?gid=0#gid=0';
         const LOGIN_USERNAME = 'admin';
         const LOGIN_PASSWORD = 'admin';
+        
+        // GitHub Configuration - loaded from config.js
+        const GITHUB_TOKEN = typeof GITHUB_CONFIG !== 'undefined' ? GITHUB_CONFIG.token : '';
+        const GITHUB_OWNER = typeof GITHUB_CONFIG !== 'undefined' ? GITHUB_CONFIG.owner : '';
+        const GITHUB_REPO = typeof GITHUB_CONFIG !== 'undefined' ? GITHUB_CONFIG.repo : '';
+        const GITHUB_BRANCH = typeof GITHUB_CONFIG !== 'undefined' ? GITHUB_CONFIG.branch : 'main';
+        const GITHUB_ENABLED = typeof GITHUB_CONFIG !== 'undefined' && GITHUB_CONFIG.token !== '';
         
         // Simplified cascading data
         const CASCADING_DATA = `Eastern Region||Kailahun District
@@ -1053,6 +1074,10 @@ Waterloo Rural Zone||Grafton CHC`;
             
             if (state.isLoggedIn) {
                 showMainContent();
+                // Load data from GitHub if enabled
+                if (GITHUB_ENABLED) {
+                    loadFromGitHub();
+                }
             }
 
             setupEventListeners();
@@ -1214,16 +1239,16 @@ Waterloo Rural Zone||Grafton CHC`;
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Date/Time</th>
-                            <th>Region</th>
-                            <th>District</th>
-                            <th>Chiefdom</th>
-                            <th>Facility</th>
-                            <th>Photo 1</th>
-                            <th>Photo 2</th>
-                            <th>Photo 3</th>
-                            <th>Photo 4</th>
+                            <th style="min-width: 40px;">#</th>
+                            <th style="min-width: 150px;">Date/Time</th>
+                            <th style="min-width: 120px;">Region</th>
+                            <th style="min-width: 150px;">District</th>
+                            <th style="min-width: 150px;">Chiefdom</th>
+                            <th style="min-width: 200px;">Facility</th>
+                            <th style="min-width: 100px;">Photo 1</th>
+                            <th style="min-width: 100px;">Photo 2</th>
+                            <th style="min-width: 100px;">Photo 3</th>
+                            <th style="min-width: 100px;">Photo 4</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1241,10 +1266,10 @@ Waterloo Rural Zone||Grafton CHC`;
                         <td>${record.district}</td>
                         <td>${record.chiefdom}</td>
                         <td>${record.healthFacility}</td>
-                        <td><img src="${record.photo1 || ''}" alt="Photo 1" onclick="openPhotoModal('${record.photo1 || ''}')"></td>
-                        <td><img src="${record.photo2 || ''}" alt="Photo 2" onclick="openPhotoModal('${record.photo2 || ''}')"></td>
-                        <td><img src="${record.photo3 || ''}" alt="Photo 3" onclick="openPhotoModal('${record.photo3 || ''}')"></td>
-                        <td><img src="${record.photo4 || ''}" alt="Photo 4" onclick="openPhotoModal('${record.photo4 || ''}')"></td>
+                        <td class="photo-cell"><img src="${record.photo1 || ''}" alt="Photo 1" onclick="openPhotoModal('${record.photo1 || ''}')"></td>
+                        <td class="photo-cell"><img src="${record.photo2 || ''}" alt="Photo 2" onclick="openPhotoModal('${record.photo2 || ''}')"></td>
+                        <td class="photo-cell"><img src="${record.photo3 || ''}" alt="Photo 3" onclick="openPhotoModal('${record.photo3 || ''}')"></td>
+                        <td class="photo-cell"><img src="${record.photo4 || ''}" alt="Photo 4" onclick="openPhotoModal('${record.photo4 || ''}')"></td>
                     </tr>
                 `;
             });
@@ -1263,6 +1288,122 @@ Waterloo Rural Zone||Grafton CHC`;
                 localStorage.setItem('submittedData', JSON.stringify(state.submittedData));
                 loadDataTable();
                 showNotification('All data cleared successfully', 'info');
+            }
+        }
+
+        function downloadDataAsCSV() {
+            if (state.submittedData.length === 0) {
+                showNotification('No data to download', 'error');
+                return;
+            }
+
+            // Create CSV content
+            let csvContent = "data:text/csv;charset=utf-8,";
+            
+            // Add headers
+            csvContent += "Number,Date/Time,Year,Month,Region,District,Chiefdom,Health Facility\n";
+            
+            // Add data rows
+            state.submittedData.forEach((record, index) => {
+                const date = new Date(record.timestamp);
+                const formattedDate = date.toLocaleString();
+                
+                const row = [
+                    index + 1,
+                    `"${formattedDate}"`,
+                    record.year,
+                    record.month,
+                    `"${record.region}"`,
+                    `"${record.district}"`,
+                    `"${record.chiefdom}"`,
+                    `"${record.healthFacility}"`
+                ].join(',');
+                
+                csvContent += row + "\n";
+            });
+
+            // Create download link
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `data_export_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification('CSV file downloaded successfully!', 'success');
+        }
+
+        async function deleteOldGitHubFiles() {
+            if (!GITHUB_ENABLED || !GITHUB_TOKEN || GITHUB_TOKEN === 'YOUR_GITHUB_TOKEN_HERE') {
+                showNotification('GitHub not configured', 'error');
+                return;
+            }
+
+            if (!confirm('Delete GitHub submissions older than 7 days? This cannot be undone!')) {
+                return;
+            }
+
+            const btn = document.getElementById('githubCleanBtn');
+            btn.disabled = true;
+            btn.textContent = 'Cleaning...';
+
+            try {
+                // Get all files in submissions folder
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/submissions?ref=${GITHUB_BRANCH}`, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch files from GitHub');
+                }
+
+                const files = await response.json();
+                const sevenDaysAgo = new Date();
+                sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+                let deletedCount = 0;
+
+                for (const file of files) {
+                    // Extract timestamp from filename: submission_2025-01-15T10-30-45.json
+                    const match = file.name.match(/submission_(\d{4}-\d{2}-\d{2})/);
+                    if (match) {
+                        const fileDate = new Date(match[1]);
+                        
+                        if (fileDate < sevenDaysAgo) {
+                            // Delete this file
+                            const deleteResponse = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${file.path}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Authorization': `token ${GITHUB_TOKEN}`,
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    message: `Delete old submission: ${file.name}`,
+                                    sha: file.sha,
+                                    branch: GITHUB_BRANCH
+                                })
+                            });
+
+                            if (deleteResponse.ok) {
+                                deletedCount++;
+                                console.log(`Deleted: ${file.name}`);
+                            }
+                        }
+                    }
+                }
+
+                showNotification(`Deleted ${deletedCount} old files from GitHub`, 'success');
+            } catch (error) {
+                console.error('GitHub cleanup error:', error);
+                showNotification('Failed to clean GitHub files', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Clean GitHub (7+ days old)';
             }
         }
 
@@ -1496,7 +1637,8 @@ Waterloo Rural Zone||Grafton CHC`;
             submitBtn.textContent = 'Submitting...';
         
             try {
-                const response = await fetch(SCRIPT_URL, {
+                // Submit to Google Sheets
+                await fetch(SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: {
@@ -1504,6 +1646,11 @@ Waterloo Rural Zone||Grafton CHC`;
                     },
                     body: JSON.stringify(data)
                 });
+
+                // Submit to GitHub if enabled
+                if (GITHUB_ENABLED) {
+                    await saveToGitHub(data);
+                }
         
                 // IMPORTANT: Save to local submitted data immediately
                 state.submittedData.push(data);
@@ -1519,6 +1666,73 @@ Waterloo Rural Zone||Grafton CHC`;
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit Data';
+            }
+        }
+
+        async function saveToGitHub(data) {
+            if (!GITHUB_TOKEN || GITHUB_TOKEN === 'YOUR_GITHUB_TOKEN_HERE') {
+                console.warn('GitHub not configured');
+                return;
+            }
+
+            try {
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                
+                // Save main data file with ALL photos included
+                const fileName = `submissions/submission_${timestamp}.json`;
+                const content = btoa(JSON.stringify(data, null, 2));
+
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${fileName}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: `Add submission ${timestamp}`,
+                        content: content,
+                        branch: GITHUB_BRANCH
+                    })
+                });
+
+                if (response.ok) {
+                    console.log('Data and photos saved to GitHub successfully');
+                    showNotification('Data backed up to GitHub!', 'success');
+                } else {
+                    const errorText = await response.text();
+                    console.error('GitHub save failed:', errorText);
+                    showNotification('GitHub backup failed - check console', 'error');
+                }
+            } catch (error) {
+                console.error('GitHub error:', error);
+                showNotification('GitHub backup error - data saved locally', 'error');
+            }
+        }
+
+        async function loadFromGitHub() {
+            if (!GITHUB_ENABLED || !GITHUB_TOKEN || GITHUB_TOKEN === 'YOUR_GITHUB_TOKEN_HERE') {
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/submissions?ref=${GITHUB_BRANCH}`, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (response.ok) {
+                    const files = await response.json();
+                    console.log(`Found ${files.length} submissions in GitHub`);
+                    
+                    // You can load these files if needed
+                    // This is just logging for now
+                } else {
+                    console.log('No submissions folder in GitHub yet');
+                }
+            } catch (error) {
+                console.error('Error loading from GitHub:', error);
             }
         }
 
