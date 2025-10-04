@@ -1,4 +1,54 @@
-<!DOCTYPE html>         
+async function submitToServer(data) {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+        
+            let googleSheetsSuccess = false;
+            let gitHubSuccess = false;
+
+            try {
+                // Submit to Google Sheets (fire and forget - no-cors mode)
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                }).catch(err => console.log('Google Sheets request sent'));
+                
+                googleSheetsSuccess = true; // Assume success since no-cors
+                
+            } catch (error) {
+                console.error('Google Sheets error:', error);
+            }
+
+            // Submit to GitHub if enabled
+            if (GITHUB_ENABLED) {
+                try {
+                    gitHubSuccess = await saveToGitHub(data);
+                } catch (error) {
+                    console.error('GitHub submission error:', error);
+                }
+            }
+
+            // Save to local storage
+            state.submittedData.push(data);
+            localStorage.setItem('submittedData', JSON.stringify(state.submittedData));
+
+            // Show appropriate success message
+            if (GITHUB_ENABLED && gitHubSuccess) {
+                showNotification('Data submitted to Google Sheets and GitHub!', 'success');
+            } else if (GITHUB_ENABLED && !gitHubSuccess) {
+                showNotification('Submitted to Google Sheets. GitHub backup failed.', 'info');
+            } else {
+                showNotification('Data submitted successfully!', 'success');
+            }
+
+            clearForm();
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Data';
+                <!DOCTYPE html>      
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1680,7 +1730,7 @@ Waterloo Rural Zone||Grafton CHC`;
         async function saveToGitHub(data) {
             if (!GITHUB_TOKEN || GITHUB_TOKEN === 'YOUR_GITHUB_TOKEN_HERE') {
                 console.warn('GitHub not configured');
-                return;
+                return false;
             }
 
             try {
@@ -1705,15 +1755,15 @@ Waterloo Rural Zone||Grafton CHC`;
 
                 if (response.ok) {
                     console.log('Data and photos saved to GitHub successfully');
-                    showNotification('Data backed up to GitHub!', 'success');
+                    return true;
                 } else {
                     const errorText = await response.text();
                     console.error('GitHub save failed:', errorText);
-                    showNotification('GitHub backup failed - check console', 'error');
+                    return false;
                 }
             } catch (error) {
                 console.error('GitHub error:', error);
-                showNotification('GitHub backup error - data saved locally', 'error');
+                return false;
             }
         }
 
