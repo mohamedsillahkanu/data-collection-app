@@ -472,6 +472,9 @@
             transition: all 0.3s ease;
             text-align: center;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .photo-upload-btn:hover {
@@ -910,7 +913,7 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Photo 1 <span class="required">*</span></label>
+                                <label class="form-label">HF1 <span class="required">*</span></label>
                                 <input type="file" id="photo1Input" name="photo1" accept="image/*" capture="environment" required>
                                 <label for="photo1Input" class="photo-upload-btn" id="photo1Btn">
                                     <div>Tap to take photo</div>
@@ -919,7 +922,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Photo 2 <span class="required">*</span></label>
+                                <label class="form-label">HF2 <span class="required">*</span></label>
                                 <input type="file" id="photo2Input" name="photo2" accept="image/*" capture="environment" required>
                                 <label for="photo2Input" class="photo-upload-btn" id="photo2Btn">
                                     <div>Tap to take photo</div>
@@ -930,7 +933,7 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Photo 3 <span class="required">*</span></label>
+                                <label class="form-label">HF3 <span class="required">*</span></label>
                                 <input type="file" id="photo3Input" name="photo3" accept="image/*" capture="environment" required>
                                 <label for="photo3Input" class="photo-upload-btn" id="photo3Btn">
                                     <div>Tap to take photo</div>
@@ -939,7 +942,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Photo 4 <span class="required">*</span></label>
+                                <label class="form-label">HF4 <span class="required">*</span></label>
                                 <input type="file" id="photo4Input" name="photo4" accept="image/*" capture="environment" required>
                                 <label for="photo4Input" class="photo-upload-btn" id="photo4Btn">
                                     <div>Tap to take photo</div>
@@ -1250,10 +1253,10 @@ Waterloo Rural Zone||Grafton CHC`;
                             <th style="min-width: 150px;">District</th>
                             <th style="min-width: 150px;">Chiefdom</th>
                             <th style="min-width: 200px;">Facility</th>
-                            <th style="min-width: 100px;">Photo 1</th>
-                            <th style="min-width: 100px;">Photo 2</th>
-                            <th style="min-width: 100px;">Photo 3</th>
-                            <th style="min-width: 100px;">Photo 4</th>
+                            <th style="min-width: 100px;">HF1</th>
+                            <th style="min-width: 100px;">HF2</th>
+                            <th style="min-width: 100px;">HF3</th>
+                            <th style="min-width: 100px;">HF4</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1271,10 +1274,10 @@ Waterloo Rural Zone||Grafton CHC`;
                         <td>${record.district}</td>
                         <td>${record.chiefdom}</td>
                         <td>${record.healthFacility}</td>
-                        <td class="photo-cell"><img src="${record.photo1 || ''}" alt="Photo 1" onclick="openPhotoModal('${record.photo1 || ''}')"></td>
-                        <td class="photo-cell"><img src="${record.photo2 || ''}" alt="Photo 2" onclick="openPhotoModal('${record.photo2 || ''}')"></td>
-                        <td class="photo-cell"><img src="${record.photo3 || ''}" alt="Photo 3" onclick="openPhotoModal('${record.photo3 || ''}')"></td>
-                        <td class="photo-cell"><img src="${record.photo4 || ''}" alt="Photo 4" onclick="openPhotoModal('${record.photo4 || ''}')"></td>
+                        <td class="photo-cell"><img src="${record.photo1 || ''}" alt="HF1" onclick="openPhotoModal('${record.photo1 || ''}')"></td>
+                        <td class="photo-cell"><img src="${record.photo2 || ''}" alt="HF2" onclick="openPhotoModal('${record.photo2 || ''}')"></td>
+                        <td class="photo-cell"><img src="${record.photo3 || ''}" alt="HF3" onclick="openPhotoModal('${record.photo3 || ''}')"></td>
+                        <td class="photo-cell"><img src="${record.photo4 || ''}" alt="HF4" onclick="openPhotoModal('${record.photo4 || ''}')"></td>
                     </tr>
                 `;
             });
