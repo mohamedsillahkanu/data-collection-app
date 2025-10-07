@@ -595,19 +595,24 @@
 
         /* Print Styles */
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            .print-section, .print-section * {
-                visibility: visible;
-            }
-            .print-section {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
+            body {
                 background: white;
-                color: #333;
+            }
+            
+            body > *:not(.print-section) {
+                display: none !important;
+            }
+            
+            .print-section {
+                display: block !important;
+                position: static !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            .print-section * {
+                visibility: visible !important;
             }
         }
 
