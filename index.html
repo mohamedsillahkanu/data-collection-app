@@ -1323,9 +1323,15 @@ Makeni City||Makeni Government Hospital`;
             };
 
             if (state.isOnline) {
-                await submitToServer(data, 'Patient registered successfully! ID: ' + patientId);
+                await submitToServer(data, 'Patient registered successfully!');
             } else {
-                saveOffline(data, 'Patient registered offline! ID: ' + patientId);
+                saveOffline(data, 'Patient registered offline!');
+            }
+
+            // Ask if user wants to print
+            const wantsToPrint = confirm('Patient registered successfully! Do you want to print the patient record?');
+            if (wantsToPrint) {
+                generatePrintableRecord(data);
             }
 
             e.target.reset();
@@ -1506,88 +1512,222 @@ Makeni City||Makeni Government Hospital`;
         function generatePrintableRecord(patient) {
             const printSection = document.getElementById('printSection');
             
+            const age = patient.dob ? calculateAge(patient.dob) : 'N/A';
+            const visitDate = patient.timestamp ? new Date(patient.timestamp).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            
             printSection.innerHTML = `
-                <div style="padding: 40px; max-width: 900px; margin: 0 auto; background: white; color: #333;">
-                    <div class="print-header">
-                        <h1>Medical Record</h1>
-                        <p style="color: #666;">Electronic Medical Record System</p>
+                <div style="padding: 0; margin: 0; background: white; color: #333; font-family: Arial, sans-serif;">
+                    <!-- Header with Blue Background -->
+                    <div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 40px; text-align: center; border-bottom: 5px solid #60a5fa;">
+                        <h1 style="margin: 0; font-size: 36px; font-weight: bold; letter-spacing: 1px;">PATIENT MEDICAL RECORD</h1>
+                        <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Electronic Medical Record System</p>
                     </div>
 
-                    <h2 style="color: #58a6ff; margin-bottom: 20px;">Patient Information</h2>
-                    <div class="print-patient-info">
-                        <div class="info-item">
-                            <div class="info-label">Patient ID</div>
-                            <div class="info-value">${patient.patientId}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Full Name</div>
-                            <div class="info-value">${patient.firstName} ${patient.middleName || ''} ${patient.lastName}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Date of Birth</div>
-                            <div class="info-value">${patient.dob}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Gender</div>
-                            <div class="info-value">${patient.gender}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Phone</div>
-                            <div class="info-value">${patient.phone}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Email</div>
-                            <div class="info-value">${patient.email || 'N/A'}</div>
-                        </div>
-                        <div class="info-item" style="grid-column: 1 / -1;">
-                            <div class="info-label">Address</div>
-                            <div class="info-value">${patient.address}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Health Facility</div>
-                            <div class="info-value">${patient.healthFacility}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">District</div>
-                            <div class="info-value">${patient.district}</div>
-                        </div>
-                    </div>
-
-                    <h2 style="color: #58a6ff; margin: 30px 0 20px;">Visit History</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Chief Complaint</th>
-                                <th>Diagnosis</th>
-                                <th>Treatment</th>
-                                <th>Vitals</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${patient.visits.map(visit => `
+                    <!-- Patient Information Section -->
+                    <div style="padding: 40px 60px;">
+                        <div style="background: #eff6ff; border-left: 5px solid #3b82f6; padding: 25px; margin-bottom: 30px; border-radius: 5px;">
+                            <h2 style="margin: 0 0 20px 0; color: #1e3a8a; font-size: 24px; font-weight: bold;">Patient Information</h2>
+                            
+                            <table style="width: 100%; border-collapse: collapse;">
                                 <tr>
-                                    <td>${visit.date}</td>
-                                    <td>${visit.chiefComplaint}</td>
-                                    <td>${visit.diagnosis}</td>
-                                    <td>${visit.treatment}</td>
-                                    <td>
-                                        ${visit.temperature ? `Temp: ${visit.temperature}°C<br>` : ''}
-                                        ${visit.bloodPressure ? `BP: ${visit.bloodPressure}` : ''}
+                                    <td style="padding: 12px 20px; width: 50%; border-bottom: 1px solid #bfdbfe;">
+                                        <div style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Full Name</div>
+                                        <div style="color: #1e293b; font-size: 18px; font-weight: 600;">${patient.firstName} ${patient.middleName || ''} ${patient.lastName}</div>
+                                    </td>
+                                    <td style="padding: 12px 20px; width: 50%; border-bottom: 1px solid #bfdbfe;">
+                                        <div style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Date of Birth</div>
+                                        <div style="color: #1e293b; font-size: 18px; font-weight: 600;">${patient.dob || 'N/A'}</div>
                                     </td>
                                 </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
+                                <tr>
+                                    <td style="padding: 12px 20px; border-bottom: 1px solid #bfdbfe;">
+                                        <div style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Gender</div>
+                                        <div style="color: #1e293b; font-size: 18px; font-weight: 600;">${patient.gender || 'N/A'}</div>
+                                    </td>
+                                    <td style="padding: 12px 20px; border-bottom: 1px solid #bfdbfe;">
+                                        <div style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Age</div>
+                                        <div style="color: #1e293b; font-size: 18px; font-weight: 600;">${age} years</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 20px; border-bottom: 1px solid #bfdbfe;">
+                                        <div style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Phone Number</div>
+                                        <div style="color: #1e293b; font-size: 18px; font-weight: 600;">${patient.phone || 'N/A'}</div>
+                                    </td>
+                                    <td style="padding: 12px 20px; border-bottom: 1px solid #bfdbfe;">
+                                        <div style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Email</div>
+                                        <div style="color: #1e293b; font-size: 18px; font-weight: 600;">${patient.email || 'N/A'}</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding: 12px 20px; border-bottom: 1px solid #bfdbfe;">
+                                        <div style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Address</div>
+                                        <div style="color: #1e293b; font-size: 18px; font-weight: 600;">${patient.address || 'N/A'}</div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
 
-                    <div style="margin-top: 60px; text-align: center; color: #999;">
-                        <p>Printed on: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</p>
-                        <p>This is a confidential medical record</p>
+                        <!-- Location Information -->
+                        <div style="background: white; border: 2px solid #bfdbfe; border-left: 5px solid #60a5fa; padding: 25px; margin-bottom: 30px; border-radius: 5px;">
+                            <h2 style="margin: 0 0 20px 0; color: #1e3a8a; font-size: 20px; font-weight: bold;">Location & Facility Information</h2>
+                            
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr>
+                                    <td style="padding: 10px 20px; width: 50%;">
+                                        <div style="color: #64748b; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Region</div>
+                                        <div style="color: #1e293b; font-size: 16px; font-weight: 600;">${patient.region || 'N/A'}</div>
+                                    </td>
+                                    <td style="padding: 10px 20px; width: 50%;">
+                                        <div style="color: #64748b; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">District</div>
+                                        <div style="color: #1e293b; font-size: 16px; font-weight: 600;">${patient.district || 'N/A'}</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 20px;">
+                                        <div style="color: #64748b; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Chiefdom</div>
+                                        <div style="color: #1e293b; font-size: 16px; font-weight: 600;">${patient.chiefdom || 'N/A'}</div>
+                                    </td>
+                                    <td style="padding: 10px 20px;">
+                                        <div style="color: #64748b; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Health Facility</div>
+                                        <div style="color: #1e293b; font-size: 16px; font-weight: 600;">${patient.healthFacility || 'N/A'}</div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Emergency Contact -->
+                        ${patient.emergencyContact || patient.emergencyPhone ? `
+                        <div style="background: #fef3c7; border-left: 5px solid #f59e0b; padding: 20px; margin-bottom: 30px; border-radius: 5px;">
+                            <h2 style="margin: 0 0 15px 0; color: #92400e; font-size: 18px; font-weight: bold;">Emergency Contact</h2>
+                            <div style="display: flex; gap: 40px;">
+                                ${patient.emergencyContact ? `
+                                <div>
+                                    <div style="color: #78350f; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Contact Name</div>
+                                    <div style="color: #1e293b; font-size: 16px; font-weight: 600;">${patient.emergencyContact}</div>
+                                </div>
+                                ` : ''}
+                                ${patient.emergencyPhone ? `
+                                <div>
+                                    <div style="color: #78350f; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Contact Phone</div>
+                                    <div style="color: #1e293b; font-size: 16px; font-weight: 600;">${patient.emergencyPhone}</div>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                        ` : ''}
+
+                        <!-- Clinical Information -->
+                        ${patient.temperature || patient.bloodPressure || patient.pulse || patient.weight || patient.height ? `
+                        <div style="background: #f0fdf4; border-left: 5px solid #22c55e; padding: 25px; margin-bottom: 30px; border-radius: 5px;">
+                            <h2 style="margin: 0 0 20px 0; color: #166534; font-size: 20px; font-weight: bold;">Vital Signs - ${visitDate}</h2>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                                ${patient.temperature ? `
+                                <div style="text-align: center; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                    <div style="color: #64748b; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Temperature</div>
+                                    <div style="color: #1e293b; font-size: 24px; font-weight: bold;">${patient.temperature}°C</div>
+                                </div>
+                                ` : ''}
+                                ${patient.bloodPressure ? `
+                                <div style="text-align: center; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                    <div style="color: #64748b; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Blood Pressure</div>
+                                    <div style="color: #1e293b; font-size: 24px; font-weight: bold;">${patient.bloodPressure}</div>
+                                </div>
+                                ` : ''}
+                                ${patient.pulse ? `
+                                <div style="text-align: center; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                    <div style="color: #64748b; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Pulse</div>
+                                    <div style="color: #1e293b; font-size: 24px; font-weight: bold;">${patient.pulse} bpm</div>
+                                </div>
+                                ` : ''}
+                                ${patient.weight ? `
+                                <div style="text-align: center; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                    <div style="color: #64748b; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Weight</div>
+                                    <div style="color: #1e293b; font-size: 24px; font-weight: bold;">${patient.weight} kg</div>
+                                </div>
+                                ` : ''}
+                                ${patient.height ? `
+                                <div style="text-align: center; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                    <div style="color: #64748b; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Height</div>
+                                    <div style="color: #1e293b; font-size: 24px; font-weight: bold;">${patient.height} cm</div>
+                                </div>
+                                ` : ''}
+                                ${patient.respiratoryRate ? `
+                                <div style="text-align: center; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                    <div style="color: #64748b; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Respiratory Rate</div>
+                                    <div style="color: #1e293b; font-size: 24px; font-weight: bold;">${patient.respiratoryRate}</div>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                        ` : ''}
+
+                        <!-- Diagnosis & Treatment -->
+                        ${patient.chiefComplaint || patient.diagnosis || patient.treatment ? `
+                        <div style="background: white; border: 2px solid #bfdbfe; padding: 25px; border-radius: 5px; margin-bottom: 30px;">
+                            <h2 style="margin: 0 0 20px 0; color: #1e3a8a; font-size: 20px; font-weight: bold;">Clinical Assessment</h2>
+                            
+                            ${patient.chiefComplaint ? `
+                            <div style="margin-bottom: 20px; padding: 15px; background: #f8fafc; border-radius: 5px;">
+                                <div style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Chief Complaint</div>
+                                <div style="color: #1e293b; font-size: 16px; line-height: 1.6;">${patient.chiefComplaint}</div>
+                            </div>
+                            ` : ''}
+                            
+                            ${patient.diagnosis ? `
+                            <div style="margin-bottom: 20px; padding: 15px; background: #f8fafc; border-radius: 5px;">
+                                <div style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Diagnosis</div>
+                                <div style="color: #1e293b; font-size: 16px; line-height: 1.6;">${patient.diagnosis}</div>
+                            </div>
+                            ` : ''}
+                            
+                            ${patient.treatment ? `
+                            <div style="margin-bottom: 20px; padding: 15px; background: #f8fafc; border-radius: 5px;">
+                                <div style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Treatment / Prescription</div>
+                                <div style="color: #1e293b; font-size: 16px; line-height: 1.6;">${patient.treatment}</div>
+                            </div>
+                            ` : ''}
+                            
+                            ${patient.notes ? `
+                            <div style="padding: 15px; background: #f8fafc; border-radius: 5px;">
+                                <div style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Clinical Notes</div>
+                                <div style="color: #1e293b; font-size: 16px; line-height: 1.6;">${patient.notes}</div>
+                            </div>
+                            ` : ''}
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="background: #f1f5f9; padding: 30px 60px; border-top: 3px solid #3b82f6; text-align: center; margin-top: 40px;">
+                        <div style="color: #64748b; font-size: 13px; margin-bottom: 8px;">
+                            <strong>Printed on:</strong> ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} at ${new Date().toLocaleTimeString()}
+                        </div>
+                        <div style="color: #94a3b8; font-size: 12px; font-style: italic;">
+                            This is a confidential medical record. Handle with care and in accordance with patient privacy regulations.
+                        </div>
                     </div>
                 </div>
             `;
 
-            window.print();
+            // Small delay to ensure rendering, then print
+            setTimeout(() => {
+                window.print();
+            }, 100);
+        }
+
+        function calculateAge(dob) {
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            return age;
         }
 
         function resetForm() {
