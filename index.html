@@ -84,6 +84,33 @@
             font-size: 14px;
         }
 
+        .login-btn {
+            width: 100%;
+            padding: 20px 40px;
+            background: linear-gradient(135deg, #2ea043 0%, #22c55e 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 20px rgba(46, 160, 67, 0.3);
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(135deg, #22c55e 0%, #2ea043 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(46, 160, 67, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(-1px);
+        }
+
         .error-message {
             background: rgba(248, 81, 73, 0.1);
             border: 1px solid #f85149;
@@ -714,7 +741,7 @@
                     <input type="password" class="form-input" id="password" required autocomplete="current-password">
                 </div>
 
-                <button type="submit" class="btn-next">Login</button>
+                <button type="submit" class="login-btn">Login</button>
             </form>
         </div>
     </div>
@@ -744,6 +771,8 @@
             <div class="tabs">
                 <button class="tab active" data-tab="search">Search Patient</button>
                 <button class="tab" data-tab="register">New Patient</button>
+                <button class="tab" data-tab="status" id="statusTab" style="display: none;">Patient Status</button>
+                <button class="tab" data-tab="doctor" id="doctorTab" style="display: none;">Doctor Dashboard</button>
             </div>
 
             <!-- Search Tab -->
@@ -949,6 +978,25 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="form-label">Specialty / Department <span class="required">*</span></label>
+                                <select class="form-select" name="specialty" id="specialtySelect" required>
+                                    <option value="">Select specialty...</option>
+                                    <option value="General Medicine">General Medicine</option>
+                                    <option value="Pediatrics">Pediatrics</option>
+                                    <option value="Surgery">Surgery</option>
+                                    <option value="Obstetrics & Gynecology">Obstetrics & Gynecology</option>
+                                    <option value="Internal Medicine">Internal Medicine</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" id="assignedDoctorDisplay" style="display: none;">
+                                <label class="form-label">Assigned Doctor</label>
+                                <div style="padding: 12px 16px; background: #21262d; border: 1px solid #30363d; border-radius: 6px; color: #58a6ff; font-weight: 600;">
+                                    <span id="assignedDoctorName"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label class="form-label">Chief Complaint</label>
                                 <input type="text" class="form-input" name="chiefComplaint">
                             </div>
@@ -976,6 +1024,44 @@
                     </form>
                 </div>
             </div>
+
+            <!-- Patient Status Tab -->
+            <div class="tab-content" data-content="status">
+                <div class="search-card">
+                    <div class="search-header">
+                        <h2 class="search-title">Check Your Consultation Status</h2>
+                        <p class="search-description">Enter your phone number to check if your doctor is ready to meet</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" class="form-input" id="statusPhoneInput" placeholder="Enter your registered phone number">
+                    </div>
+
+                    <button class="btn-next" id="checkStatusBtn" style="width: 100%;">Check Status</button>
+
+                    <div class="search-results" id="statusResults" style="margin-top: 30px;">
+                        <div id="statusContainer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Doctor Dashboard Tab -->
+            <div class="tab-content" data-content="doctor">
+                <div class="search-card">
+                    <div class="search-header">
+                        <h2 class="search-title">Doctor Dashboard</h2>
+                        <p class="search-description">Review and accept consultation requests</p>
+                    </div>
+
+                    <div id="doctorCasesContainer">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>Loading cases...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -992,7 +1078,23 @@
         const CONFIG = {
             SCRIPT_URL: 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec',
             LOGIN_USERNAME: 'admin',
-            LOGIN_PASSWORD: 'admin'
+            LOGIN_PASSWORD: 'admin',
+            DOCTOR_CREDENTIALS: {
+                'dr.smith': { password: 'doctor123', name: 'Dr. John Smith', specialty: 'General Medicine' },
+                'dr.johnson': { password: 'doctor123', name: 'Dr. Sarah Johnson', specialty: 'Pediatrics' },
+                'dr.williams': { password: 'doctor123', name: 'Dr. Michael Williams', specialty: 'Surgery' },
+                'dr.brown': { password: 'doctor123', name: 'Dr. Emily Brown', specialty: 'Obstetrics & Gynecology' },
+                'dr.davis': { password: 'doctor123', name: 'Dr. David Davis', specialty: 'Internal Medicine' }
+            }
+        };
+
+        // Doctors and their specialties
+        const DOCTORS = {
+            'General Medicine': { name: 'Dr. John Smith', username: 'dr.smith' },
+            'Pediatrics': { name: 'Dr. Sarah Johnson', username: 'dr.johnson' },
+            'Surgery': { name: 'Dr. Michael Williams', username: 'dr.williams' },
+            'Obstetrics & Gynecology': { name: 'Dr. Emily Brown', username: 'dr.brown' },
+            'Internal Medicine': { name: 'Dr. David Davis', username: 'dr.davis' }
         };
 
         // Cascading data
@@ -1024,8 +1126,11 @@ Makeni City||Makeni Government Hospital`;
             pendingSubmissions: [],
             isOnline: navigator.onLine,
             isLoggedIn: false,
+            userType: null, // 'admin', 'doctor', or 'patient'
+            currentUser: null,
             currentSection: 1,
-            totalSections: 3
+            totalSections: 3,
+            pendingCases: [] // For doctor dashboard
         };
 
         // Cascading Manager
@@ -1186,6 +1291,7 @@ Makeni City||Makeni Government Hospital`;
             document.getElementById('logoutBtn').addEventListener('click', handleLogout);
             document.getElementById('patientForm').addEventListener('submit', handleSubmit);
             document.getElementById('searchBtn').addEventListener('click', handleSearch);
+            document.getElementById('checkStatusBtn').addEventListener('click', checkPatientStatus);
 
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', () => switchTab(tab.dataset.tab));
@@ -1197,6 +1303,17 @@ Makeni City||Makeni Government Hospital`;
             // Real-time search on all fields
             ['searchFirstName', 'searchLastName', 'searchDOB', 'searchPhone', 'searchPatientID'].forEach(id => {
                 document.getElementById(id).addEventListener('input', handleSearch);
+            });
+
+            // Specialty selection shows assigned doctor
+            document.getElementById('specialtySelect').addEventListener('change', function(e) {
+                const specialty = e.target.value;
+                if (specialty && DOCTORS[specialty]) {
+                    document.getElementById('assignedDoctorDisplay').style.display = 'block';
+                    document.getElementById('assignedDoctorName').textContent = DOCTORS[specialty].name;
+                } else {
+                    document.getElementById('assignedDoctorDisplay').style.display = 'none';
+                }
             });
         }
 
@@ -1228,6 +1345,9 @@ Makeni City||Makeni Government Hospital`;
 
         function checkLoginState() {
             state.isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+            state.userType = sessionStorage.getItem('userType');
+            state.currentUser = sessionStorage.getItem('currentUser');
+            
             if (state.isLoggedIn) {
                 showMainContent();
             }
@@ -1238,16 +1358,33 @@ Makeni City||Makeni Government Hospital`;
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
+            // Check admin login
             if (username === CONFIG.LOGIN_USERNAME && password === CONFIG.LOGIN_PASSWORD) {
                 sessionStorage.setItem('isLoggedIn', 'true');
+                sessionStorage.setItem('userType', 'admin');
                 state.isLoggedIn = true;
+                state.userType = 'admin';
                 showMainContent();
-            } else {
-                document.getElementById('loginError').classList.add('show');
-                setTimeout(() => {
-                    document.getElementById('loginError').classList.remove('show');
-                }, 3000);
+                return;
             }
+
+            // Check doctor login
+            if (CONFIG.DOCTOR_CREDENTIALS[username] && CONFIG.DOCTOR_CREDENTIALS[username].password === password) {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                sessionStorage.setItem('userType', 'doctor');
+                sessionStorage.setItem('currentUser', username);
+                state.isLoggedIn = true;
+                state.userType = 'doctor';
+                state.currentUser = username;
+                showMainContent();
+                return;
+            }
+
+            // Invalid credentials
+            document.getElementById('loginError').classList.add('show');
+            setTimeout(() => {
+                document.getElementById('loginError').classList.remove('show');
+            }, 3000);
         }
 
         function handleLogout() {
@@ -1260,6 +1397,19 @@ Makeni City||Makeni Government Hospital`;
         function showMainContent() {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('mainContent').classList.add('show');
+            
+            // Show/hide tabs based on user type
+            if (state.userType === 'doctor') {
+                document.getElementById('doctorTab').style.display = 'block';
+                document.getElementById('statusTab').style.display = 'none';
+                // Switch to doctor dashboard
+                switchTab('doctor');
+                loadDoctorCases();
+            } else if (state.userType === 'admin') {
+                document.getElementById('doctorTab').style.display = 'none';
+                document.getElementById('statusTab').style.display = 'block';
+            }
+            
             if (state.isOnline && state.pendingSubmissions.length > 0) {
                 syncPendingSubmissions();
             }
@@ -1319,11 +1469,17 @@ Makeni City||Makeni Government Hospital`;
             e.preventDefault();
             const formData = new FormData(e.target);
             const patientId = generatePatientId();
+            const specialty = formData.get('specialty');
+            const assignedDoctor = DOCTORS[specialty];
             
             const data = {
                 action: 'registerPatient',
                 patientId: patientId,
                 timestamp: new Date().toISOString(),
+                specialty: specialty,
+                assignedDoctor: assignedDoctor.name,
+                assignedDoctorUsername: assignedDoctor.username,
+                consultationStatus: 'pending',
                 ...Object.fromEntries(formData)
             };
 
@@ -1334,7 +1490,7 @@ Makeni City||Makeni Government Hospital`;
             }
 
             // Ask if user wants to print
-            const wantsToPrint = confirm('Patient registered successfully! Do you want to print the patient record?');
+            const wantsToPrint = confirm('Patient registered successfully!\n\nAssigned to: ' + assignedDoctor.name + '\n\nDo you want to print the patient record?');
             if (wantsToPrint) {
                 generatePrintableRecord(data);
             }
@@ -1744,6 +1900,234 @@ Makeni City||Makeni Government Hospital`;
             document.getElementById('districtSelect').disabled = true;
             document.getElementById('chiefdomSelect').disabled = true;
             document.getElementById('healthFacilitySelect').disabled = true;
+            document.getElementById('assignedDoctorDisplay').style.display = 'none';
+        }
+
+        // Doctor Dashboard Functions
+        async function loadDoctorCases() {
+            const container = document.getElementById('doctorCasesContainer');
+            
+            if (!state.isOnline) {
+                container.innerHTML = '<div class="no-records">Internet connection required to load cases</div>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${CONFIG.SCRIPT_URL}?action=getDoctorCases&doctor=${state.currentUser}`);
+                const cases = await response.json();
+                displayDoctorCases(cases);
+            } catch (error) {
+                // Mock data for demo
+                const mockCases = [
+                    {
+                        patientId: 'PT-2025-0001',
+                        firstName: 'John',
+                        lastName: 'Doe',
+                        phone: '076123456',
+                        chiefComplaint: 'Fever and headache',
+                        diagnosis: 'Suspected Malaria',
+                        timestamp: new Date().toISOString(),
+                        consultationStatus: 'pending'
+                    },
+                    {
+                        patientId: 'PT-2025-0002',
+                        firstName: 'Jane',
+                        lastName: 'Smith',
+                        phone: '077654321',
+                        chiefComplaint: 'Abdominal pain',
+                        diagnosis: 'Gastritis',
+                        timestamp: new Date(Date.now() - 86400000).toISOString(),
+                        consultationStatus: 'pending'
+                    }
+                ];
+                displayDoctorCases(mockCases);
+            }
+        }
+
+        function displayDoctorCases(cases) {
+            const container = document.getElementById('doctorCasesContainer');
+            const doctorName = CONFIG.DOCTOR_CREDENTIALS[state.currentUser].name;
+            
+            if (cases.length === 0) {
+                container.innerHTML = '<div class="no-records">No pending consultation requests</div>';
+                return;
+            }
+
+            const pendingCases = cases.filter(c => c.consultationStatus === 'pending');
+            const acceptedCases = cases.filter(c => c.consultationStatus === 'accepted');
+
+            let html = `
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #58a6ff; font-size: 20px; margin-bottom: 15px;">Welcome, ${doctorName}</h3>
+                    <p style="color: #8b949e;">You have ${pendingCases.length} pending consultation request(s)</p>
+                </div>
+            `;
+
+            if (pendingCases.length > 0) {
+                html += '<h3 style="color: #f59e0b; margin-bottom: 15px;">Pending Requests</h3>';
+                pendingCases.forEach(patient => {
+                    html += `
+                        <div class="patient-card" style="border-left: 4px solid #f59e0b;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                                <div>
+                                    <div class="patient-name">${patient.firstName} ${patient.lastName}</div>
+                                    <div class="patient-details">Phone: ${patient.phone}</div>
+                                    <div class="patient-details">Submitted: ${new Date(patient.timestamp).toLocaleString()}</div>
+                                </div>
+                                <span style="background: #f59e0b; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">PENDING</span>
+                            </div>
+                            <div style="background: #21262d; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                                <div style="margin-bottom: 10px;">
+                                    <div style="color: #8b949e; font-size: 12px; margin-bottom: 5px;">Chief Complaint</div>
+                                    <div style="color: #e6edf3;">${patient.chiefComplaint || 'Not provided'}</div>
+                                </div>
+                                <div>
+                                    <div style="color: #8b949e; font-size: 12px; margin-bottom: 5px;">Diagnosis</div>
+                                    <div style="color: #e6edf3;">${patient.diagnosis || 'Not provided'}</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn-view" onclick="acceptConsultation('${patient.phone}')" style="flex: 1; background: #2ea043;">
+                                    Accept Consultation
+                                </button>
+                                <button class="btn-view" onclick="viewPatientDetails('${patient.phone}')" style="flex: 1;">
+                                    View Full Details
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            if (acceptedCases.length > 0) {
+                html += '<h3 style="color: #2ea043; margin: 30px 0 15px;">Accepted Consultations</h3>';
+                acceptedCases.forEach(patient => {
+                    html += `
+                        <div class="patient-card" style="border-left: 4px solid #2ea043;">
+                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <div>
+                                    <div class="patient-name">${patient.firstName} ${patient.lastName}</div>
+                                    <div class="patient-details">Phone: ${patient.phone}</div>
+                                    <div style="color: #2ea043; font-weight: 600; margin-top: 8px;">Ready for consultation</div>
+                                </div>
+                                <span style="background: #2ea043; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">ACCEPTED</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            container.innerHTML = html;
+        }
+
+        async function acceptConsultation(phone) {
+            if (!confirm('Accept this consultation request?')) {
+                return;
+            }
+
+            try {
+                await fetch(CONFIG.SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'acceptConsultation',
+                        phone: phone,
+                        doctor: state.currentUser
+                    })
+                });
+
+                showNotification('Consultation accepted! Patient will be notified.', 'success');
+                loadDoctorCases(); // Reload cases
+            } catch (error) {
+                showNotification('Error accepting consultation', 'error');
+            }
+        }
+
+        async function viewPatientDetails(phone) {
+            // This would fetch and display full patient details
+            showNotification('Loading patient details...', 'info');
+        }
+
+        // Patient Status Check
+        async function checkPatientStatus() {
+            const phone = document.getElementById('statusPhoneInput').value.trim();
+            
+            if (!phone) {
+                showNotification('Please enter your phone number', 'error');
+                return;
+            }
+
+            if (!state.isOnline) {
+                showNotification('Internet connection required to check status', 'error');
+                return;
+            }
+
+            const container = document.getElementById('statusContainer');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Checking status...</p></div>';
+            document.getElementById('statusResults').classList.add('show');
+
+            try {
+                const response = await fetch(`${CONFIG.SCRIPT_URL}?action=checkStatus&phone=${encodeURIComponent(phone)}`);
+                const status = await response.json();
+                displayPatientStatus(status);
+            } catch (error) {
+                // Mock data for demo
+                setTimeout(() => {
+                    const mockStatus = {
+                        found: true,
+                        firstName: 'John',
+                        lastName: 'Doe',
+                        assignedDoctor: 'Dr. John Smith',
+                        consultationStatus: 'accepted',
+                        message: 'Your doctor is ready to meet with you!'
+                    };
+                    displayPatientStatus(mockStatus);
+                }, 1000);
+            }
+        }
+
+        function displayPatientStatus(status) {
+            const container = document.getElementById('statusContainer');
+            
+            if (!status.found) {
+                container.innerHTML = '<div class="no-records">No record found with this phone number</div>';
+                return;
+            }
+
+            let statusColor = '#f59e0b'; // pending - orange
+            let statusText = 'UNDER REVIEW';
+            let message = 'Your consultation request is being reviewed by the doctor.';
+
+            if (status.consultationStatus === 'accepted') {
+                statusColor = '#2ea043'; // accepted - green
+                statusText = 'READY TO MEET';
+                message = 'Your doctor is ready to meet with you!';
+            }
+
+            container.innerHTML = `
+                <div class="patient-card" style="border-left: 4px solid ${statusColor};">
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">
+                            ${status.consultationStatus === 'accepted' ? '✓' : '⏱'}
+                        </div>
+                        <div style="background: ${statusColor}; color: white; padding: 8px 20px; border-radius: 20px; display: inline-block; margin-bottom: 20px; font-weight: 600;">
+                            ${statusText}
+                        </div>
+                        <div class="patient-name" style="margin-bottom: 10px;">Hello, ${status.firstName} ${status.lastName}!</div>
+                        <div style="font-size: 18px; color: #e6edf3; margin-bottom: 20px;">${message}</div>
+                        <div style="background: #21262d; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                            <div style="color: #8b949e; font-size: 14px; margin-bottom: 8px;">Assigned Doctor</div>
+                            <div style="color: #58a6ff; font-size: 20px; font-weight: 600;">${status.assignedDoctor}</div>
+                        </div>
+                        ${status.consultationStatus === 'accepted' ? `
+                        <div style="margin-top: 20px; padding: 15px; background: rgba(46, 160, 67, 0.1); border-radius: 8px;">
+                            <div style="color: #2ea043; font-weight: 600;">Please proceed to the consultation room</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
         }
 
         function generatePatientId() {
