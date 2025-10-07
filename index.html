@@ -867,8 +867,642 @@
         <span id="notificationText"></span>
     </div>
 
-    <script src="emr-config.js"></script>
-    <script src="emr-cascading.js"></script>
-    <script src="emr-main.js"></script>
+    <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        const CONFIG = {
+            SCRIPT_URL: 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec',
+            GOOGLE_SHEET_URL: 'https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit',
+            LOGIN_USERNAME: 'admin',
+            LOGIN_PASSWORD: 'admin'
+        };
+
+        // Cascading data in pipe-delimited format
+        const CASCADING_DATA = `Eastern Region||Kailahun District
+Eastern Region||Kenema District
+Eastern Region||Kono District
+Northern Region||Bombali District
+Northern Region||Falaba District
+Northern Region||Koinadugu District
+Northern Region||Tonkolili District
+North West Region||Kambia District
+North West Region||Karene District
+North West Region||Port Loko District
+Southern Region||Bo District
+Southern Region||Bonthe District
+Southern Region||Moyamba District
+Southern Region||Pujehun District
+Western Area||Western Area Urban District
+Western Area||Western Area Rural District
+Bo District||Bo City
+Bo District||Badjia Chiefdom
+Bo District||Bagbwe Chiefdom
+Bo District||Baoma Chiefdom
+Bombali District||Biriwa Chiefdom
+Bombali District||Bombali Sebora Chiefdom
+Bombali District||Makeni City
+Bo City||Bo Government Hospital
+Bo City||Kakua Static CHC
+Bo City||Gilas Hospital
+Makeni City||Makeni Government Hospital
+Makeni City||Holy Spirit Hospital`;
+
+        // State management
+        const state = {
+            pendingSubmissions: [],
+            isOnline: navigator.onLine,
+            isLoggedIn: false
+        };
+
+        // ============================================
+        // CASCADING DATA MANAGER
+        // ============================================
+        const CascadingManager = {
+            regions: {},
+            districts: {},
+            chiefdoms: {},
+
+            init() {
+                this.parseCascadingData();
+                this.populateRegions();
+                this.setupListeners();
+            },
+
+            parseCascadingData() {
+                const lines = CASCADING_DATA.trim().split('\n');
+                
+                lines.forEach(line => {
+                    const parts = line.split('||');
+                    if (parts.length === 2) {
+                        const [parent, child] = parts.map(s => s.trim());
+                        
+                        if (parent.includes('Region') || parent === 'Western Area') {
+                            if (!this.regions[parent]) this.regions[parent] = [];
+                            if (!this.regions[parent].includes(child)) {
+                                this.regions[parent].push(child);
+                            }
+                        }
+                        else if (child.includes('Chiefdom') || child.includes('City') || child.includes('Town') || child.includes('Zone')) {
+                            if (!this.districts[parent]) this.districts[parent] = [];
+                            if (!this.districts[parent].includes(child)) {
+                                this.districts[parent].push(child);
+                            }
+                        }
+                        else {
+                            if (!this.chiefdoms[parent]) this.chiefdoms[parent] = [];
+                            if (!this.chiefdoms[parent].includes(child)) {
+                                this.chiefdoms[parent].push(child);
+                            }
+                        }
+                    }
+                });
+            },
+
+            populateRegions() {
+                const regionSelect = document.getElementById('regionSelect');
+                Object.keys(this.regions).forEach(region => {
+                    const option = document.createElement('option');
+                    option.value = region;
+                    option.textContent = region;
+                    regionSelect.appendChild(option);
+                });
+            },
+
+            setupListeners() {
+                document.getElementById('regionSelect').addEventListener('change', (e) => this.handleRegionChange(e));
+                document.getElementById('districtSelect').addEventListener('change', (e) => this.handleDistrictChange(e));
+                document.getElementById('chiefdomSelect').addEventListener('change', (e) => this.handleChiefdomChange(e));
+            },
+
+            handleRegionChange(e) {
+                const region = e.target.value;
+                const districtSelect = document.getElementById('districtSelect');
+                const chiefdomSelect = document.getElementById('chiefdomSelect');
+                const facilitySelect = document.getElementById('healthFacilitySelect');
+
+                districtSelect.innerHTML = '<option value="">Select district...</option>';
+                chiefdomSelect.innerHTML = '<option value="">Select district first...</option>';
+                facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
+                
+                chiefdomSelect.disabled = true;
+                facilitySelect.disabled = true;
+
+                if (region && this.regions[region]) {
+                    districtSelect.disabled = false;
+                    this.regions[region].forEach(district => {
+                        const option = document.createElement('option');
+                        option.value = district;
+                        option.textContent = district;
+                        districtSelect.appendChild(option);
+                    });
+                } else {
+                    districtSelect.disabled = true;
+                }
+            },
+
+            handleDistrictChange(e) {
+                const district = e.target.value;
+                const chiefdomSelect = document.getElementById('chiefdomSelect');
+                const facilitySelect = document.getElementById('healthFacilitySelect');
+
+                chiefdomSelect.innerHTML = '<option value="">Select chiefdom...</option>';
+                facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
+                facilitySelect.disabled = true;
+
+                if (district && this.districts[district]) {
+                    chiefdomSelect.disabled = false;
+                    this.districts[district].forEach(chiefdom => {
+                        const option = document.createElement('option');
+                        option.value = chiefdom;
+                        option.textContent = chiefdom;
+                        chiefdomSelect.appendChild(option);
+                    });
+                } else {
+                    chiefdomSelect.disabled = true;
+                }
+            },
+
+            handleChiefdomChange(e) {
+                const chiefdom = e.target.value;
+                const facilitySelect = document.getElementById('healthFacilitySelect');
+
+                facilitySelect.innerHTML = '<option value="">Select facility...</option>';
+
+                if (chiefdom && this.chiefdoms[chiefdom]) {
+                    facilitySelect.disabled = false;
+                    this.chiefdoms[chiefdom].forEach(facility => {
+                        const option = document.createElement('option');
+                        option.value = facility;
+                        option.textContent = facility;
+                        facilitySelect.appendChild(option);
+                    });
+                } else {
+                    facilitySelect.disabled = true;
+                }
+            }
+        };
+
+        // ============================================
+        // MAIN EMR APPLICATION
+        // ============================================
+        const EMRApp = {
+            init() {
+                this.loadPendingSubmissions();
+                this.checkLoginState();
+                this.setupEventListeners();
+                this.updateOnlineStatus();
+                CascadingManager.init();
+            },
+
+            loadPendingSubmissions() {
+                const saved = localStorage.getItem('pendingSubmissions');
+                if (saved) {
+                    try {
+                        state.pendingSubmissions = JSON.parse(saved);
+                    } catch (e) {
+                        state.pendingSubmissions = [];
+                    }
+                }
+            },
+
+            savePendingSubmissions() {
+                localStorage.setItem('pendingSubmissions', JSON.stringify(state.pendingSubmissions));
+            },
+
+            updatePendingCount() {
+                const badge = document.querySelector('.pending-badge');
+                if (badge) {
+                    badge.textContent = state.pendingSubmissions.length;
+                    badge.style.display = state.pendingSubmissions.length > 0 ? 'inline-block' : 'none';
+                }
+            },
+
+            setupEventListeners() {
+                // Login
+                document.getElementById('loginForm').addEventListener('submit', (e) => this.handleLogin(e));
+                document.getElementById('logoutBtn').addEventListener('click', () => this.handleLogout());
+
+                // Tabs
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', () => this.switchTab(tab.dataset.tab));
+                });
+
+                // Forms
+                document.getElementById('registerForm').addEventListener('submit', (e) => this.handleRegister(e));
+                document.getElementById('visitForm').addEventListener('submit', (e) => this.handleVisit(e));
+
+                // Search
+                document.getElementById('searchBtn').addEventListener('click', () => this.handleSearch());
+                document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.handleSearch();
+                });
+
+                // Online/Offline events
+                window.addEventListener('online', () => this.handleOnlineEvent());
+                window.addEventListener('offline', () => this.handleOfflineEvent());
+            },
+
+            handleOnlineEvent() {
+                state.isOnline = true;
+                this.updateOnlineStatus();
+                this.showNotification('Back online - Syncing data...', 'info');
+                this.syncPendingSubmissions();
+            },
+
+            handleOfflineEvent() {
+                state.isOnline = false;
+                this.updateOnlineStatus();
+                this.showNotification('You are offline - Data will be saved locally', 'info');
+            },
+
+            updateOnlineStatus() {
+                // You can add online/offline indicator in header if needed
+                console.log('Online status:', state.isOnline);
+            },
+
+            checkLoginState() {
+                state.isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+                if (state.isLoggedIn) {
+                    this.showMainContent();
+                }
+            },
+
+            handleLogin(e) {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                if (username === CONFIG.LOGIN_USERNAME && password === CONFIG.LOGIN_PASSWORD) {
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    state.isLoggedIn = true;
+                    this.showMainContent();
+                } else {
+                    document.getElementById('loginError').classList.add('show');
+                    setTimeout(() => {
+                        document.getElementById('loginError').classList.remove('show');
+                    }, 3000);
+                }
+            },
+
+            handleLogout() {
+                sessionStorage.removeItem('isLoggedIn');
+                state.isLoggedIn = false;
+                document.getElementById('mainContent').classList.remove('show');
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+            },
+
+            showMainContent() {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainContent').classList.add('show');
+                
+                // Sync pending submissions if online
+                if (state.isOnline && state.pendingSubmissions.length > 0) {
+                    this.syncPendingSubmissions();
+                }
+            },
+
+            switchTab(tabName) {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+                document.querySelector(`[data-content="${tabName}"]`).classList.add('active');
+            },
+
+            async handleRegister(e) {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const patientId = this.generatePatientId();
+                
+                const data = {
+                    action: 'registerPatient',
+                    patientId: patientId,
+                    timestamp: new Date().toISOString(),
+                    ...Object.fromEntries(formData)
+                };
+
+                if (state.isOnline) {
+                    await this.submitToServer(data, 'Patient registered successfully! ID: ' + patientId);
+                } else {
+                    this.saveOffline(data, 'Patient registered offline! ID: ' + patientId);
+                }
+
+                e.target.reset();
+                this.resetCascadingSelects();
+            },
+
+            async handleVisit(e) {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                
+                const data = {
+                    action: 'recordVisit',
+                    visitId: this.generateVisitId(),
+                    timestamp: new Date().toISOString(),
+                    ...Object.fromEntries(formData)
+                };
+
+                if (state.isOnline) {
+                    await this.submitToServer(data, 'Visit recorded successfully!');
+                } else {
+                    this.saveOffline(data, 'Visit saved offline!');
+                }
+
+                e.target.reset();
+            },
+
+            async submitToServer(data, successMessage) {
+                try {
+                    await fetch(CONFIG.SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    this.showNotification(successMessage, 'success');
+                    
+                } catch (error) {
+                    console.error('Submit error:', error);
+                    this.showNotification('Failed to submit - Saved offline', 'error');
+                    this.saveOffline(data);
+                }
+            },
+
+            saveOffline(data, message = 'Data saved offline - Will sync when online') {
+                state.pendingSubmissions.push(data);
+                this.savePendingSubmissions();
+                this.updatePendingCount();
+                this.showNotification(message, 'info');
+            },
+
+            async syncPendingSubmissions() {
+                if (state.pendingSubmissions.length === 0) return;
+
+                this.showNotification(`Syncing ${state.pendingSubmissions.length} pending submission(s)...`, 'info');
+                const successfulSyncs = [];
+                
+                for (let i = 0; i < state.pendingSubmissions.length; i++) {
+                    try {
+                        await fetch(CONFIG.SCRIPT_URL, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(state.pendingSubmissions[i])
+                        });
+                        successfulSyncs.push(i);
+                    } catch (error) {
+                        console.error('Sync error:', error);
+                    }
+                }
+
+                if (successfulSyncs.length > 0) {
+                    state.pendingSubmissions = state.pendingSubmissions.filter((_, index) => 
+                        !successfulSyncs.includes(index)
+                    );
+                    this.savePendingSubmissions();
+                    this.updatePendingCount();
+                    this.showNotification(`Successfully synced ${successfulSyncs.length} submission(s)`, 'success');
+                }
+            },
+
+            async handleSearch() {
+                const query = document.getElementById('searchInput').value.trim();
+                
+                if (!query) {
+                    this.showNotification('Please enter a search term', 'error');
+                    return;
+                }
+
+                const resultsContainer = document.getElementById('resultsContainer');
+                resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Searching...</p></div>';
+                document.getElementById('searchResults').classList.add('show');
+
+                try {
+                    if (state.isOnline) {
+                        const response = await fetch(`${CONFIG.SCRIPT_URL}?action=searchPatient&query=${encodeURIComponent(query)}`);
+                        const results = await response.json();
+                        this.displaySearchResults(results);
+                    } else {
+                        this.showNotification('Search requires internet connection', 'error');
+                        resultsContainer.innerHTML = '<div class="no-records">Search unavailable offline</div>';
+                    }
+                } catch (error) {
+                    // Show mock data for demo
+                    setTimeout(() => {
+                        const mockResults = [
+                            {
+                                patientId: 'PT-2025-0001',
+                                firstName: 'John',
+                                lastName: 'Doe',
+                                dob: '1990-05-15',
+                                phone: '076123456',
+                                lastVisit: '2025-10-05'
+                            }
+                        ];
+                        this.displaySearchResults(mockResults);
+                    }, 1000);
+                }
+            },
+
+            displaySearchResults(results) {
+                const container = document.getElementById('resultsContainer');
+                
+                if (results.length === 0) {
+                    container.innerHTML = '<div class="no-records">No patients found</div>';
+                    return;
+                }
+
+                container.innerHTML = results.map(patient => `
+                    <div class="patient-card" onclick="EMRApp.viewPatientRecord('${patient.patientId}')">
+                        <div class="patient-info">
+                            <div>
+                                <div class="patient-name">${patient.firstName} ${patient.lastName}</div>
+                                <div class="patient-details">
+                                    ID: ${patient.patientId} | DOB: ${patient.dob} | Phone: ${patient.phone}
+                                </div>
+                                <div class="patient-details">Last Visit: ${patient.lastVisit || 'No visits'}</div>
+                            </div>
+                            <button class="btn-view">View & Print</button>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            async viewPatientRecord(patientId) {
+                if (!state.isOnline) {
+                    this.showNotification('Viewing records requires internet connection', 'error');
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${CONFIG.SCRIPT_URL}?action=getPatient&patientId=${patientId}`);
+                    const patient = await response.json();
+                    this.generatePrintableRecord(patient);
+                } catch (error) {
+                    // Mock data for demo
+                    const mockPatient = {
+                        patientId: 'PT-2025-0001',
+                        firstName: 'John',
+                        middleName: 'Michael',
+                        lastName: 'Doe',
+                        dob: '1990-05-15',
+                        gender: 'Male',
+                        phone: '076123456',
+                        email: 'john.doe@email.com',
+                        address: '123 Main Street, Bo',
+                        region: 'Southern Region',
+                        district: 'Bo District',
+                        chiefdom: 'Bo City',
+                        healthFacility: 'Bo Government Hospital',
+                        visits: [
+                            {
+                                date: '2025-10-05',
+                                chiefComplaint: 'Fever and headache',
+                                diagnosis: 'Malaria',
+                                treatment: 'ACT therapy',
+                                temperature: '38.5',
+                                bloodPressure: '120/80',
+                                pulse: '72',
+                                weight: '70',
+                                height: '175'
+                            }
+                        ]
+                    };
+                    this.generatePrintableRecord(mockPatient);
+                }
+            },
+
+            generatePrintableRecord(patient) {
+                const printSection = document.getElementById('printSection');
+                
+                printSection.innerHTML = `
+                    <div style="padding: 40px; max-width: 900px; margin: 0 auto; background: white; color: #333;">
+                        <div class="print-header">
+                            <h1>🏥 Medical Record</h1>
+                            <p style="color: #666;">Electronic Medical Record System</p>
+                        </div>
+
+                        <h2 style="color: #58a6ff; margin-bottom: 20px;">Patient Information</h2>
+                        <div class="print-patient-info">
+                            <div class="info-item">
+                                <div class="info-label">Patient ID</div>
+                                <div class="info-value">${patient.patientId}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Full Name</div>
+                                <div class="info-value">${patient.firstName} ${patient.middleName || ''} ${patient.lastName}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Date of Birth</div>
+                                <div class="info-value">${patient.dob}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Gender</div>
+                                <div class="info-value">${patient.gender}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Phone</div>
+                                <div class="info-value">${patient.phone}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Email</div>
+                                <div class="info-value">${patient.email || 'N/A'}</div>
+                            </div>
+                            <div class="info-item" style="grid-column: 1 / -1;">
+                                <div class="info-label">Address</div>
+                                <div class="info-value">${patient.address}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Health Facility</div>
+                                <div class="info-value">${patient.healthFacility}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">District</div>
+                                <div class="info-value">${patient.district}</div>
+                            </div>
+                        </div>
+
+                        <h2 style="color: #58a6ff; margin: 30px 0 20px;">Visit History</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Chief Complaint</th>
+                                    <th>Diagnosis</th>
+                                    <th>Treatment</th>
+                                    <th>Vitals</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${patient.visits.map(visit => `
+                                    <tr>
+                                        <td>${visit.date}</td>
+                                        <td>${visit.chiefComplaint}</td>
+                                        <td>${visit.diagnosis}</td>
+                                        <td>${visit.treatment}</td>
+                                        <td>
+                                            ${visit.temperature ? `Temp: ${visit.temperature}°C<br>` : ''}
+                                            ${visit.bloodPressure ? `BP: ${visit.bloodPressure}<br>` : ''}
+                                            ${visit.pulse ? `Pulse: ${visit.pulse} bpm<br>` : ''}
+                                            ${visit.weight ? `Weight: ${visit.weight} kg` : ''}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+
+                        <div style="margin-top: 60px; text-align: center; color: #999;">
+                            <p>Printed on: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</p>
+                            <p>This is a confidential medical record</p>
+                        </div>
+                    </div>
+                `;
+
+                window.print();
+            },
+
+            resetCascadingSelects() {
+                document.getElementById('districtSelect').disabled = true;
+                document.getElementById('chiefdomSelect').disabled = true;
+                document.getElementById('healthFacilitySelect').disabled = true;
+                document.getElementById('districtSelect').innerHTML = '<option value="">Select region first...</option>';
+                document.getElementById('chiefdomSelect').innerHTML = '<option value="">Select district first...</option>';
+                document.getElementById('healthFacilitySelect').innerHTML = '<option value="">Select chiefdom first...</option>';
+            },
+
+            generatePatientId() {
+                const year = new Date().getFullYear();
+                const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+                return `PT-${year}-${random}`;
+            },
+
+            generateVisitId() {
+                const year = new Date().getFullYear();
+                const random = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
+                return `VS-${year}-${random}`;
+            },
+
+            showNotification(message, type) {
+                const notification = document.getElementById('notification');
+                const text = document.getElementById('notificationText');
+                
+                notification.className = `notification ${type} show`;
+                text.textContent = message;
+
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 4000);
+            }
+        };
+
+        // Initialize app when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            EMRApp.init();
+        });
+    </script>
 </body>
 </html>
