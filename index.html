@@ -1029,19 +1029,17 @@
             <div class="tab-content" data-content="status">
                 <div class="search-card">
                     <div class="search-header">
-                        <h2 class="search-title">Check Your Consultation Status</h2>
-                        <p class="search-description">Enter your phone number to check if your doctor is ready to meet</p>
+                        <h2 class="search-title">Consultation Status</h2>
+                        <p class="search-description">View all consultation requests (sorted from latest to oldest)</p>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Phone Number</label>
-                        <input type="text" class="form-input" id="statusPhoneInput" placeholder="Enter your registered phone number">
-                    </div>
-
-                    <button class="btn-next" id="checkStatusBtn" style="width: 100%;">Check Status</button>
-
-                    <div class="search-results" id="statusResults" style="margin-top: 30px;">
-                        <div id="statusContainer"></div>
+                    <div class="search-results show" id="statusResults">
+                        <div id="statusContainer">
+                            <div class="loading">
+                                <div class="spinner"></div>
+                                <p>Loading consultation statuses...</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1291,7 +1289,6 @@ Makeni City||Makeni Government Hospital`;
             document.getElementById('logoutBtn').addEventListener('click', handleLogout);
             document.getElementById('patientForm').addEventListener('submit', handleSubmit);
             document.getElementById('searchBtn').addEventListener('click', handleSearch);
-            document.getElementById('checkStatusBtn').addEventListener('click', checkPatientStatus);
 
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', () => switchTab(tab.dataset.tab));
@@ -1408,6 +1405,8 @@ Makeni City||Makeni Government Hospital`;
             } else if (state.userType === 'admin') {
                 document.getElementById('doctorTab').style.display = 'none';
                 document.getElementById('statusTab').style.display = 'block';
+                // Load all consultation statuses when viewing status tab
+                loadAllConsultationStatuses();
             }
             
             if (state.isOnline && state.pendingSubmissions.length > 0) {
@@ -1420,6 +1419,11 @@ Makeni City||Makeni Government Hospital`;
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
             document.querySelector(`[data-content="${tabName}"]`).classList.add('active');
+
+            // Load consultation statuses when switching to status tab
+            if (tabName === 'status' && state.userType === 'admin') {
+                loadAllConsultationStatuses();
+            }
         }
 
         function nextSection() {
@@ -2050,84 +2054,147 @@ Makeni City||Makeni Government Hospital`;
         }
 
         // Patient Status Check
-        async function checkPatientStatus() {
-            const phone = document.getElementById('statusPhoneInput').value.trim();
-            
-            if (!phone) {
-                showNotification('Please enter your phone number', 'error');
-                return;
-            }
-
-            if (!state.isOnline) {
-                showNotification('Internet connection required to check status', 'error');
-                return;
-            }
-
+        async function loadAllConsultationStatuses() {
             const container = document.getElementById('statusContainer');
-            container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Checking status...</p></div>';
-            document.getElementById('statusResults').classList.add('show');
+            
+            if (!state.isOnline) {
+                container.innerHTML = '<div class="no-records">Internet connection required to load consultation statuses</div>';
+                return;
+            }
+
+            container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading consultation statuses...</p></div>';
 
             try {
-                const response = await fetch(`${CONFIG.SCRIPT_URL}?action=checkStatus&phone=${encodeURIComponent(phone)}`);
-                const status = await response.json();
-                displayPatientStatus(status);
+                const response = await fetch(`${CONFIG.SCRIPT_URL}?action=getAllConsultations`);
+                const consultations = await response.json();
+                displayAllConsultationStatuses(consultations);
             } catch (error) {
-                // Mock data for demo
-                setTimeout(() => {
-                    const mockStatus = {
-                        found: true,
+                // Mock data for demo - sorted from latest to oldest
+                const mockConsultations = [
+                    {
+                        firstName: 'Jane',
+                        lastName: 'Smith',
+                        phone: '077654321',
+                        address: '456 Market Street, Makeni',
+                        assignedDoctor: 'Dr. Sarah Johnson',
+                        specialty: 'Pediatrics',
+                        consultationStatus: 'accepted',
+                        timestamp: new Date().toISOString()
+                    },
+                    {
                         firstName: 'John',
                         lastName: 'Doe',
+                        phone: '076123456',
+                        address: '123 Main Street, Bo',
                         assignedDoctor: 'Dr. John Smith',
+                        specialty: 'General Medicine',
+                        consultationStatus: 'pending',
+                        timestamp: new Date(Date.now() - 3600000).toISOString()
+                    },
+                    {
+                        firstName: 'Mary',
+                        lastName: 'Johnson',
+                        phone: '078987654',
+                        address: '789 River Road, Kenema',
+                        assignedDoctor: 'Dr. Emily Brown',
+                        specialty: 'Obstetrics & Gynecology',
                         consultationStatus: 'accepted',
-                        message: 'Your doctor is ready to meet with you!'
-                    };
-                    displayPatientStatus(mockStatus);
-                }, 1000);
+                        timestamp: new Date(Date.now() - 7200000).toISOString()
+                    },
+                    {
+                        firstName: 'Robert',
+                        lastName: 'Williams',
+                        phone: '075246813',
+                        address: '321 Hospital Avenue, Freetown',
+                        assignedDoctor: 'Dr. Michael Williams',
+                        specialty: 'Surgery',
+                        consultationStatus: 'pending',
+                        timestamp: new Date(Date.now() - 86400000).toISOString()
+                    }
+                ];
+                displayAllConsultationStatuses(mockConsultations);
             }
         }
 
-        function displayPatientStatus(status) {
+        function displayAllConsultationStatuses(consultations) {
             const container = document.getElementById('statusContainer');
             
-            if (!status.found) {
-                container.innerHTML = '<div class="no-records">No record found with this phone number</div>';
+            if (consultations.length === 0) {
+                container.innerHTML = '<div class="no-records">No consultation requests found</div>';
                 return;
             }
 
-            let statusColor = '#f59e0b'; // pending - orange
-            let statusText = 'UNDER REVIEW';
-            let message = 'Your consultation request is being reviewed by the doctor.';
+            // Sort by timestamp (latest first)
+            consultations.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-            if (status.consultationStatus === 'accepted') {
-                statusColor = '#2ea043'; // accepted - green
-                statusText = 'READY TO MEET';
-                message = 'Your doctor is ready to meet with you!';
-            }
+            let html = '<div style="margin-bottom: 20px;">';
+            html += '<h3 style="color: #58a6ff; font-size: 18px; margin-bottom: 10px;">All Consultation Requests</h3>';
+            html += '<p style="color: #8b949e; font-size: 14px;">Total: ' + consultations.length + ' requests</p>';
+            html += '</div>';
 
-            container.innerHTML = `
-                <div class="patient-card" style="border-left: 4px solid ${statusColor};">
-                    <div style="text-align: center; padding: 20px;">
-                        <div style="font-size: 48px; margin-bottom: 20px;">
-                            ${status.consultationStatus === 'accepted' ? '✓' : '⏱'}
+            consultations.forEach(patient => {
+                const statusColor = patient.consultationStatus === 'accepted' ? '#2ea043' : '#f59e0b';
+                const statusText = patient.consultationStatus === 'accepted' ? 'READY' : 'PENDING';
+                const statusIcon = patient.consultationStatus === 'accepted' ? '✓' : '⏱';
+                const date = new Date(patient.timestamp);
+                const dateStr = date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                html += `
+                    <div class="patient-card" style="border-left: 4px solid ${statusColor}; margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                            <div style="flex: 1;">
+                                <div class="patient-name" style="display: flex; align-items: center; gap: 10px;">
+                                    <span>${patient.firstName} ${patient.lastName}</span>
+                                    <span style="font-size: 24px;">${statusIcon}</span>
+                                </div>
+                                <div class="patient-details" style="margin-top: 8px;">
+                                    <div style="margin-bottom: 4px;"><strong>Phone:</strong> ${patient.phone}</div>
+                                    <div style="margin-bottom: 4px;"><strong>Address:</strong> ${patient.address}</div>
+                                    <div style="margin-bottom: 4px;"><strong>Submitted:</strong> ${dateStr}</div>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="background: ${statusColor}; color: white; padding: 6px 16px; border-radius: 20px; display: inline-block; font-size: 12px; font-weight: 600; margin-bottom: 10px;">
+                                    ${statusText}
+                                </span>
+                            </div>
                         </div>
-                        <div style="background: ${statusColor}; color: white; padding: 8px 20px; border-radius: 20px; display: inline-block; margin-bottom: 20px; font-weight: 600;">
-                            ${statusText}
+                        
+                        <div style="background: #21262d; padding: 15px; border-radius: 6px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <div style="color: #8b949e; font-size: 12px; margin-bottom: 5px;">Assigned Doctor</div>
+                                <div style="color: #58a6ff; font-weight: 600;">${patient.assignedDoctor}</div>
+                            </div>
+                            <div>
+                                <div style="color: #8b949e; font-size: 12px; margin-bottom: 5px;">Specialty</div>
+                                <div style="color: #e6edf3; font-weight: 600;">${patient.specialty}</div>
+                            </div>
                         </div>
-                        <div class="patient-name" style="margin-bottom: 10px;">Hello, ${status.firstName} ${status.lastName}!</div>
-                        <div style="font-size: 18px; color: #e6edf3; margin-bottom: 20px;">${message}</div>
-                        <div style="background: #21262d; padding: 20px; border-radius: 8px; margin-top: 20px;">
-                            <div style="color: #8b949e; font-size: 14px; margin-bottom: 8px;">Assigned Doctor</div>
-                            <div style="color: #58a6ff; font-size: 20px; font-weight: 600;">${status.assignedDoctor}</div>
+
+                        ${patient.consultationStatus === 'accepted' ? `
+                        <div style="margin-top: 15px; padding: 12px; background: rgba(46, 160, 67, 0.1); border-radius: 6px; border: 1px solid rgba(46, 160, 67, 0.3);">
+                            <div style="color: #2ea043; font-weight: 600; text-align: center;">
+                                ✓ Doctor is ready to meet with patient
+                            </div>
                         </div>
-                        ${status.consultationStatus === 'accepted' ? `
-                        <div style="margin-top: 20px; padding: 15px; background: rgba(46, 160, 67, 0.1); border-radius: 8px;">
-                            <div style="color: #2ea043; font-weight: 600;">Please proceed to the consultation room</div>
+                        ` : `
+                        <div style="margin-top: 15px; padding: 12px; background: rgba(245, 158, 11, 0.1); border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.3);">
+                            <div style="color: #f59e0b; font-weight: 600; text-align: center;">
+                                ⏱ Waiting for doctor to review
+                            </div>
                         </div>
-                        ` : ''}
+                        `}
                     </div>
-                </div>
-            `;
+                `;
+            });
+
+            container.innerHTML = html;
         }
 
         function generatePatientId() {
