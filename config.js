@@ -5,7 +5,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxA3n0W05nn16Qvu_qZH
 const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/13N7EZsv32f1K9N0BjCTxGeRjIOil_A8_cyJ5zgI9bEM/edit?gid=0#gid=0';
 const LOGIN_USERNAME = 'admin';
 const LOGIN_PASSWORD = 'admin';
-
+  
 // Variable names organized by sections
 const VARIABLE_SECTIONS = {
     'Location & Time': {
