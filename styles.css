@@ -481,13 +481,13 @@ body {
     justify-content: center;
     gap: 20px;
     cursor: pointer;
-    padding: 20px 20px;
+    padding: 30px 50px;
     background: linear-gradient(135deg, #21262d 0%, #161b22 100%);
     border: 3px solid #30363d;
     border-radius: 12px;
     transition: all 0.3s ease;
-    font-size: 10px;
-    font-weight: 300;
+    font-size: 20px;
+    font-weight: 700;
     flex: 1;
     min-width: 280px;
     text-transform: uppercase;
@@ -506,9 +506,9 @@ body {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    width: 70px;
-    height: 70px;
-    border: 6px solid #30363d;
+    width: 35px;
+    height: 35px;
+    border: 3px solid #30363d;
     border-radius: 50%;
     cursor: pointer;
     position: relative;
@@ -519,14 +519,14 @@ body {
 
 .radio-label input[type="radio"]:hover {
     border-color: #58a6ff;
-    box-shadow: 0 0 20px rgba(88, 166, 255, 0.6);
+    box-shadow: 0 0 10px rgba(88, 166, 255, 0.6);
     transform: scale(1.1);
 }
 
 .radio-label input[type="radio"]:checked {
     border-color: #58a6ff;
-    border-width: 8px;
-    box-shadow: 0 0 35px rgba(88, 166, 255, 1);
+    border-width: 4px;
+    box-shadow: 0 0 18px rgba(88, 166, 255, 1);
 }
 
 .radio-label input[type="radio"]:checked::before {
@@ -535,21 +535,21 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 42px;
-    height: 42px;
+    width: 21px;
+    height: 21px;
     border-radius: 50%;
     background: linear-gradient(135deg, #58a6ff 0%, #388bfd 100%);
-    box-shadow: 0 0 20px rgba(88, 166, 255, 1);
+    box-shadow: 0 0 10px rgba(88, 166, 255, 1);
     animation: radioGlow 1.5s ease-in-out infinite;
 }
 
 @keyframes radioGlow {
     0%, 100% { 
-        box-shadow: 0 0 20px rgba(88, 166, 255, 1);
+        box-shadow: 0 0 10px rgba(88, 166, 255, 1);
         transform: translate(-50%, -50%) scale(1);
     }
     50% { 
-        box-shadow: 0 0 30px rgba(88, 166, 255, 1);
+        box-shadow: 0 0 15px rgba(88, 166, 255, 1);
         transform: translate(-50%, -50%) scale(1.05);
     }
 }
