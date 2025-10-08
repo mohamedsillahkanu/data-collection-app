@@ -1,7 +1,7 @@
 // ============================================
 // CONFIGURATION - Change these values
 // ============================================
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxA3n0W05nn16Qvu_qZHcx48AU0C2wpWqCM2j61xRBEaaH89ixD1VUXhLTXbUFfOKvOPA/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqhplQAEn3Xp_TKqzTddtvTAicoEu_4ltq5C4iR7LNIElN18exltV1-t12RjiQcvLx/exec';
 const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/13N7EZsv32f1K9N0BjCTxGeRjIOil_A8_cyJ5zgI9bEM/edit?gid=0#gid=0';
 const LOGIN_USERNAME = 'admin';
 const LOGIN_PASSWORD = 'admin';
