@@ -9,7 +9,8 @@ const state = {
     isOnline: navigator.onLine,
     isLoggedIn: false,
     currentSection: 1,
-    totalSections: 9
+    totalSections: 9,
+    formType: null // 'under_five' or 'general'
 };
 
 // Initialize
@@ -33,8 +34,8 @@ function init() {
     // Populate month dropdown (only current month)
     populateMonthDropdown();
     
-    // Generate variable fields
-    generateVariableFields();
+    // Setup form type listeners
+    setupFormTypeListeners();
     
     if (state.isLoggedIn) {
         showMainContent();
@@ -42,6 +43,29 @@ function init() {
 
     // Setup event listeners
     setupEventListeners();
+}
+
+function setupFormTypeListeners() {
+    const underFiveRadio = document.getElementById('underFiveRadio');
+    const generalRadio = document.getElementById('generalRadio');
+    
+    if (underFiveRadio) {
+        underFiveRadio.addEventListener('change', function() {
+            if (this.checked) {
+                state.formType = 'under_five';
+                generateVariableFields();
+            }
+        });
+    }
+    
+    if (generalRadio) {
+        generalRadio.addEventListener('change', function() {
+            if (this.checked) {
+                state.formType = 'general';
+                generateVariableFields();
+            }
+        });
+    }
 }
 
 function populateMonthDropdown() {
@@ -69,14 +93,29 @@ function populateMonthDropdown() {
 
 function generateVariableFields() {
     const container = document.getElementById('dynamicSections');
+    
+    // If no form type selected yet, clear container and return
+    if (!state.formType) {
+        container.innerHTML = '';
+        return;
+    }
+    
     let html = '';
     let sectionNum = 2;
     
-    // Skip the first section (Location & Time) as it's already created
-    const sectionKeys = Object.keys(VARIABLE_SECTIONS).slice(1);
+    // Get the sections for the selected form type
+    const formSections = VARIABLE_SECTIONS[state.formType === 'under_five' ? 'UNDER_FIVE' : 'GENERAL'];
+    
+    if (!formSections) {
+        container.innerHTML = '<p style="color: #8b949e; text-align: center; padding: 20px;">No sections available for this form type yet.</p>';
+        state.totalSections = 1;
+        return;
+    }
+    
+    const sectionKeys = Object.keys(formSections);
     
     sectionKeys.forEach((sectionTitle, index) => {
-        const section = VARIABLE_SECTIONS[sectionTitle];
+        const section = formSections[sectionTitle];
         const isLastSection = index === sectionKeys.length - 1;
         
         html += `
@@ -120,7 +159,7 @@ function generateVariableFields() {
                 } else if (type === 'number') {
                     html += `<input type="number" class="form-input" name="${fieldName}" min="0" step="0.1" required>`;
                 } else {
-                    html += `<input type="text" class="form-input" name="${fieldName}" required>`;
+                    html += `<input type="text" class="form-input" name="${fieldName}" ${type === 'text' ? '' : 'required'}>`;
                 }
                 
                 html += '</div>';
@@ -145,6 +184,7 @@ function generateVariableFields() {
     
     container.innerHTML = html;
     state.totalSections = sectionNum - 1;
+    updateProgress();
 }
 
 function nextSection() {
@@ -163,6 +203,12 @@ function nextSection() {
     
     if (!isValid) {
         showNotification('Please fill in all required fields', 'error');
+        return;
+    }
+    
+    // Special check for form type on section 1
+    if (state.currentSection === 1 && !state.formType) {
+        showNotification('Please select a form type (Under Five or General)', 'error');
         return;
     }
     
@@ -233,11 +279,6 @@ function parseCascadingData() {
     
     console.log('Cascading data parsed successfully');
 }
-
-// Continue in Part 2...
-
-
-// Part 2 of main.js - Add this after Part 1
 
 function setupEventListeners() {
     // Login form
@@ -310,6 +351,7 @@ function showMainContent() {
     updatePendingCount();
     
     setupCascadingListeners();
+    setupFormTypeListeners();
     
     if (state.isOnline && state.pendingSubmissions.length > 0) {
         syncPendingSubmissions();
@@ -426,6 +468,7 @@ async function handleFormSubmit(e) {
     
     const data = {
         timestamp: new Date().toISOString(),
+        formType: state.formType,
         year: formData.get('year'),
         month: formData.get('month'),
         region: formData.get('region'),
@@ -528,7 +571,11 @@ function clearForm() {
     facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
     facilitySelect.disabled = true;
     
+    // Reset form type and regenerate
+    state.formType = null;
     state.currentSection = 1;
+    generateVariableFields();
+    
     document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active'));
     document.querySelector('.form-section[data-section="1"]').classList.add('active');
     updateProgress();
