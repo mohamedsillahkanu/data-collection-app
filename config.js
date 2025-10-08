@@ -134,6 +134,51 @@ const VARIABLE_SECTIONS = {
             wounds_non_rta: { label: 'Wounds/Trauma - Non-RTA', type: 'yesno' },
             burns: { label: 'Burns', type: 'yesno' }
         }
+    },
+    'Tracer and Life-Saving Medicines': {
+        description: 'Availability of essential tracer and life-saving medicines and supplies',
+        fields: {
+            albendazole_400mg_tab: { label: 'Albendazole 400mg, Tab', type: 'yesno' },
+            amoxycillin_125mg_susp: { label: 'Amoxycillin 125mg/5ml, Suspension (100ml)', type: 'yesno' },
+            amoxicillin_250mg_tab: { label: 'Amoxicillin 250mg, Dispersible Tab', type: 'yesno' },
+            ampicillin_500mg_inj: { label: 'Ampicillin 500mg, Powder for Injection (Vial)', type: 'yesno' },
+            benzyl_benzoate_25_emulsion: { label: 'Benzyl Benzoate 25%, Emulsion (100ml)', type: 'yesno' },
+            chlorhexidine_7_1_gel: { label: 'Chlorhexidine 7.1%, Gel (Tube)', type: 'yesno' },
+            clotrimazole_1_cream: { label: 'Clotrimazole 1%, Cream (30g Tube)', type: 'yesno' },
+            cotrimoxazole_120mg_tab: { label: 'Cotrimoxazole 120mg, Tab', type: 'yesno' },
+            cotrimoxazole_240mg_susp: { label: 'Cotrimoxazole 240mg/5ml, Suspension (100ml)', type: 'yesno' },
+            dexamethasone_4mg_inj: { label: 'Dexamethasone 4mg/ml, Inj (1ml Amp)', type: 'yesno' },
+            dextrose_5_sol: { label: 'Dextrose 5%, Solution (500ml Bag)', type: 'yesno' },
+            diazepam_5mg_inj: { label: 'Diazepam 5mg/ml, Inj (2ml Amp)', type: 'yesno' },
+            erythromycin_125mg_susp: { label: 'Erythromycin 125mg/5ml, Suspension (100ml)', type: 'yesno' },
+            erythromycin_250mg_tab: { label: 'Erythromycin 250mg, Tab', type: 'yesno' },
+            ferrous_sulphate_125mg_drop: { label: 'Ferrous Sulphate 125mg/ml, Oral Drops (60ml)', type: 'yesno' },
+            ferrous_sulphate_200mg_tab: { label: 'Ferrous Sulphate 200mg, Tab', type: 'yesno' },
+            folic_acid_5mg_tab: { label: 'Folic Acid 5mg, Tab', type: 'yesno' },
+            gentamycin_0_5_eye_drop: { label: 'Gentamycin 0.5%, Eye Drops (10ml)', type: 'yesno' },
+            gentamycin_40mg_inj: { label: 'Gentamycin 40mg/ml, Inj (2ml Amp)', type: 'yesno' },
+            lidocaine_2_inj: { label: 'Lidocaine HCl 2%, Inj (50ml Vial)', type: 'yesno' },
+            metronidazole_200mg_susp: { label: 'Metronidazole 200mg/5ml, Suspension (100ml)', type: 'yesno' },
+            metronidazole_250mg_tab: { label: 'Metronidazole 250mg, Tab', type: 'yesno' },
+            normal_saline_0_9_sol: { label: 'Normal Saline 0.9%, Solution (500ml Bag)', type: 'yesno' },
+            ors_sachet: { label: 'Oral Rehydration Salt (ORS), Sachet', type: 'yesno' },
+            paracetamol_100mg_tab: { label: 'Paracetamol 100mg, Tab', type: 'yesno' },
+            paracetamol_125mg_syrup: { label: 'Paracetamol 125mg/5ml, Syrup (60–100ml)', type: 'yesno' },
+            paracetamol_250mg_tab: { label: 'Paracetamol 250mg, Dispersible Tab', type: 'yesno' },
+            ringers_lactate_500ml: { label: "Ringer's Lactate, Solution (500ml)", type: 'yesno' },
+            tetracycline_1_eye_ointment: { label: 'Tetracycline 1%, Eye Ointment (5g)', type: 'yesno' },
+            rutf_sachet: { label: 'Ready to Use Therapeutic Food (RUTF), Sachet', type: 'yesno' },
+            zinc_sulphate_20mg_tab: { label: 'Zinc Sulphate 20mg, Tab', type: 'yesno' },
+            act_al6_or_asaq_3tab_infant: { label: 'ACT (AL-6 Tab Blister or ASAQ-3 Tab, 2–11 months)', type: 'yesno' },
+            act_al12_or_asaq_3tab_child: { label: 'ACT (AL-12 Tab Blister or ASAQ-3 Tab, 1–5 years)', type: 'yesno' },
+            artesunate_60mg_inj: { label: 'Artesunate 60mg/ml Inj, 1ml, Vial', type: 'yesno' },
+            artesunate_50mg_supp: { label: 'Artesunate 50mg, Suppository', type: 'yesno' },
+            llin_piece: { label: 'LLIN (Long-Lasting Insecticidal Net), Piece', type: 'yesno' },
+            glove_examination_piece: { label: 'Glove, Examination, Disposable, Piece', type: 'yesno' },
+            needle_disposable_piece: { label: 'Needle, Disposable, Piece', type: 'yesno' },
+            syringe_disposable_piece: { label: 'Syringe, Disposable, Piece', type: 'yesno' },
+            remarks: { label: 'Remarks', type: 'text' }
+        }
     }
 };
 
