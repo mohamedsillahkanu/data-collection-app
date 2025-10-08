@@ -9,7 +9,7 @@ const state = {
     isOnline: navigator.onLine,
     isLoggedIn: false,
     currentSection: 1,
-    totalSections: 9,
+    totalSections: 10, // Changed from 9 to 10 to include form type section
     formType: null // 'under_five' or 'general'
 };
 
@@ -206,23 +206,74 @@ function nextSection() {
         return;
     }
     
-    // Special check for form type on section 1
-    if (state.currentSection === 1 && !state.formType) {
+    // Special check: If moving from section 1 to section 0 (form type selection)
+    if (state.currentSection === 1) {
+        // Move to form type selection (section 0)
+        currentSectionEl.classList.remove('active');
+        const formTypeSection = document.querySelector('.form-section[data-section="0"]');
+        if (formTypeSection) {
+            formTypeSection.classList.add('active');
+            state.currentSection = 0;
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+    }
+    
+    // Special check for form type on section 0
+    if (state.currentSection === 0 && !state.formType) {
         showNotification('Please select a form type (Under Five or General)', 'error');
         return;
     }
     
-    // Move to next section
+    // If leaving section 0 (form type), move to section 2 (first dynamic section)
+    if (state.currentSection === 0) {
+        currentSectionEl.classList.remove('active');
+        state.currentSection = 2;
+        const nextSection = document.querySelector(`.form-section[data-section="${state.currentSection}"]`);
+        if (nextSection) {
+            nextSection.classList.add('active');
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        return;
+    }
+    
+    // Move to next section normally
     if (state.currentSection < state.totalSections) {
         currentSectionEl.classList.remove('active');
         state.currentSection++;
-        document.querySelector(`.form-section[data-section="${state.currentSection}"]`).classList.add('active');
-        updateProgress();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const nextSection = document.querySelector(`.form-section[data-section="${state.currentSection}"]`);
+        if (nextSection) {
+            nextSection.classList.add('active');
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     }
 }
 
 function previousSection() {
+    // If on section 0 (form type), go back to section 1 (location)
+    if (state.currentSection === 0) {
+        document.querySelector('.form-section[data-section="0"]').classList.remove('active');
+        state.currentSection = 1;
+        document.querySelector('.form-section[data-section="1"]').classList.add('active');
+        updateProgress();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+    }
+    
+    // If on section 2 (first dynamic section), go back to section 0 (form type)
+    if (state.currentSection === 2) {
+        document.querySelector('.form-section[data-section="2"]').classList.remove('active');
+        state.currentSection = 0;
+        document.querySelector('.form-section[data-section="0"]').classList.add('active');
+        updateProgress();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+    }
+    
+    // Normal previous section
     if (state.currentSection > 1) {
         document.querySelector(`.form-section[data-section="${state.currentSection}"]`).classList.remove('active');
         state.currentSection--;
@@ -233,9 +284,26 @@ function previousSection() {
 }
 
 function updateProgress() {
+    let displaySection = state.currentSection;
+    let displayTotal = state.totalSections;
+    
+    // If on form type section (0), show as "Selecting Form Type"
+    if (state.currentSection === 0) {
+        document.getElementById('progressText').textContent = 'Selecting Form Type';
+        const progress = (1.5 / state.totalSections) * 100;
+        document.getElementById('progressFill').style.width = progress + '%';
+        return;
+    }
+    
+    // Adjust display for section numbering (skip section 0 in count)
+    if (state.currentSection > 0) {
+        displaySection = state.currentSection - 1;
+        displayTotal = state.totalSections - 1;
+    }
+    
     const progress = (state.currentSection / state.totalSections) * 100;
     document.getElementById('progressFill').style.width = progress + '%';
-    document.getElementById('progressText').textContent = `Section ${state.currentSection} of ${state.totalSections}`;
+    document.getElementById('progressText').textContent = `Section ${displaySection} of ${displayTotal}`;
 }
 
 function parseCascadingData() {
@@ -576,8 +644,13 @@ function clearForm() {
     state.currentSection = 1;
     generateVariableFields();
     
+    // Hide all sections and show only section 1
     document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active'));
-    document.querySelector('.form-section[data-section="1"]').classList.add('active');
+    const section1 = document.querySelector('.form-section[data-section="1"]');
+    if (section1) {
+        section1.classList.add('active');
+    }
+    
     updateProgress();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
