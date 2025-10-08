@@ -131,23 +131,41 @@
                             </div>
                         </div>
 
-                        <!-- Form Type Selection -->
-                        <div class="form-group" style="margin-top: 30px; background: #21262d; padding: 20px; border-radius: 8px;">
-                            <label class="form-label" style="font-size: 16px; color: #58a6ff;">SELECT FORM TYPE <span class="required">*</span></label>
+                        <div class="navigation-buttons">
+                            <button type="button" class="btn-nav btn-next" onclick="nextSection()">Next Section →</button>
+                        </div>
+                    </div>
+
+                    <!-- FORM TYPE SELECTION SECTION -->
+                    <div class="form-section" data-section="0">
+                        <div class="section-header">
+                            <h2 class="section-title">⚕️ Select Form Type</h2>
+                            <p class="section-description">Choose the appropriate form for data entry</p>
+                        </div>
+
+                        <div style="position: relative; background: linear-gradient(135deg, #1a1f26 0%, #0d1117 100%); padding: 50px; border-radius: 12px; border: 3px solid #58a6ff; box-shadow: 0 0 40px rgba(88, 166, 255, 0.3);">
+                            <div style="text-align: center; margin-bottom: 40px;">
+                                <h3 style="font-size: 26px; color: #58a6ff; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">
+                                    CHOOSE YOUR FORM TYPE
+                                </h3>
+                                <p style="color: #8b949e; font-size: 16px; margin-top: 10px;">Select one option below to continue</p>
+                            </div>
+
                             <div class="radio-group">
                                 <label class="radio-label">
                                     <input type="radio" name="formType" value="under_five" id="underFiveRadio" required>
-                                    <span>📋 Under Five Register</span>
+                                    <span>UNDER FIVE REGISTER</span>
                                 </label>
                                 <label class="radio-label">
                                     <input type="radio" name="formType" value="general" id="generalRadio" required>
-                                    <span>📄 General Form</span>
+                                    <span>GENERAL FORM</span>
                                 </label>
                             </div>
                         </div>
 
-                        <div class="navigation-buttons">
-                            <button type="button" class="btn-nav btn-next" onclick="nextSection()">Next Section →</button>
+                        <div class="navigation-buttons" style="margin-top: 30px;">
+                            <button type="button" class="btn-nav btn-back" onclick="previousSection()">← Back</button>
+                            <button type="button" class="btn-nav btn-next" onclick="nextSection()">Continue →</button>
                         </div>
                     </div>
 
