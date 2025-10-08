@@ -1,0 +1,154 @@
+<!DOCTYPE html>      
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Collection Form - Offline Enabled</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <div class="logo-container">
+                <div class="logo-box">
+                    <img src="NMCP.png" alt="Logo Left" class="logo-img">
+                </div>
+                <div class="logo-box">
+                    <img src="ICF-SL.jpg" alt="Logo Right" class="logo-img">
+                </div>
+            </div>
+
+            <div class="login-header">
+                <h1>Welcome</h1>
+                <p>Please login to access the data collection form</p>
+            </div>
+
+            <div class="login-error" id="loginError">Invalid username or password</div>
+
+            <form id="loginForm">
+                <div class="login-form-group">
+                    <label class="login-label">Username</label>
+                    <input type="text" class="login-input" id="username" required autocomplete="username">
+                </div>
+
+                <div class="login-form-group">
+                    <label class="login-label">Password</label>
+                    <input type="password" class="login-input" id="password" required autocomplete="current-password">
+                </div>
+
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Form Content -->
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <div class="logout-container">
+                <button class="view-data-btn" id="viewDataBtn">📊 View Data</button>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
+            </div>
+
+            <div class="header">
+                <h1>Health Data Collection Form</h1>
+                <p>Works offline - Data syncs automatically when online</p>
+            </div>
+
+            <div class="status-bar">
+                <div class="status-item">
+                    <div class="status-indicator" id="statusIndicator"></div>
+                    <span class="status-text" id="statusText">Checking...</span>
+                </div>
+                <div class="status-item">
+                    <span style="color: #8b949e; font-size: 14px;">Pending submissions:</span>
+                    <span class="pending-count" id="pendingCount">0</span>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="progressText">Section 1 of 9</div>
+
+                <form id="dataForm">
+                    <!-- Section 1: Location & Time -->
+                    <div class="form-section active" data-section="1">
+                        <div class="section-header">
+                            <h2 class="section-title">Location & Time Information</h2>
+                            <p class="section-description">Basic facility and reporting information</p>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Year <span class="required">*</span></label>
+                                <input type="text" class="form-input" name="year" value="2025" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Month <span class="required">*</span></label>
+                                <select class="form-select" name="month" id="monthSelect" required>
+                                    <option value="">Select month...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Region <span class="required">*</span></label>
+                                <select class="form-select" name="region" id="regionSelect" required>
+                                    <option value="">Select region...</option>
+                                    <option value="Eastern Region">Eastern Region</option>
+                                    <option value="Northern Region">Northern Region</option>
+                                    <option value="North West Region">North West Region</option>
+                                    <option value="Southern Region">Southern Region</option>
+                                    <option value="Western Area">Western Area</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">District <span class="required">*</span></label>
+                                <select class="form-select" name="district" id="districtSelect" required disabled>
+                                    <option value="">Select region first...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Chiefdom <span class="required">*</span></label>
+                                <select class="form-select" name="chiefdom" id="chiefdomSelect" required disabled>
+                                    <option value="">Select district first...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Health Facility <span class="required">*</span></label>
+                                <select class="form-select" name="healthFacility" id="healthFacilitySelect" required disabled>
+                                    <option value="">Select chiefdom first...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="navigation-buttons">
+                            <button type="button" class="btn-nav btn-next" onclick="nextSection()">Next Section →</button>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic sections will be inserted here -->
+                    <div id="dynamicSections"></div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <span class="notification-text" id="notificationText"></span>
+    </div>
+    
+    <script src="config.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
