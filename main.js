@@ -1,7 +1,7 @@
 // Data will be parsed from the string in config.js
 let regionDistrictMap = {};
 let districtChiefdomMap = {};
-let chiefdomFacilityMap = {};
+let chiefdomFacilityMap = {}; // Now stores objects with {name, uid}
 
 // State variables
 const state = {
@@ -9,7 +9,7 @@ const state = {
     isOnline: navigator.onLine,
     isLoggedIn: false,
     currentSection: 1,
-    totalSections: 10, // Changed from 9 to 10 to include form type section
+    totalSections: 10,
     formType: null // 'under_five' or 'general'
 };
 
@@ -70,6 +70,8 @@ function setupFormTypeListeners() {
 
 function populateMonthDropdown() {
     const monthSelect = document.getElementById('monthSelect');
+    if (!monthSelect) return;
+    
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth(); // 0-11
     
@@ -190,6 +192,8 @@ function generateVariableFields() {
 function nextSection() {
     // Validate current section
     const currentSectionEl = document.querySelector(`.form-section[data-section="${state.currentSection}"]`);
+    if (!currentSectionEl) return;
+    
     const inputs = currentSectionEl.querySelectorAll('input[required], select[required]');
     let isValid = true;
     
@@ -206,9 +210,8 @@ function nextSection() {
         return;
     }
     
-    // Special check: If moving from section 1 to section 0 (form type selection)
+    // Special check: If moving from section 1 to form type selection (section 0)
     if (state.currentSection === 1) {
-        // Move to form type selection (section 0)
         currentSectionEl.classList.remove('active');
         const formTypeSection = document.querySelector('.form-section[data-section="0"]');
         if (formTypeSection) {
@@ -230,9 +233,9 @@ function nextSection() {
     if (state.currentSection === 0) {
         currentSectionEl.classList.remove('active');
         state.currentSection = 2;
-        const nextSection = document.querySelector(`.form-section[data-section="${state.currentSection}"]`);
-        if (nextSection) {
-            nextSection.classList.add('active');
+        const nextSectionEl = document.querySelector(`.form-section[data-section="${state.currentSection}"]`);
+        if (nextSectionEl) {
+            nextSectionEl.classList.add('active');
             updateProgress();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -243,9 +246,9 @@ function nextSection() {
     if (state.currentSection < state.totalSections) {
         currentSectionEl.classList.remove('active');
         state.currentSection++;
-        const nextSection = document.querySelector(`.form-section[data-section="${state.currentSection}"]`);
-        if (nextSection) {
-            nextSection.classList.add('active');
+        const nextSectionEl = document.querySelector(`.form-section[data-section="${state.currentSection}"]`);
+        if (nextSectionEl) {
+            nextSectionEl.classList.add('active');
             updateProgress();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -306,16 +309,37 @@ function updateProgress() {
     document.getElementById('progressText').textContent = `Section ${displaySection} of ${displayTotal}`;
 }
 
+// ============================================
+// UPDATED CASCADING DATA PARSER - Supports UIDs
+// ============================================
 function parseCascadingData() {
-    // Parse the pipe-delimited data
     const lines = CASCADING_DATA.trim().split('\n');
     
+    // Reset maps
+    regionDistrictMap = {};
+    districtChiefdomMap = {};
+    chiefdomFacilityMap = {};
+    
     lines.forEach(line => {
-        const parts = line.split('||');
-        if (parts.length === 2) {
-            const [parent, child] = parts.map(s => s.trim());
+        const parts = line.split('||').map(p => p.trim());
+        
+        // 3-column format: Chiefdom||Facility||UID
+        if (parts.length === 3) {
+            const [chiefdom, facilityName, uid] = parts;
+            if (!chiefdomFacilityMap[chiefdom]) {
+                chiefdomFacilityMap[chiefdom] = [];
+            }
+            // Store as object with name and uid
+            chiefdomFacilityMap[chiefdom].push({
+                name: facilityName,
+                uid: uid
+            });
+        }
+        // 2-column format: Parent||Child
+        else if (parts.length === 2) {
+            const [parent, child] = parts;
             
-            // Check if this looks like Region||District
+            // Check if this is Region||District
             if (parent.includes('Region') || parent === 'Western Area') {
                 if (!regionDistrictMap[parent]) {
                     regionDistrictMap[parent] = [];
@@ -324,7 +348,7 @@ function parseCascadingData() {
                     regionDistrictMap[parent].push(child);
                 }
             }
-            // Check if this looks like District||Chiefdom
+            // Check if this is District||Chiefdom (child ends with Chiefdom, City, Town, or Zone)
             else if (child.includes('Chiefdom') || child.includes('City') || child.includes('Town') || child.includes('Zone')) {
                 if (!districtChiefdomMap[parent]) {
                     districtChiefdomMap[parent] = [];
@@ -333,33 +357,46 @@ function parseCascadingData() {
                     districtChiefdomMap[parent].push(child);
                 }
             }
-            // Otherwise it's Chiefdom||Facility
-            else {
-                if (!chiefdomFacilityMap[parent]) {
-                    chiefdomFacilityMap[parent] = [];
-                }
-                if (!chiefdomFacilityMap[parent].includes(child)) {
-                    chiefdomFacilityMap[parent].push(child);
-                }
-            }
         }
     });
     
+    // Log statistics
+    const regionCount = Object.keys(regionDistrictMap).length;
+    const districtCount = Object.keys(districtChiefdomMap).length;
+    const chiefdomCount = Object.keys(chiefdomFacilityMap).length;
+    let facilityCount = 0;
+    for (const chiefdom in chiefdomFacilityMap) {
+        facilityCount += chiefdomFacilityMap[chiefdom].length;
+    }
+    
     console.log('Cascading data parsed successfully');
+    console.log(`Regions: ${regionCount}, Districts: ${districtCount}, Chiefdoms: ${chiefdomCount}, Facilities: ${facilityCount}`);
 }
 
 function setupEventListeners() {
     // Login form
-    document.getElementById('loginForm').addEventListener('submit', handleLogin);
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
 
     // Logout button
-    document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
 
     // View Data button
-    document.getElementById('viewDataBtn').addEventListener('click', handleViewData);
+    const viewDataBtn = document.getElementById('viewDataBtn');
+    if (viewDataBtn) {
+        viewDataBtn.addEventListener('click', handleViewData);
+    }
 
     // Main form
-    document.getElementById('dataForm').addEventListener('submit', handleFormSubmit);
+    const dataForm = document.getElementById('dataForm');
+    if (dataForm) {
+        dataForm.addEventListener('submit', handleFormSubmit);
+    }
 
     // Online/offline events
     window.addEventListener('online', handleOnlineEvent);
@@ -421,9 +458,30 @@ function showMainContent() {
     setupCascadingListeners();
     setupFormTypeListeners();
     
+    // Populate regions dropdown
+    populateRegions();
+    
     if (state.isOnline && state.pendingSubmissions.length > 0) {
         syncPendingSubmissions();
     }
+}
+
+// Populate regions dropdown on load
+function populateRegions() {
+    const regionSelect = document.getElementById('regionSelect');
+    if (!regionSelect) return;
+    
+    // Clear existing options except the first placeholder
+    regionSelect.innerHTML = '<option value="">Select region...</option>';
+    
+    // Add regions sorted alphabetically
+    const regions = Object.keys(regionDistrictMap).sort();
+    regions.forEach(region => {
+        const option = document.createElement('option');
+        option.value = region;
+        option.textContent = region;
+        regionSelect.appendChild(option);
+    });
 }
 
 function handleRegionChange(e) {
@@ -432,16 +490,23 @@ function handleRegionChange(e) {
     const chiefdomSelect = document.getElementById('chiefdomSelect');
     const facilitySelect = document.getElementById('healthFacilitySelect');
     
+    // Reset downstream dropdowns
     districtSelect.innerHTML = '<option value="">Select district...</option>';
     chiefdomSelect.innerHTML = '<option value="">Select district first...</option>';
     chiefdomSelect.disabled = true;
     facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
     facilitySelect.disabled = true;
     
+    // Clear hidden UID field
+    const uidField = document.getElementById('healthFacilityUID');
+    if (uidField) uidField.value = '';
+    
     if (region && regionDistrictMap[region]) {
         districtSelect.disabled = false;
         
-        regionDistrictMap[region].forEach(district => {
+        // Sort districts alphabetically
+        const districts = regionDistrictMap[region].sort();
+        districts.forEach(district => {
             const option = document.createElement('option');
             option.value = district;
             option.textContent = district;
@@ -458,14 +523,21 @@ function handleDistrictChange(e) {
     const chiefdomSelect = document.getElementById('chiefdomSelect');
     const facilitySelect = document.getElementById('healthFacilitySelect');
     
+    // Reset downstream dropdowns
     chiefdomSelect.innerHTML = '<option value="">Select chiefdom...</option>';
     facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
     facilitySelect.disabled = true;
     
+    // Clear hidden UID field
+    const uidField = document.getElementById('healthFacilityUID');
+    if (uidField) uidField.value = '';
+    
     if (district && districtChiefdomMap[district]) {
         chiefdomSelect.disabled = false;
         
-        districtChiefdomMap[district].forEach(chiefdom => {
+        // Sort chiefdoms alphabetically
+        const chiefdoms = districtChiefdomMap[district].sort();
+        chiefdoms.forEach(chiefdom => {
             const option = document.createElement('option');
             option.value = chiefdom;
             option.textContent = chiefdom;
@@ -477,21 +549,48 @@ function handleDistrictChange(e) {
     }
 }
 
+// ============================================
+// UPDATED: Handle Chiefdom Change with UID support
+// ============================================
 function handleChiefdomChange(e) {
     const chiefdom = e.target.value;
     const facilitySelect = document.getElementById('healthFacilitySelect');
     
+    // Reset facility dropdown
     facilitySelect.innerHTML = '<option value="">Select health facility...</option>';
+    
+    // Clear hidden UID field
+    const uidField = document.getElementById('healthFacilityUID');
+    if (uidField) uidField.value = '';
     
     if (chiefdom && chiefdomFacilityMap[chiefdom]) {
         facilitySelect.disabled = false;
         
-        chiefdomFacilityMap[chiefdom].forEach(facility => {
+        // Sort facilities alphabetically by name
+        const facilities = chiefdomFacilityMap[chiefdom].sort((a, b) => a.name.localeCompare(b.name));
+        
+        facilities.forEach(facility => {
             const option = document.createElement('option');
-            option.value = facility;
-            option.textContent = facility;
+            // Store UID as the value, display name as text
+            option.value = facility.uid;
+            option.textContent = facility.name;
+            // Also store the name as a data attribute for reference
+            option.dataset.name = facility.name;
             facilitySelect.appendChild(option);
         });
+        
+        // Add change listener to update hidden field and display
+        facilitySelect.onchange = function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (uidField) {
+                uidField.value = this.value; // This is the UID
+            }
+            // Also update the facility name hidden field if it exists
+            const nameField = document.getElementById('healthFacilityName');
+            if (nameField && selectedOption.dataset.name) {
+                nameField.value = selectedOption.dataset.name;
+            }
+        };
     } else {
         facilitySelect.disabled = true;
         facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
@@ -525,14 +624,22 @@ function updateOnlineStatus() {
 }
 
 function updatePendingCount() {
-    document.getElementById('pendingCount').textContent = state.pendingSubmissions.length;
+    const pendingCount = document.getElementById('pendingCount');
+    if (pendingCount) {
+        pendingCount.textContent = state.pendingSubmissions.length;
+    }
 }
 
+// ============================================
+// UPDATED: Form Submit with UID support
+// ============================================
 async function handleFormSubmit(e) {
     e.preventDefault();
     e.stopPropagation();
 
     const formData = new FormData(e.target);
+    const facilitySelect = document.getElementById('healthFacilitySelect');
+    const selectedOption = facilitySelect.options[facilitySelect.selectedIndex];
     
     const data = {
         timestamp: new Date().toISOString(),
@@ -542,13 +649,18 @@ async function handleFormSubmit(e) {
         region: formData.get('region'),
         district: formData.get('district'),
         chiefdom: formData.get('chiefdom'),
-        healthFacility: formData.get('healthFacility')
+        // Get facility name from selected option's data attribute or text
+        healthFacility: selectedOption ? (selectedOption.dataset.name || selectedOption.textContent) : '',
+        // Get UID from the select value
+        healthFacilityUID: facilitySelect.value || ''
     };
     
     // Add all variable fields dynamically
     for (const fieldName of Object.keys(VARIABLES)) {
         data[fieldName] = formData.get(fieldName);
     }
+
+    console.log('Submitting data:', data);
 
     if (state.isOnline) {
         await submitToServer(data);
@@ -559,8 +671,10 @@ async function handleFormSubmit(e) {
 
 async function submitToServer(data) {
     const submitBtn = document.getElementById('submitBtn');
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Submitting...';
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+    }
 
     try {
         const response = await fetch(SCRIPT_URL, {
@@ -580,8 +694,10 @@ async function submitToServer(data) {
         showNotification('Failed to submit - Saved offline', 'error');
         saveOffline(data);
     } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit Data ✓';
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Data ✓';
+        }
     }
 }
 
@@ -626,22 +742,42 @@ async function syncPendingSubmissions() {
 }
 
 function clearForm() {
-    document.getElementById('dataForm').reset();
+    const dataForm = document.getElementById('dataForm');
+    if (dataForm) {
+        dataForm.reset();
+    }
     
     const districtSelect = document.getElementById('districtSelect');
     const chiefdomSelect = document.getElementById('chiefdomSelect');
     const facilitySelect = document.getElementById('healthFacilitySelect');
     
-    districtSelect.innerHTML = '<option value="">Select region first...</option>';
-    districtSelect.disabled = true;
-    chiefdomSelect.innerHTML = '<option value="">Select district first...</option>';
-    chiefdomSelect.disabled = true;
-    facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
-    facilitySelect.disabled = true;
+    if (districtSelect) {
+        districtSelect.innerHTML = '<option value="">Select region first...</option>';
+        districtSelect.disabled = true;
+    }
+    if (chiefdomSelect) {
+        chiefdomSelect.innerHTML = '<option value="">Select district first...</option>';
+        chiefdomSelect.disabled = true;
+    }
+    if (facilitySelect) {
+        facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
+        facilitySelect.disabled = true;
+    }
+    
+    // Clear hidden UID field
+    const uidField = document.getElementById('healthFacilityUID');
+    if (uidField) uidField.value = '';
     
     // Reset form type and regenerate
     state.formType = null;
     state.currentSection = 1;
+    
+    // Uncheck radio buttons
+    const underFiveRadio = document.getElementById('underFiveRadio');
+    const generalRadio = document.getElementById('generalRadio');
+    if (underFiveRadio) underFiveRadio.checked = false;
+    if (generalRadio) generalRadio.checked = false;
+    
     generateVariableFields();
     
     // Hide all sections and show only section 1
@@ -659,12 +795,65 @@ function showNotification(message, type) {
     const notification = document.getElementById('notification');
     const text = document.getElementById('notificationText');
     
-    notification.className = `notification ${type} show`;
-    text.textContent = message;
+    if (notification && text) {
+        notification.className = `notification ${type} show`;
+        text.textContent = message;
 
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 4000);
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 4000);
+    }
+}
+
+// ============================================
+// HELPER FUNCTIONS FOR FACILITY LOOKUP
+// ============================================
+
+// Get facility by UID
+function getFacilityByUID(uid) {
+    for (const chiefdom in chiefdomFacilityMap) {
+        const facility = chiefdomFacilityMap[chiefdom].find(f => f.uid === uid);
+        if (facility) {
+            return {
+                ...facility,
+                chiefdom: chiefdom
+            };
+        }
+    }
+    return null;
+}
+
+// Search facilities by name (partial match)
+function searchFacilitiesByName(searchTerm) {
+    const results = [];
+    const term = searchTerm.toLowerCase();
+    
+    for (const chiefdom in chiefdomFacilityMap) {
+        chiefdomFacilityMap[chiefdom].forEach(facility => {
+            if (facility.name.toLowerCase().includes(term)) {
+                results.push({
+                    ...facility,
+                    chiefdom: chiefdom
+                });
+            }
+        });
+    }
+    
+    return results;
+}
+
+// Get all facilities as flat array
+function getAllFacilities() {
+    const all = [];
+    for (const chiefdom in chiefdomFacilityMap) {
+        chiefdomFacilityMap[chiefdom].forEach(facility => {
+            all.push({
+                ...facility,
+                chiefdom: chiefdom
+            });
+        });
+    }
+    return all;
 }
 
 // Start the app
