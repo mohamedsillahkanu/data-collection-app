@@ -497,9 +497,11 @@ function handleRegionChange(e) {
     facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
     facilitySelect.disabled = true;
     
-    // Clear hidden UID field
+    // Clear UID and name fields
     const uidField = document.getElementById('healthFacilityUID');
+    const nameField = document.getElementById('healthFacilityName');
     if (uidField) uidField.value = '';
+    if (nameField) nameField.value = '';
     
     if (region && regionDistrictMap[region]) {
         districtSelect.disabled = false;
@@ -528,9 +530,11 @@ function handleDistrictChange(e) {
     facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
     facilitySelect.disabled = true;
     
-    // Clear hidden UID field
+    // Clear UID and name fields
     const uidField = document.getElementById('healthFacilityUID');
+    const nameField = document.getElementById('healthFacilityName');
     if (uidField) uidField.value = '';
+    if (nameField) nameField.value = '';
     
     if (district && districtChiefdomMap[district]) {
         chiefdomSelect.disabled = false;
@@ -559,15 +563,17 @@ function handleChiefdomChange(e) {
     // Reset facility dropdown
     facilitySelect.innerHTML = '<option value="">Select health facility...</option>';
     
-    // Clear hidden UID field
+    // Clear UID and name fields
     const uidField = document.getElementById('healthFacilityUID');
+    const nameField = document.getElementById('healthFacilityName');
     if (uidField) uidField.value = '';
+    if (nameField) nameField.value = '';
     
     if (chiefdom && chiefdomFacilityMap[chiefdom]) {
         facilitySelect.disabled = false;
         
         // Sort facilities alphabetically by name
-        const facilities = chiefdomFacilityMap[chiefdom].sort((a, b) => a.name.localeCompare(b.name));
+        const facilities = [...chiefdomFacilityMap[chiefdom]].sort((a, b) => a.name.localeCompare(b.name));
         
         facilities.forEach(facility => {
             const option = document.createElement('option');
@@ -579,17 +585,22 @@ function handleChiefdomChange(e) {
             facilitySelect.appendChild(option);
         });
         
-        // Add change listener to update hidden field and display
+        // Add change listener to update UID field
         facilitySelect.onchange = function() {
             const selectedOption = this.options[this.selectedIndex];
+            const selectedUID = this.value;
+            const selectedName = selectedOption.dataset.name || selectedOption.textContent;
+            
+            // Update UID field (now visible)
             if (uidField) {
-                uidField.value = this.value; // This is the UID
+                uidField.value = selectedUID;
             }
-            // Also update the facility name hidden field if it exists
-            const nameField = document.getElementById('healthFacilityName');
-            if (nameField && selectedOption.dataset.name) {
-                nameField.value = selectedOption.dataset.name;
+            // Update hidden name field
+            if (nameField) {
+                nameField.value = selectedName;
             }
+            
+            console.log('Selected facility:', selectedName, 'UID:', selectedUID);
         };
     } else {
         facilitySelect.disabled = true;
@@ -764,9 +775,11 @@ function clearForm() {
         facilitySelect.disabled = true;
     }
     
-    // Clear hidden UID field
+    // Clear UID and name fields
     const uidField = document.getElementById('healthFacilityUID');
+    const nameField = document.getElementById('healthFacilityName');
     if (uidField) uidField.value = '';
+    if (nameField) nameField.value = '';
     
     // Reset form type and regenerate
     state.formType = null;
