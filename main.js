@@ -1,9 +1,13 @@
-// Data will be parsed from the string in config.js   
+// ============================================
+// DATA COLLECTION APP - CORRECTED VERSION
+// ============================================
+
+// Data maps for cascading dropdowns
 let regionDistrictMap = {};
 let districtChiefdomMap = {};
-let chiefdomFacilityMap = {}; // Now stores objects with {name, uid}
+let chiefdomFacilityMap = {};
 
-// State variables
+// Application state
 const state = {
     pendingSubmissions: [],
     isOnline: navigator.onLine,
@@ -13,36 +17,96 @@ const state = {
     formType: null // 'under_five' or 'general'
 };
 
-// Initialize
+// ============================================
+// INITIALIZATION
+// ============================================
 function init() {
-    // Load pending submissions
-    const saved = localStorage.getItem('pendingSubmissions');
-    if (saved) {
-        try {
-            state.pendingSubmissions = JSON.parse(saved);
-        } catch (e) {
-            state.pendingSubmissions = [];
+    console.log('Initializing application...');
+    
+    try {
+        // Load pending submissions from localStorage
+        const saved = localStorage.getItem('pendingSubmissions');
+        if (saved) {
+            try {
+                state.pendingSubmissions = JSON.parse(saved);
+                console.log('Loaded pending submissions:', state.pendingSubmissions.length);
+            } catch (e) {
+                console.error('Error parsing pending submissions:', e);
+                state.pendingSubmissions = [];
+            }
         }
+
+        // Check login state from sessionStorage
+        state.isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+        console.log('Login state:', state.isLoggedIn);
+        
+        // Parse cascading data for dropdowns
+        parseCascadingDataLocal();
+        
+        // Populate month dropdown
+        populateMonthDropdown();
+        
+        // Setup all event listeners
+        setupEventListeners();
+        
+        // Setup form type listeners
+        setupFormTypeListeners();
+        
+        // Show appropriate screen based on login state
+        if (state.isLoggedIn) {
+            showMainContent();
+        } else {
+            console.log('Showing login screen');
+            document.getElementById('loginScreen').style.display = 'flex';
+        }
+        
+        console.log('Initialization complete');
+        
+    } catch (error) {
+        console.error('Initialization error:', error);
+    }
+}
+
+// ============================================
+// EVENT LISTENERS SETUP
+// ============================================
+function setupEventListeners() {
+    console.log('Setting up event listeners...');
+    
+    // Login form
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+        console.log('Login form listener attached');
+    } else {
+        console.error('Login form not found!');
     }
 
-    // Check login state
-    state.isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
-    
-    // Parse cascading data
-    parseCascadingData();
-    
-    // Populate month dropdown (only current month)
-    populateMonthDropdown();
-    
-    // Setup form type listeners
-    setupFormTypeListeners();
-    
-    if (state.isLoggedIn) {
-        showMainContent();
+    // Logout button
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+        console.log('Logout button listener attached');
     }
 
-    // Setup event listeners
-    setupEventListeners();
+    // View Data button
+    const viewDataBtn = document.getElementById('viewDataBtn');
+    if (viewDataBtn) {
+        viewDataBtn.addEventListener('click', handleViewData);
+        console.log('View data button listener attached');
+    }
+
+    // Main data form
+    const dataForm = document.getElementById('dataForm');
+    if (dataForm) {
+        dataForm.addEventListener('submit', handleFormSubmit);
+        console.log('Data form listener attached');
+    }
+
+    // Online/offline events
+    window.addEventListener('online', handleOnlineEvent);
+    window.addEventListener('offline', handleOfflineEvent);
+    console.log('Online/offline listeners attached');
 }
 
 function setupFormTypeListeners() {
@@ -53,6 +117,7 @@ function setupFormTypeListeners() {
         underFiveRadio.addEventListener('change', function() {
             if (this.checked) {
                 state.formType = 'under_five';
+                console.log('Form type selected: under_five');
                 generateVariableFields();
             }
         });
@@ -62,12 +127,166 @@ function setupFormTypeListeners() {
         generalRadio.addEventListener('change', function() {
             if (this.checked) {
                 state.formType = 'general';
+                console.log('Form type selected: general');
                 generateVariableFields();
             }
         });
     }
 }
 
+function setupCascadingListeners() {
+    const regionSelect = document.getElementById('regionSelect');
+    const districtSelect = document.getElementById('districtSelect');
+    const chiefdomSelect = document.getElementById('chiefdomSelect');
+    
+    if (regionSelect) {
+        regionSelect.addEventListener('change', handleRegionChange);
+    }
+    if (districtSelect) {
+        districtSelect.addEventListener('change', handleDistrictChange);
+    }
+    if (chiefdomSelect) {
+        chiefdomSelect.addEventListener('change', handleChiefdomChange);
+    }
+    
+    console.log('Cascading dropdown listeners attached');
+}
+
+// ============================================
+// CASCADING DATA PARSER (Local version)
+// ============================================
+function parseCascadingDataLocal() {
+    // Check if CASCADING_DATA exists from config.js
+    if (typeof CASCADING_DATA === 'undefined') {
+        console.error('CASCADING_DATA not found in config.js');
+        return;
+    }
+    
+    const lines = CASCADING_DATA.trim().split('\n');
+    
+    // Reset maps
+    regionDistrictMap = {};
+    districtChiefdomMap = {};
+    chiefdomFacilityMap = {};
+    
+    lines.forEach(line => {
+        const parts = line.split('||').map(p => p.trim());
+        
+        // 3-column format: Chiefdom||Facility||UID
+        if (parts.length === 3) {
+            const [chiefdom, facilityName, uid] = parts;
+            if (!chiefdomFacilityMap[chiefdom]) {
+                chiefdomFacilityMap[chiefdom] = [];
+            }
+            chiefdomFacilityMap[chiefdom].push({
+                name: facilityName,
+                uid: uid
+            });
+        }
+        // 2-column format: Parent||Child
+        else if (parts.length === 2) {
+            const [parent, child] = parts;
+            
+            // Region||District mapping
+            if (parent.includes('Region') || parent === 'Western Area') {
+                if (!regionDistrictMap[parent]) {
+                    regionDistrictMap[parent] = [];
+                }
+                if (!regionDistrictMap[parent].includes(child)) {
+                    regionDistrictMap[parent].push(child);
+                }
+            }
+            // District||Chiefdom mapping
+            else if (child.includes('Chiefdom') || child.includes('City') || child.includes('Town') || child.includes('Zone')) {
+                if (!districtChiefdomMap[parent]) {
+                    districtChiefdomMap[parent] = [];
+                }
+                if (!districtChiefdomMap[parent].includes(child)) {
+                    districtChiefdomMap[parent].push(child);
+                }
+            }
+        }
+    });
+    
+    // Log statistics
+    const regionCount = Object.keys(regionDistrictMap).length;
+    const districtCount = Object.keys(districtChiefdomMap).length;
+    const chiefdomCount = Object.keys(chiefdomFacilityMap).length;
+    let facilityCount = 0;
+    for (const chiefdom in chiefdomFacilityMap) {
+        facilityCount += chiefdomFacilityMap[chiefdom].length;
+    }
+    
+    console.log(`Cascading data parsed: ${regionCount} regions, ${districtCount} districts, ${chiefdomCount} chiefdoms, ${facilityCount} facilities`);
+}
+
+// ============================================
+// LOGIN / LOGOUT HANDLERS
+// ============================================
+function handleLogin(e) {
+    e.preventDefault();
+    console.log('Login attempt...');
+    
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const errorDiv = document.getElementById('loginError');
+    
+    console.log('Username entered:', username);
+    console.log('Expected username:', LOGIN_USERNAME);
+    
+    // Check credentials against config values
+    if (username === LOGIN_USERNAME && password === LOGIN_PASSWORD) {
+        console.log('Login successful');
+        sessionStorage.setItem('isLoggedIn', 'true');
+        state.isLoggedIn = true;
+        errorDiv.classList.remove('show');
+        showMainContent();
+    } else {
+        console.log('Login failed - invalid credentials');
+        errorDiv.classList.add('show');
+    }
+}
+
+function handleLogout() {
+    console.log('Logging out...');
+    sessionStorage.removeItem('isLoggedIn');
+    state.isLoggedIn = false;
+    document.getElementById('mainContent').classList.remove('show');
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+}
+
+function showMainContent() {
+    console.log('Showing main content...');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainContent').classList.add('show');
+    
+    updateOnlineStatus();
+    updatePendingCount();
+    
+    setupCascadingListeners();
+    
+    // Populate regions dropdown
+    populateRegions();
+    
+    // Sync pending submissions if online
+    if (state.isOnline && state.pendingSubmissions.length > 0) {
+        syncPendingSubmissions();
+    }
+}
+
+// ============================================
+// VIEW DATA HANDLER
+// ============================================
+function handleViewData() {
+    console.log('Opening Google Sheet:', GOOGLE_SHEET_URL);
+    window.open(GOOGLE_SHEET_URL, '_blank');
+}
+
+// ============================================
+// MONTH DROPDOWN
+// ============================================
 function populateMonthDropdown() {
     const monthSelect = document.getElementById('monthSelect');
     if (!monthSelect) return;
@@ -87,34 +306,186 @@ function populateMonthDropdown() {
     option.selected = true;
     monthSelect.appendChild(option);
     
-    // Make it readonly by disabling
+    // Make it readonly
     monthSelect.disabled = true;
     monthSelect.style.opacity = '1';
     monthSelect.style.cursor = 'not-allowed';
+    
+    console.log('Month dropdown populated:', months[currentMonth]);
 }
 
+// ============================================
+// CASCADING DROPDOWN HANDLERS
+// ============================================
+function populateRegions() {
+    const regionSelect = document.getElementById('regionSelect');
+    if (!regionSelect) return;
+    
+    // Clear existing options
+    regionSelect.innerHTML = '<option value="">Select region...</option>';
+    
+    // Add regions sorted alphabetically
+    const regions = Object.keys(regionDistrictMap).sort();
+    regions.forEach(region => {
+        const option = document.createElement('option');
+        option.value = region;
+        option.textContent = region;
+        regionSelect.appendChild(option);
+    });
+    
+    console.log('Regions populated:', regions.length);
+}
+
+function handleRegionChange(e) {
+    const region = e.target.value;
+    const districtSelect = document.getElementById('districtSelect');
+    const chiefdomSelect = document.getElementById('chiefdomSelect');
+    const facilitySelect = document.getElementById('healthFacilitySelect');
+    
+    // Reset downstream dropdowns
+    districtSelect.innerHTML = '<option value="">Select district...</option>';
+    chiefdomSelect.innerHTML = '<option value="">Select district first...</option>';
+    chiefdomSelect.disabled = true;
+    facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
+    facilitySelect.disabled = true;
+    
+    // Clear UID and name fields
+    clearFacilityFields();
+    
+    if (region && regionDistrictMap[region]) {
+        districtSelect.disabled = false;
+        
+        const districts = regionDistrictMap[region].sort();
+        districts.forEach(district => {
+            const option = document.createElement('option');
+            option.value = district;
+            option.textContent = district;
+            districtSelect.appendChild(option);
+        });
+        
+        console.log('Districts loaded for', region, ':', districts.length);
+    } else {
+        districtSelect.disabled = true;
+        districtSelect.innerHTML = '<option value="">Select region first...</option>';
+    }
+}
+
+function handleDistrictChange(e) {
+    const district = e.target.value;
+    const chiefdomSelect = document.getElementById('chiefdomSelect');
+    const facilitySelect = document.getElementById('healthFacilitySelect');
+    
+    // Reset downstream dropdowns
+    chiefdomSelect.innerHTML = '<option value="">Select chiefdom...</option>';
+    facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
+    facilitySelect.disabled = true;
+    
+    // Clear UID and name fields
+    clearFacilityFields();
+    
+    if (district && districtChiefdomMap[district]) {
+        chiefdomSelect.disabled = false;
+        
+        const chiefdoms = districtChiefdomMap[district].sort();
+        chiefdoms.forEach(chiefdom => {
+            const option = document.createElement('option');
+            option.value = chiefdom;
+            option.textContent = chiefdom;
+            chiefdomSelect.appendChild(option);
+        });
+        
+        console.log('Chiefdoms loaded for', district, ':', chiefdoms.length);
+    } else {
+        chiefdomSelect.disabled = true;
+        chiefdomSelect.innerHTML = '<option value="">Select district first...</option>';
+    }
+}
+
+function handleChiefdomChange(e) {
+    const chiefdom = e.target.value;
+    const facilitySelect = document.getElementById('healthFacilitySelect');
+    
+    // Reset facility dropdown
+    facilitySelect.innerHTML = '<option value="">Select health facility...</option>';
+    
+    // Clear UID and name fields
+    clearFacilityFields();
+    
+    if (chiefdom && chiefdomFacilityMap[chiefdom]) {
+        facilitySelect.disabled = false;
+        
+        // Sort facilities alphabetically by name
+        const facilities = [...chiefdomFacilityMap[chiefdom]].sort((a, b) => a.name.localeCompare(b.name));
+        
+        facilities.forEach(facility => {
+            const option = document.createElement('option');
+            option.value = facility.uid;
+            option.textContent = facility.name;
+            option.dataset.name = facility.name;
+            facilitySelect.appendChild(option);
+        });
+        
+        // Add change listener to update UID field
+        facilitySelect.onchange = function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const selectedUID = this.value;
+            const selectedName = selectedOption.dataset.name || selectedOption.textContent;
+            
+            const uidField = document.getElementById('healthFacilityUID');
+            const nameField = document.getElementById('healthFacilityName');
+            
+            if (uidField) uidField.value = selectedUID;
+            if (nameField) nameField.value = selectedName;
+            
+            console.log('Selected facility:', selectedName, 'UID:', selectedUID);
+        };
+        
+        console.log('Facilities loaded for', chiefdom, ':', facilities.length);
+    } else {
+        facilitySelect.disabled = true;
+        facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
+    }
+}
+
+function clearFacilityFields() {
+    const uidField = document.getElementById('healthFacilityUID');
+    const nameField = document.getElementById('healthFacilityName');
+    if (uidField) uidField.value = '';
+    if (nameField) nameField.value = '';
+}
+
+// ============================================
+// DYNAMIC FORM GENERATION
+// ============================================
 function generateVariableFields() {
     const container = document.getElementById('dynamicSections');
     
-    // If no form type selected yet, clear container and return
     if (!state.formType) {
         container.innerHTML = '';
+        return;
+    }
+    
+    // Check if VARIABLE_SECTIONS exists from config.js
+    if (typeof VARIABLE_SECTIONS === 'undefined') {
+        console.error('VARIABLE_SECTIONS not found in config.js');
+        container.innerHTML = '<p style="color: #dc3545; text-align: center; padding: 20px;">Configuration error: VARIABLE_SECTIONS not found.</p>';
         return;
     }
     
     let html = '';
     let sectionNum = 2;
     
-    // Get the sections for the selected form type
+    // Get sections for selected form type
     const formSections = VARIABLE_SECTIONS[state.formType === 'under_five' ? 'UNDER_FIVE' : 'GENERAL'];
     
     if (!formSections) {
-        container.innerHTML = '<p style="color: #8b949e; text-align: center; padding: 20px;">No sections available for this form type yet.</p>';
+        container.innerHTML = '<p style="color: #666666; text-align: center; padding: 20px;">No sections available for this form type.</p>';
         state.totalSections = 1;
         return;
     }
     
     const sectionKeys = Object.keys(formSections);
+    console.log('Generating', sectionKeys.length, 'sections for', state.formType);
     
     sectionKeys.forEach((sectionTitle, index) => {
         const section = formSections[sectionTitle];
@@ -187,8 +558,13 @@ function generateVariableFields() {
     container.innerHTML = html;
     state.totalSections = sectionNum - 1;
     updateProgress();
+    
+    console.log('Form sections generated. Total sections:', state.totalSections);
 }
 
+// ============================================
+// SECTION NAVIGATION
+// ============================================
 function nextSection() {
     // Validate current section
     const currentSectionEl = document.querySelector(`.form-section[data-section="${state.currentSection}"]`);
@@ -200,7 +576,7 @@ function nextSection() {
     inputs.forEach(input => {
         if (!input.value) {
             isValid = false;
-            input.style.borderColor = '#f85149';
+            input.style.borderColor = '#dc3545';
             setTimeout(() => input.style.borderColor = '', 3000);
         }
     });
@@ -210,7 +586,7 @@ function nextSection() {
         return;
     }
     
-    // Special check: If moving from section 1 to form type selection (section 0)
+    // From section 1 (Location) -> section 0 (Form Type)
     if (state.currentSection === 1) {
         currentSectionEl.classList.remove('active');
         const formTypeSection = document.querySelector('.form-section[data-section="0"]');
@@ -223,13 +599,13 @@ function nextSection() {
         }
     }
     
-    // Special check for form type on section 0
+    // Check form type selection on section 0
     if (state.currentSection === 0 && !state.formType) {
         showNotification('Please select a form type (Under Five or General)', 'error');
         return;
     }
     
-    // If leaving section 0 (form type), move to section 2 (first dynamic section)
+    // From section 0 (Form Type) -> section 2 (first dynamic section)
     if (state.currentSection === 0) {
         currentSectionEl.classList.remove('active');
         state.currentSection = 2;
@@ -242,7 +618,7 @@ function nextSection() {
         return;
     }
     
-    // Move to next section normally
+    // Normal next section
     if (state.currentSection < state.totalSections) {
         currentSectionEl.classList.remove('active');
         state.currentSection++;
@@ -256,7 +632,7 @@ function nextSection() {
 }
 
 function previousSection() {
-    // If on section 0 (form type), go back to section 1 (location)
+    // From section 0 (Form Type) -> section 1 (Location)
     if (state.currentSection === 0) {
         document.querySelector('.form-section[data-section="0"]').classList.remove('active');
         state.currentSection = 1;
@@ -266,7 +642,7 @@ function previousSection() {
         return;
     }
     
-    // If on section 2 (first dynamic section), go back to section 0 (form type)
+    // From section 2 (first dynamic) -> section 0 (Form Type)
     if (state.currentSection === 2) {
         document.querySelector('.form-section[data-section="2"]').classList.remove('active');
         state.currentSection = 0;
@@ -287,327 +663,36 @@ function previousSection() {
 }
 
 function updateProgress() {
-    let displaySection = state.currentSection;
-    let displayTotal = state.totalSections;
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
     
-    // If on form type section (0), show as "Selecting Form Type"
+    if (!progressFill || !progressText) return;
+    
+    // Form type selection section
     if (state.currentSection === 0) {
-        document.getElementById('progressText').textContent = 'Selecting Form Type';
+        progressText.textContent = 'Selecting Form Type';
         const progress = (1.5 / state.totalSections) * 100;
-        document.getElementById('progressFill').style.width = progress + '%';
+        progressFill.style.width = progress + '%';
         return;
     }
     
-    // Adjust display for section numbering (skip section 0 in count)
+    // Adjust display for section numbering
+    let displaySection = state.currentSection;
+    let displayTotal = state.totalSections;
+    
     if (state.currentSection > 0) {
         displaySection = state.currentSection - 1;
         displayTotal = state.totalSections - 1;
     }
     
     const progress = (state.currentSection / state.totalSections) * 100;
-    document.getElementById('progressFill').style.width = progress + '%';
-    document.getElementById('progressText').textContent = `Section ${displaySection} of ${displayTotal}`;
+    progressFill.style.width = progress + '%';
+    progressText.textContent = `Section ${displaySection} of ${displayTotal}`;
 }
 
 // ============================================
-// UPDATED CASCADING DATA PARSER - Supports UIDs
+// ONLINE/OFFLINE HANDLERS
 // ============================================
-function parseCascadingData() {
-    const lines = CASCADING_DATA.trim().split('\n');
-    
-    // Reset maps
-    regionDistrictMap = {};
-    districtChiefdomMap = {};
-    chiefdomFacilityMap = {};
-    
-    lines.forEach(line => {
-        const parts = line.split('||').map(p => p.trim());
-        
-        // 3-column format: Chiefdom||Facility||UID
-        if (parts.length === 3) {
-            const [chiefdom, facilityName, uid] = parts;
-            if (!chiefdomFacilityMap[chiefdom]) {
-                chiefdomFacilityMap[chiefdom] = [];
-            }
-            // Store as object with name and uid
-            chiefdomFacilityMap[chiefdom].push({
-                name: facilityName,
-                uid: uid
-            });
-        }
-        // 2-column format: Parent||Child
-        else if (parts.length === 2) {
-            const [parent, child] = parts;
-            
-            // Check if this is Region||District
-            if (parent.includes('Region') || parent === 'Western Area') {
-                if (!regionDistrictMap[parent]) {
-                    regionDistrictMap[parent] = [];
-                }
-                if (!regionDistrictMap[parent].includes(child)) {
-                    regionDistrictMap[parent].push(child);
-                }
-            }
-            // Check if this is District||Chiefdom (child ends with Chiefdom, City, Town, or Zone)
-            else if (child.includes('Chiefdom') || child.includes('City') || child.includes('Town') || child.includes('Zone')) {
-                if (!districtChiefdomMap[parent]) {
-                    districtChiefdomMap[parent] = [];
-                }
-                if (!districtChiefdomMap[parent].includes(child)) {
-                    districtChiefdomMap[parent].push(child);
-                }
-            }
-        }
-    });
-    
-    // Log statistics
-    const regionCount = Object.keys(regionDistrictMap).length;
-    const districtCount = Object.keys(districtChiefdomMap).length;
-    const chiefdomCount = Object.keys(chiefdomFacilityMap).length;
-    let facilityCount = 0;
-    for (const chiefdom in chiefdomFacilityMap) {
-        facilityCount += chiefdomFacilityMap[chiefdom].length;
-    }
-    
-    console.log('Cascading data parsed successfully');
-    console.log(`Regions: ${regionCount}, Districts: ${districtCount}, Chiefdoms: ${chiefdomCount}, Facilities: ${facilityCount}`);
-}
-
-function setupEventListeners() {
-    // Login form
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-    }
-
-    // Logout button
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', handleLogout);
-    }
-
-    // View Data button
-    const viewDataBtn = document.getElementById('viewDataBtn');
-    if (viewDataBtn) {
-        viewDataBtn.addEventListener('click', handleViewData);
-    }
-
-    // Main form
-    const dataForm = document.getElementById('dataForm');
-    if (dataForm) {
-        dataForm.addEventListener('submit', handleFormSubmit);
-    }
-
-    // Online/offline events
-    window.addEventListener('online', handleOnlineEvent);
-    window.addEventListener('offline', handleOfflineEvent);
-}
-
-function setupCascadingListeners() {
-    const regionSelect = document.getElementById('regionSelect');
-    const districtSelect = document.getElementById('districtSelect');
-    const chiefdomSelect = document.getElementById('chiefdomSelect');
-    
-    if (regionSelect) {
-        regionSelect.addEventListener('change', handleRegionChange);
-    }
-    if (districtSelect) {
-        districtSelect.addEventListener('change', handleDistrictChange);
-    }
-    if (chiefdomSelect) {
-        chiefdomSelect.addEventListener('change', handleChiefdomChange);
-    }
-}
-
-function handleViewData() {
-    window.open(GOOGLE_SHEET_URL, '_blank');
-}
-
-function handleLogin(e) {
-    e.preventDefault();
-    
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
-    const errorDiv = document.getElementById('loginError');
-    
-    if (username === LOGIN_USERNAME && password === LOGIN_PASSWORD) {
-        sessionStorage.setItem('isLoggedIn', 'true');
-        state.isLoggedIn = true;
-        errorDiv.classList.remove('show');
-        showMainContent();
-    } else {
-        errorDiv.classList.add('show');
-    }
-}
-
-function handleLogout() {
-    sessionStorage.removeItem('isLoggedIn');
-    state.isLoggedIn = false;
-    document.getElementById('mainContent').classList.remove('show');
-    document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
-}
-
-function showMainContent() {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('mainContent').classList.add('show');
-    updateOnlineStatus();
-    updatePendingCount();
-    
-    setupCascadingListeners();
-    setupFormTypeListeners();
-    
-    // Populate regions dropdown
-    populateRegions();
-    
-    if (state.isOnline && state.pendingSubmissions.length > 0) {
-        syncPendingSubmissions();
-    }
-}
-
-// Populate regions dropdown on load
-function populateRegions() {
-    const regionSelect = document.getElementById('regionSelect');
-    if (!regionSelect) return;
-    
-    // Clear existing options except the first placeholder
-    regionSelect.innerHTML = '<option value="">Select region...</option>';
-    
-    // Add regions sorted alphabetically
-    const regions = Object.keys(regionDistrictMap).sort();
-    regions.forEach(region => {
-        const option = document.createElement('option');
-        option.value = region;
-        option.textContent = region;
-        regionSelect.appendChild(option);
-    });
-}
-
-function handleRegionChange(e) {
-    const region = e.target.value;
-    const districtSelect = document.getElementById('districtSelect');
-    const chiefdomSelect = document.getElementById('chiefdomSelect');
-    const facilitySelect = document.getElementById('healthFacilitySelect');
-    
-    // Reset downstream dropdowns
-    districtSelect.innerHTML = '<option value="">Select district...</option>';
-    chiefdomSelect.innerHTML = '<option value="">Select district first...</option>';
-    chiefdomSelect.disabled = true;
-    facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
-    facilitySelect.disabled = true;
-    
-    // Clear UID and name fields
-    const uidField = document.getElementById('healthFacilityUID');
-    const nameField = document.getElementById('healthFacilityName');
-    if (uidField) uidField.value = '';
-    if (nameField) nameField.value = '';
-    
-    if (region && regionDistrictMap[region]) {
-        districtSelect.disabled = false;
-        
-        // Sort districts alphabetically
-        const districts = regionDistrictMap[region].sort();
-        districts.forEach(district => {
-            const option = document.createElement('option');
-            option.value = district;
-            option.textContent = district;
-            districtSelect.appendChild(option);
-        });
-    } else {
-        districtSelect.disabled = true;
-        districtSelect.innerHTML = '<option value="">Select region first...</option>';
-    }
-}
-
-function handleDistrictChange(e) {
-    const district = e.target.value;
-    const chiefdomSelect = document.getElementById('chiefdomSelect');
-    const facilitySelect = document.getElementById('healthFacilitySelect');
-    
-    // Reset downstream dropdowns
-    chiefdomSelect.innerHTML = '<option value="">Select chiefdom...</option>';
-    facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
-    facilitySelect.disabled = true;
-    
-    // Clear UID and name fields
-    const uidField = document.getElementById('healthFacilityUID');
-    const nameField = document.getElementById('healthFacilityName');
-    if (uidField) uidField.value = '';
-    if (nameField) nameField.value = '';
-    
-    if (district && districtChiefdomMap[district]) {
-        chiefdomSelect.disabled = false;
-        
-        // Sort chiefdoms alphabetically
-        const chiefdoms = districtChiefdomMap[district].sort();
-        chiefdoms.forEach(chiefdom => {
-            const option = document.createElement('option');
-            option.value = chiefdom;
-            option.textContent = chiefdom;
-            chiefdomSelect.appendChild(option);
-        });
-    } else {
-        chiefdomSelect.disabled = true;
-        chiefdomSelect.innerHTML = '<option value="">Select district first...</option>';
-    }
-}
-
-// ============================================
-// UPDATED: Handle Chiefdom Change with UID support
-// ============================================
-function handleChiefdomChange(e) {
-    const chiefdom = e.target.value;
-    const facilitySelect = document.getElementById('healthFacilitySelect');
-    
-    // Reset facility dropdown
-    facilitySelect.innerHTML = '<option value="">Select health facility...</option>';
-    
-    // Clear UID and name fields
-    const uidField = document.getElementById('healthFacilityUID');
-    const nameField = document.getElementById('healthFacilityName');
-    if (uidField) uidField.value = '';
-    if (nameField) nameField.value = '';
-    
-    if (chiefdom && chiefdomFacilityMap[chiefdom]) {
-        facilitySelect.disabled = false;
-        
-        // Sort facilities alphabetically by name
-        const facilities = [...chiefdomFacilityMap[chiefdom]].sort((a, b) => a.name.localeCompare(b.name));
-        
-        facilities.forEach(facility => {
-            const option = document.createElement('option');
-            // Store UID as the value, display name as text
-            option.value = facility.uid;
-            option.textContent = facility.name;
-            // Also store the name as a data attribute for reference
-            option.dataset.name = facility.name;
-            facilitySelect.appendChild(option);
-        });
-        
-        // Add change listener to update UID field
-        facilitySelect.onchange = function() {
-            const selectedOption = this.options[this.selectedIndex];
-            const selectedUID = this.value;
-            const selectedName = selectedOption.dataset.name || selectedOption.textContent;
-            
-            // Update UID field (now visible)
-            if (uidField) {
-                uidField.value = selectedUID;
-            }
-            // Update hidden name field
-            if (nameField) {
-                nameField.value = selectedName;
-            }
-            
-            console.log('Selected facility:', selectedName, 'UID:', selectedUID);
-        };
-    } else {
-        facilitySelect.disabled = true;
-        facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
-    }
-}
-
 function handleOnlineEvent() {
     state.isOnline = true;
     updateOnlineStatus();
@@ -624,6 +709,8 @@ function handleOfflineEvent() {
 function updateOnlineStatus() {
     const indicator = document.getElementById('statusIndicator');
     const text = document.getElementById('statusText');
+    
+    if (!indicator || !text) return;
     
     if (state.isOnline) {
         indicator.className = 'status-indicator online';
@@ -642,11 +729,13 @@ function updatePendingCount() {
 }
 
 // ============================================
-// UPDATED: Form Submit with UID support
+// FORM SUBMISSION
 // ============================================
 async function handleFormSubmit(e) {
     e.preventDefault();
     e.stopPropagation();
+    
+    console.log('Form submission started...');
 
     const formData = new FormData(e.target);
     const facilitySelect = document.getElementById('healthFacilitySelect');
@@ -660,15 +749,18 @@ async function handleFormSubmit(e) {
         region: formData.get('region'),
         district: formData.get('district'),
         chiefdom: formData.get('chiefdom'),
-        // Get facility name from selected option's data attribute or text
         healthFacility: selectedOption ? (selectedOption.dataset.name || selectedOption.textContent) : '',
-        // Get UID from the select value
         healthFacilityUID: facilitySelect.value || ''
     };
     
-    // Add all variable fields dynamically
-    for (const fieldName of Object.keys(VARIABLES)) {
-        data[fieldName] = formData.get(fieldName);
+    // Add all variable fields
+    if (typeof VARIABLES !== 'undefined') {
+        for (const fieldName of Object.keys(VARIABLES)) {
+            const value = formData.get(fieldName);
+            if (value !== null) {
+                data[fieldName] = value;
+            }
+        }
     }
 
     console.log('Submitting data:', data);
@@ -697,6 +789,7 @@ async function submitToServer(data) {
             body: JSON.stringify(data)
         });
 
+        console.log('Submission successful');
         showNotification('Data submitted successfully!', 'success');
         clearForm();
         
@@ -717,13 +810,16 @@ function saveOffline(data) {
     localStorage.setItem('pendingSubmissions', JSON.stringify(state.pendingSubmissions));
     updatePendingCount();
     showNotification('Data saved offline - Will sync when online', 'info');
+    console.log('Data saved offline. Pending:', state.pendingSubmissions.length);
     clearForm();
 }
 
 async function syncPendingSubmissions() {
     if (state.pendingSubmissions.length === 0) return;
 
+    console.log('Syncing', state.pendingSubmissions.length, 'pending submissions...');
     showNotification('Syncing pending submissions...', 'info');
+    
     const successfulSyncs = [];
     
     for (let i = 0; i < state.pendingSubmissions.length; i++) {
@@ -738,7 +834,7 @@ async function syncPendingSubmissions() {
             });
             successfulSyncs.push(i);
         } catch (error) {
-            console.error('Sync error:', error);
+            console.error('Sync error for item', i, ':', error);
         }
     }
 
@@ -749,15 +845,22 @@ async function syncPendingSubmissions() {
         localStorage.setItem('pendingSubmissions', JSON.stringify(state.pendingSubmissions));
         updatePendingCount();
         showNotification(`Successfully synced ${successfulSyncs.length} submission(s)`, 'success');
+        console.log('Synced', successfulSyncs.length, 'submissions. Remaining:', state.pendingSubmissions.length);
     }
 }
 
+// ============================================
+// FORM CLEARING
+// ============================================
 function clearForm() {
+    console.log('Clearing form...');
+    
     const dataForm = document.getElementById('dataForm');
     if (dataForm) {
         dataForm.reset();
     }
     
+    // Reset cascading dropdowns
     const districtSelect = document.getElementById('districtSelect');
     const chiefdomSelect = document.getElementById('chiefdomSelect');
     const facilitySelect = document.getElementById('healthFacilitySelect');
@@ -775,13 +878,10 @@ function clearForm() {
         facilitySelect.disabled = true;
     }
     
-    // Clear UID and name fields
-    const uidField = document.getElementById('healthFacilityUID');
-    const nameField = document.getElementById('healthFacilityName');
-    if (uidField) uidField.value = '';
-    if (nameField) nameField.value = '';
+    // Clear facility fields
+    clearFacilityFields();
     
-    // Reset form type and regenerate
+    // Reset form type
     state.formType = null;
     state.currentSection = 1;
     
@@ -791,9 +891,10 @@ function clearForm() {
     if (underFiveRadio) underFiveRadio.checked = false;
     if (generalRadio) generalRadio.checked = false;
     
+    // Regenerate empty dynamic sections
     generateVariableFields();
     
-    // Hide all sections and show only section 1
+    // Show section 1
     document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active'));
     const section1 = document.querySelector('.form-section[data-section="1"]');
     if (section1) {
@@ -804,6 +905,9 @@ function clearForm() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// ============================================
+// NOTIFICATION
+// ============================================
 function showNotification(message, type) {
     const notification = document.getElementById('notification');
     const text = document.getElementById('notificationText');
@@ -816,10 +920,12 @@ function showNotification(message, type) {
             notification.classList.remove('show');
         }, 4000);
     }
+    
+    console.log(`[${type.toUpperCase()}] ${message}`);
 }
 
 // ============================================
-// HELPER FUNCTIONS FOR FACILITY LOOKUP
+// HELPER FUNCTIONS
 // ============================================
 
 // Get facility by UID
@@ -836,7 +942,7 @@ function getFacilityByUID(uid) {
     return null;
 }
 
-// Search facilities by name (partial match)
+// Search facilities by name
 function searchFacilitiesByName(searchTerm) {
     const results = [];
     const term = searchTerm.toLowerCase();
@@ -856,7 +962,7 @@ function searchFacilitiesByName(searchTerm) {
 }
 
 // Get all facilities as flat array
-function getAllFacilities() {
+function getAllFacilitiesFlat() {
     const all = [];
     for (const chiefdom in chiefdomFacilityMap) {
         chiefdomFacilityMap[chiefdom].forEach(facility => {
@@ -869,5 +975,11 @@ function getAllFacilities() {
     return all;
 }
 
-// Start the app
-init();
+// ============================================
+// START APPLICATION
+// ============================================
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
