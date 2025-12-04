@@ -1,4 +1,4 @@
-// Data will be parsed from the string in config.js
+// Data will be parsed from the string in config.js   
 let regionDistrictMap = {};
 let districtChiefdomMap = {};
 let chiefdomFacilityMap = {}; // Now stores objects with {name, uid}
