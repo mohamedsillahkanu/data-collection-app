@@ -1,170 +1,184 @@
-// ============================================
-// COMPLETE DATA COLLECTION & SUMMARY CONFIGURATION
+// ============================================     
+// CONFIGURATION - Change these values
 // ============================================
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqhplQAEn3Xp_TKqzTddtvTAicoEu_4ltq5C4iR7LNIElN18exltV1-t12RjiQcvLx/exec';
 const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1_3jdmPYJMJ7DzKpJqR33t5RwdsRRJ9PbUUUjd9k9zfI/edit?gid=0#gid=0';
 const LOGIN_USERNAME = 'admin';
 const LOGIN_PASSWORD = 'admin';
 
-// ============================================
-// SHEET NAMES
-// ============================================
-const SHEET_NAMES = {
-    UNDER_FIVE: 'UNDER_FIVE_REGISTER',
-    GENERAL: 'GENERAL_REGISTER',
-    SUMMARY: 'HF01_SUMMARY',
-    CASCADING: 'CASCADING_DATA'
-};
-
-// ============================================
-// DATA COLLECTION FORMS
-// ============================================
+// Variable names organized by sections
 const VARIABLE_SECTIONS = {
     'Location & Time': {
         description: 'Basic facility and reporting information',
-        fields: {
-            region: { label: 'Region', type: 'cascading', level: 1 },
-            district: { label: 'District', type: 'cascading', level: 2 },
-            chiefdom: { label: 'Chiefdom', type: 'cascading', level: 3 },
-            facility: { label: 'Health Facility', type: 'cascading', level: 4 },
-            report_month: { label: 'Report Month', type: 'select', options: ['January','February','March','April','May','June','July','August','September','October','November','December'] },
-            report_year: { label: 'Report Year', type: 'number' }
-        }
+        fields: {}
     },
     'UNDER_FIVE': {
         'General Information': {
             description: 'Patient basic information',
             fields: {
-                reg_no: { label: 'Registration Number', type: 'text', summary_field: null },
-                date_visit: { label: 'Date of Visit', type: 'date', summary_field: null },
-                date_onset: { label: 'Date of Onset', type: 'date', summary_field: null },
-                child_name: { label: 'Name of Child', type: 'text', summary_field: null },
-                age_group: { label: 'Age Group', type: 'select', options: ['<1 Month', '1-5 Months', '6-11 Months', '12-23 Months', '24-59 Months'], summary_mapping: 'age_classification' },
-                sex: { label: 'Sex', type: 'select', options: ['Male', 'Female'], summary_mapping: 'sex_disaggregation' },
-                address: { label: 'Address', type: 'text', summary_field: null },
-                disability: { label: 'Disability', type: 'yesno', summary_field: 'disabled_patient_total' },
-                evd_survivor: { label: 'EVD Survivor', type: 'yesno', summary_field: 'evd_survivor_total' }
+                reg_no: { label: 'Registration Number', type: 'text' },
+                date_visit: { label: 'Date of Visit', type: 'date' },
+                date_onset: { label: 'Date of Onset', type: 'date' },
+                child_name: { label: 'Name of Child', type: 'text' },
+                age_group: { label: 'Age Group', type: 'select', options: ['<1 Month', '1-5 Months', '6-11 Months', '12-23 Months', '24-59 Months'] },
+                sex: { label: 'Sex', type: 'select', options: ['Male', 'Female'] },
+                address: { label: 'Address', type: 'text' },
+                disability: { label: 'Disability', type: 'yesno' },
+                evd_survivor: { label: 'EVD Survivor', type: 'yesno' }
             }
         },
         'Nutrition Screening': {
             description: 'Nutritional assessment and interventions',
             fields: {
-                height_cm: { label: 'Height (cm)', type: 'number', summary_field: null },
-                weight_kg: { label: 'Weight (kg)', type: 'number', summary_field: null },
-                muac_cm: { label: 'MUAC (cm)', type: 'number', summary_field: null },
-                bilateral_oedema: { label: 'Bilateral Oedema', type: 'select', options: ['0', '+', '++', '+++'], summary_field: null },
-                vitamin_a_6_11m: { label: 'Vitamin A (6-11 months)', type: 'yesno', summary_field: null },
-                vitamin_a_12_59m: { label: 'Vitamin A (12-59 months)', type: 'yesno', summary_field: null },
-                deworming_12_23m: { label: 'Deworming (12-23 months)', type: 'yesno', summary_field: null },
-                deworming_24_59m: { label: 'Deworming (24-59 months)', type: 'yesno', summary_field: null },
-                early_breastfeeding: { label: 'Early Initiation of Breastfeeding', type: 'yesno', summary_field: null },
-                exclusive_breastfeeding: { label: 'Exclusive Breastfeeding (0-5 months)', type: 'yesno', summary_field: null },
-                continued_breastfeeding: { label: 'Continued Breastfeeding (6-23 months)', type: 'yesno', summary_field: null },
-                type_of_visit: { label: 'Type of Visit', type: 'select', options: ['New', 'Follow-up'], summary_mapping: 'visit_type' }
+                height_cm: { label: 'Height (cm)', type: 'number' },
+                weight_kg: { label: 'Weight (kg)', type: 'number' },
+                muac_cm: { label: 'MUAC (cm)', type: 'number' },
+                bilateral_oedema: { label: 'Bilateral Oedema', type: 'select', options: ['0', '+', '++', '+++'] },
+                vitamin_a_6_11m: { label: 'Vitamin A (6-11 months)', type: 'yesno' },
+                vitamin_a_12_59m: { label: 'Vitamin A (12-59 months)', type: 'yesno' },
+                deworming_12_23m: { label: 'Deworming (12-23 months)', type: 'yesno' },
+                deworming_24_59m: { label: 'Deworming (24-59 months)', type: 'yesno' },
+                early_breastfeeding: { label: 'Early Initiation of Breastfeeding', type: 'yesno' },
+                exclusive_breastfeeding: { label: 'Exclusive Breastfeeding (0-5 months)', type: 'yesno' },
+                continued_breastfeeding: { label: 'Continued Breastfeeding (6-23 months)', type: 'yesno' },
+                type_of_visit: { label: 'Type of Visit', type: 'select', options: ['New', 'Follow-up'] }
             }
         },
         'Malaria': {
             description: 'Malaria testing and treatment',
             fields: {
-                fever_suspected_malaria: { label: 'Fever Case (Suspected Malaria)', type: 'yesno', summary_field: 'fever_suspected' },
-                rdt_positive: { label: 'RDT Test - Positive', type: 'yesno', summary_field: 'rdt_positive' },
-                rdt_negative: { label: 'RDT Test - Negative', type: 'yesno', summary_field: 'rdt_negative' },
-                microscopy_positive: { label: 'Microscopy - Positive', type: 'yesno', summary_field: 'microscopy_positive' },
-                microscopy_negative: { label: 'Microscopy - Negative', type: 'yesno', summary_field: 'microscopy_negative' },
-                act_less_24h: { label: 'Malaria Treated with ACT <24 hours', type: 'yesno', summary_field: 'act_less24h' },
-                act_more_24h: { label: 'Malaria Treated with ACT >24 hours', type: 'yesno', summary_field: 'act_more24h' },
-                treated_without_act_less_24h: { label: 'Treated without ACT <24 hours', type: 'yesno', summary_field: 'no_act_less24h' },
-                treated_without_act_more_24h: { label: 'Treated without ACT >24 hours', type: 'yesno', summary_field: 'no_act_more24h' }
+                fever_suspected_malaria: { label: 'Fever Case (Suspected Malaria)', type: 'yesno' },
+                rdt_positive: { label: 'RDT Test - Positive', type: 'yesno' },
+                rdt_negative: { label: 'RDT Test - Negative', type: 'yesno' },
+                microscopy_positive: { label: 'Microscopy - Positive', type: 'yesno' },
+                microscopy_negative: { label: 'Microscopy - Negative', type: 'yesno' },
+                act_less_24h: { label: 'Malaria Treated with ACT <24 hours', type: 'yesno' },
+                act_more_24h: { label: 'Malaria Treated with ACT >24 hours', type: 'yesno' },
+                treated_without_act_less_24h: { label: 'Treated without ACT <24 hours', type: 'yesno' },
+                treated_without_act_more_24h: { label: 'Treated without ACT >24 hours', type: 'yesno' }
             }
         },
         'Eye Conditions': {
             description: 'Eye infections and conditions',
             fields: {
-                eye_infection: { label: 'Eye Infection', type: 'yesno', summary_field: 'eye_infection' },
-                other_eye_condition: { label: 'Eye Condition (all types, except infection)', type: 'yesno', summary_field: null }
+                eye_infection: { label: 'Eye Infection', type: 'yesno' },
+                other_eye_condition: { label: 'Eye Condition (all types, except infection)', type: 'yesno' }
             }
         },
         'Infectious Diseases': {
             description: 'Various infectious conditions and diseases',
             fields: {
-                moderate_malnutrition: { label: 'Moderate Malnutrition', type: 'yesno', summary_field: null },
-                severe_malnutrition: { label: 'Severe Malnutrition', type: 'yesno', summary_field: null },
-                snake_bites: { label: 'Snake Bites', type: 'yesno', summary_field: 'snake_bite' },
-                aids: { label: 'AIDS', type: 'yesno', summary_field: null },
-                ari_with_antibiotic: { label: 'ARI Treated with Antibiotic', type: 'yesno', summary_field: 'child_ari' },
-                ari_without_antibiotic: { label: 'ARI Treated without Antibiotic', type: 'yesno', summary_field: 'child_ari' },
-                pneumonia_with_antibiotic: { label: 'Pneumonia Treated with Antibiotic', type: 'yesno', summary_field: 'child_pneumonia_antibiotic' },
-                pneumonia_without_antibiotic: { label: 'Pneumonia Treated without Antibiotic', type: 'yesno', summary_field: 'child_pneumonia_no_antibiotic' },
-                chicken_pox: { label: 'Chicken Pox', type: 'yesno', summary_field: null },
-                diarrhoea_ors_zinc: { label: 'Diarrhoea Treated with ORS and Zinc', type: 'yesno', summary_field: 'child_diarrhoea_ors_zinc' },
-                diarrhoea_ors_only: { label: 'Diarrhoea Treated with ORS Only', type: 'yesno', summary_field: 'child_diarrhoea_ors_only' },
-                hepatitis: { label: 'Hepatitis (all types)', type: 'yesno', summary_field: 'hepatitis_all' },
-                leprosy: { label: 'Leprosy', type: 'yesno', summary_field: null },
-                mumps: { label: 'Mumps', type: 'yesno', summary_field: null },
-                sepsis: { label: 'Sepsis', type: 'yesno', summary_field: null },
-                skin_infection: { label: 'Skin Infection', type: 'yesno', summary_field: null },
-                sti_pid: { label: 'STI - Pelvic Inflammatory Disease (PID)', type: 'yesno', summary_field: null },
-                sti_genital_discharge: { label: 'STI - Genital Discharge', type: 'yesno', summary_field: null },
-                sti_genital_ulcer: { label: 'STI - Genital Ulcer', type: 'yesno', summary_field: null },
-                tetanus: { label: 'Tetanus', type: 'yesno', summary_field: null },
-                tuberculosis: { label: 'Tuberculosis (TB)', type: 'yesno', summary_field: null },
-                uti: { label: 'UTI (Urinary Tract Infection)', type: 'yesno', summary_field: null },
-                worm_infestation: { label: 'Worm Infestation', type: 'yesno', summary_field: 'worm_infestation' },
-                yaws: { label: 'Yaws', type: 'yesno', summary_field: null }
+                moderate_malnutrition: { label: 'Moderate Malnutrition', type: 'yesno' },
+                severe_malnutrition: { label: 'Severe Malnutrition', type: 'yesno' },
+                snake_bites: { label: 'Snake Bites', type: 'yesno' },
+                aids: { label: 'AIDS', type: 'yesno' },
+                ari_with_antibiotic: { label: 'ARI Treated with Antibiotic', type: 'yesno' },
+                ari_without_antibiotic: { label: 'ARI Treated without Antibiotic', type: 'yesno' },
+                pneumonia_with_antibiotic: { label: 'Pneumonia Treated with Antibiotic', type: 'yesno' },
+                pneumonia_without_antibiotic: { label: 'Pneumonia Treated without Antibiotic', type: 'yesno' },
+                chicken_pox: { label: 'Chicken Pox', type: 'yesno' },
+                diarrhoea_ors_zinc: { label: 'Diarrhoea Treated with ORS and Zinc', type: 'yesno' },
+                diarrhoea_ors_only: { label: 'Diarrhoea Treated with ORS Only', type: 'yesno' },
+                hepatitis: { label: 'Hepatitis (all types)', type: 'yesno' },
+                leprosy: { label: 'Leprosy', type: 'yesno' },
+                mumps: { label: 'Mumps', type: 'yesno' },
+                sepsis: { label: 'Sepsis', type: 'yesno' },
+                skin_infection: { label: 'Skin Infection', type: 'yesno' },
+                sti_pid: { label: 'STI - Pelvic Inflammatory Disease (PID)', type: 'yesno' },
+                sti_genital_discharge: { label: 'STI - Genital Discharge', type: 'yesno' },
+                sti_genital_ulcer: { label: 'STI - Genital Ulcer', type: 'yesno' },
+                tetanus: { label: 'Tetanus', type: 'yesno' },
+                tuberculosis: { label: 'Tuberculosis (TB)', type: 'yesno' },
+                uti: { label: 'UTI (Urinary Tract Infection)', type: 'yesno' },
+                worm_infestation: { label: 'Worm Infestation', type: 'yesno' },
+                yaws: { label: 'Yaws', type: 'yesno' }
             }
         },
         'Internal Medicine & NCD': {
             description: 'Non-communicable diseases and mental health',
             fields: {
-                adverse_drug_reaction: { label: 'Adverse Drug Reaction', type: 'yesno', summary_field: 'adverse_drug_reaction' },
-                anaemia: { label: 'Anaemia', type: 'yesno', summary_field: null },
-                sickle_cell: { label: 'Sickle Cell Disease', type: 'yesno', summary_field: null },
-                cancer: { label: 'Cancer (all types)', type: 'yesno', summary_field: null },
-                cardiovascular: { label: 'Cardiovascular Diseases', type: 'yesno', summary_field: null },
-                chronic_respiratory: { label: 'Chronic Respiratory Diseases', type: 'yesno', summary_field: null },
-                diabetes: { label: 'Diabetes (Type 1 or Type 2)', type: 'yesno', summary_field: null },
-                epilepsy: { label: 'Epilepsy', type: 'yesno', summary_field: null },
-                hypertension: { label: 'Hypertension', type: 'yesno', summary_field: null },
-                kidney_disorders: { label: 'Kidney Disorders', type: 'yesno', summary_field: null },
-                mental_disorder: { label: 'Mental Disorder (all types)', type: 'yesno', summary_field: 'mental_health_new_0_59m' }
+                adverse_drug_reaction: { label: 'Adverse Drug Reaction', type: 'yesno' },
+                anaemia: { label: 'Anaemia', type: 'yesno' },
+                sickle_cell: { label: 'Sickle Cell Disease', type: 'yesno' },
+                cancer: { label: 'Cancer (all types)', type: 'yesno' },
+                cardiovascular: { label: 'Cardiovascular Diseases', type: 'yesno' },
+                chronic_respiratory: { label: 'Chronic Respiratory Diseases', type: 'yesno' },
+                diabetes: { label: 'Diabetes (Type 1 or Type 2)', type: 'yesno' },
+                epilepsy: { label: 'Epilepsy', type: 'yesno' },
+                hypertension: { label: 'Hypertension', type: 'yesno' },
+                kidney_disorders: { label: 'Kidney Disorders', type: 'yesno' },
+                mental_disorder: { label: 'Mental Disorder (all types)', type: 'yesno' }
             }
         },
         'Neonatal Conditions': {
             description: 'Conditions affecting newborns',
             fields: {
-                asphyxia: { label: 'Asphyxia', type: 'yesno', summary_mapping: 'neonatal_by_age' },
-                congenital_abnormality: { label: 'Congenital Abnormality', type: 'yesno', summary_field: null },
-                prematurity: { label: 'Prematurity', type: 'yesno', summary_field: null },
-                hypothermia: { label: 'Hypothermia', type: 'yesno', summary_mapping: 'neonatal_by_age' },
-                respiratory_distress: { label: 'Respiratory Distress Syndrome', type: 'yesno', summary_mapping: 'neonatal_by_age' }
+                asphyxia: { label: 'Asphyxia', type: 'yesno' },
+                congenital_abnormality: { label: 'Congenital Abnormality', type: 'yesno' },
+                prematurity: { label: 'Prematurity', type: 'yesno' },
+                hypothermia: { label: 'Hypothermia', type: 'yesno' },
+                respiratory_distress: { label: 'Respiratory Distress Syndrome', type: 'yesno' }
             }
         },
         'Surgical Conditions': {
             description: 'Surgical and trauma conditions',
             fields: {
-                acute_abdomen: { label: 'Acute Abdomen', type: 'yesno', summary_field: null },
-                appendicitis: { label: 'Appendicitis', type: 'yesno', summary_field: null },
-                ent_disorder: { label: 'ENT Disorder', type: 'yesno', summary_field: null },
-                hernia: { label: 'Hernia', type: 'yesno', summary_field: null },
-                hydrocele: { label: 'Hydrocele', type: 'yesno', summary_field: null },
-                lymphodema: { label: 'Lymphodema', type: 'yesno', summary_field: null },
-                oral_dental: { label: 'Oral and Dental Conditions', type: 'yesno', summary_field: null },
-                pud: { label: 'PUD (Peptic Ulcer Disease)', type: 'yesno', summary_field: null },
-                wounds_rta: { label: 'Wounds/Trauma - RTA', type: 'yesno', summary_field: 'trauma_rta' },
-                wounds_non_rta: { label: 'Wounds/Trauma - Non-RTA', type: 'yesno', summary_field: 'trauma_other' },
-                burns: { label: 'Burns', type: 'yesno', summary_field: null }
+                acute_abdomen: { label: 'Acute Abdomen', type: 'yesno' },
+                appendicitis: { label: 'Appendicitis', type: 'yesno' },
+                ent_disorder: { label: 'ENT Disorder', type: 'yesno' },
+                hernia: { label: 'Hernia', type: 'yesno' },
+                hydrocele: { label: 'Hydrocele', type: 'yesno' },
+                lymphodema: { label: 'Lymphodema', type: 'yesno' },
+                oral_dental: { label: 'Oral and Dental Conditions', type: 'yesno' },
+                pud: { label: 'PUD (Peptic Ulcer Disease)', type: 'yesno' },
+                wounds_rta: { label: 'Wounds/Trauma - RTA', type: 'yesno' },
+                wounds_non_rta: { label: 'Wounds/Trauma - Non-RTA', type: 'yesno' },
+                burns: { label: 'Burns', type: 'yesno' }
             }
         },
         'Tracer and Life-Saving Medicines': {
-            description: 'Availability of essential medicines',
+            description: 'Availability of essential tracer and life-saving medicines and supplies',
             fields: {
-                albendazole_400mg_tab: { label: 'Albendazole 400mg, Tab', type: 'yesno', summary_field: null },
-                amoxycillin_125mg_susp: { label: 'Amoxycillin 125mg/5ml, Suspension', type: 'yesno', summary_field: null },
-                amoxicillin_250mg_tab: { label: 'Amoxicillin 250mg, Dispersible Tab', type: 'yesno', summary_field: null },
-                ampicillin_500mg_inj: { label: 'Ampicillin 500mg, Powder for Injection', type: 'yesno', summary_field: null },
-                act_al6_or_asaq_3tab_infant: { label: 'ACT (AL-6 or ASAQ-3, 2–11 months)', type: 'yesno', summary_field: null },
-                act_al12_or_asaq_3tab_child: { label: 'ACT (AL-12 or ASAQ-3, 1–5 years)', type: 'yesno', summary_field: null },
-                remarks: { label: 'Remarks', type: 'text', summary_field: null }
+                albendazole_400mg_tab: { label: 'Albendazole 400mg, Tab', type: 'yesno' },
+                amoxycillin_125mg_susp: { label: 'Amoxycillin 125mg/5ml, Suspension (100ml)', type: 'yesno' },
+                amoxicillin_250mg_tab: { label: 'Amoxicillin 250mg, Dispersible Tab', type: 'yesno' },
+                ampicillin_500mg_inj: { label: 'Ampicillin 500mg, Powder for Injection (Vial)', type: 'yesno' },
+                benzyl_benzoate_25_emulsion: { label: 'Benzyl Benzoate 25%, Emulsion (100ml)', type: 'yesno' },
+                chlorhexidine_7_1_gel: { label: 'Chlorhexidine 7.1%, Gel (Tube)', type: 'yesno' },
+                clotrimazole_1_cream: { label: 'Clotrimazole 1%, Cream (30g Tube)', type: 'yesno' },
+                cotrimoxazole_120mg_tab: { label: 'Cotrimoxazole 120mg, Tab', type: 'yesno' },
+                cotrimoxazole_240mg_susp: { label: 'Cotrimoxazole 240mg/5ml, Suspension (100ml)', type: 'yesno' },
+                dexamethasone_4mg_inj: { label: 'Dexamethasone 4mg/ml, Inj (1ml Amp)', type: 'yesno' },
+                dextrose_5_sol: { label: 'Dextrose 5%, Solution (500ml Bag)', type: 'yesno' },
+                diazepam_5mg_inj: { label: 'Diazepam 5mg/ml, Inj (2ml Amp)', type: 'yesno' },
+                erythromycin_125mg_susp: { label: 'Erythromycin 125mg/5ml, Suspension (100ml)', type: 'yesno' },
+                erythromycin_250mg_tab: { label: 'Erythromycin 250mg, Tab', type: 'yesno' },
+                ferrous_sulphate_125mg_drop: { label: 'Ferrous Sulphate 125mg/ml, Oral Drops (60ml)', type: 'yesno' },
+                ferrous_sulphate_200mg_tab: { label: 'Ferrous Sulphate 200mg, Tab', type: 'yesno' },
+                folic_acid_5mg_tab: { label: 'Folic Acid 5mg, Tab', type: 'yesno' },
+                gentamycin_0_5_eye_drop: { label: 'Gentamycin 0.5%, Eye Drops (10ml)', type: 'yesno' },
+                gentamycin_40mg_inj: { label: 'Gentamycin 40mg/ml, Inj (2ml Amp)', type: 'yesno' },
+                lidocaine_2_inj: { label: 'Lidocaine HCl 2%, Inj (50ml Vial)', type: 'yesno' },
+                metronidazole_200mg_susp: { label: 'Metronidazole 200mg/5ml, Suspension (100ml)', type: 'yesno' },
+                metronidazole_250mg_tab: { label: 'Metronidazole 250mg, Tab', type: 'yesno' },
+                normal_saline_0_9_sol: { label: 'Normal Saline 0.9%, Solution (500ml Bag)', type: 'yesno' },
+                ors_sachet: { label: 'Oral Rehydration Salt (ORS), Sachet', type: 'yesno' },
+                paracetamol_100mg_tab: { label: 'Paracetamol 100mg, Tab', type: 'yesno' },
+                paracetamol_125mg_syrup: { label: 'Paracetamol 125mg/5ml, Syrup (60–100ml)', type: 'yesno' },
+                paracetamol_250mg_tab: { label: 'Paracetamol 250mg, Dispersible Tab', type: 'yesno' },
+                ringers_lactate_500ml: { label: "Ringer's Lactate, Solution (500ml)", type: 'yesno' },
+                tetracycline_1_eye_ointment: { label: 'Tetracycline 1%, Eye Ointment (5g)', type: 'yesno' },
+                rutf_sachet: { label: 'Ready to Use Therapeutic Food (RUTF), Sachet', type: 'yesno' },
+                zinc_sulphate_20mg_tab: { label: 'Zinc Sulphate 20mg, Tab', type: 'yesno' },
+                act_al6_or_asaq_3tab_infant: { label: 'ACT (AL-6 Tab Blister or ASAQ-3 Tab, 2–11 months)', type: 'yesno' },
+                act_al12_or_asaq_3tab_child: { label: 'ACT (AL-12 Tab Blister or ASAQ-3 Tab, 1–5 years)', type: 'yesno' },
+                artesunate_60mg_inj: { label: 'Artesunate 60mg/ml Inj, 1ml, Vial', type: 'yesno' },
+                artesunate_50mg_supp: { label: 'Artesunate 50mg, Suppository', type: 'yesno' },
+                llin_piece: { label: 'LLIN (Long-Lasting Insecticidal Net), Piece', type: 'yesno' },
+                glove_examination_piece: { label: 'Glove, Examination, Disposable, Piece', type: 'yesno' },
+                needle_disposable_piece: { label: 'Needle, Disposable, Piece', type: 'yesno' },
+                syringe_disposable_piece: { label: 'Syringe, Disposable, Piece', type: 'yesno' },
+                remarks: { label: 'Remarks', type: 'text' }
             }
         }
     },
@@ -172,705 +186,196 @@ const VARIABLE_SECTIONS = {
         'General Information': {
             description: 'Patient basic information for above five years',
             fields: {
-                reg_no_gen: { label: 'Registration Number', type: 'text', summary_field: null },
-                date_seen: { label: 'Date Seen', type: 'date', summary_field: null },
-                date_onset_gen: { label: 'Date of Onset', type: 'date', summary_field: null },
-                patient_name: { label: 'Patient Name', type: 'text', summary_field: null },
-                age_years: { label: 'Age in Years', type: 'number', summary_mapping: 'age_classification_general' },
-                sex_gen: { label: 'Sex', type: 'select', options: ['Male', 'Female'], summary_mapping: 'sex_disaggregation' },
-                address_gen: { label: 'Address', type: 'text', summary_field: null },
-                marital_status: { label: 'Marital Status', type: 'select', options: ['Single', 'Married', 'Divorced', 'Widowed'], summary_field: null },
-                occupation: { label: 'Occupation', type: 'text', summary_field: null },
-                type_of_visit_gen: { label: 'Type of Visit', type: 'select', options: ['New', 'Follow-up'], summary_mapping: 'visit_type' },
-                category_patient: { label: 'Category of Patient', type: 'select', options: ['General', 'Pregnant', 'Lactating', 'EVD Survivor', 'Disability'], summary_mapping: 'patient_category' }
+                reg_no_gen: { label: 'Registration Number', type: 'text' },
+                date_seen: { label: 'Date Seen', type: 'date' },
+                date_onset_gen: { label: 'Date of Onset', type: 'date' },
+                patient_name: { label: 'Patient Name', type: 'text' },
+                age_years: { label: 'Age in Years', type: 'number' },
+                sex_gen: { label: 'Sex', type: 'select', options: ['Male', 'Female'] },
+                address_gen: { label: 'Address', type: 'text' },
+                marital_status: { label: 'Marital Status', type: 'select', options: ['Single', 'Married', 'Divorced', 'Widowed'] },
+                occupation: { label: 'Occupation', type: 'text' },
+                type_of_visit_gen: { label: 'Type of Visit', type: 'select', options: ['New', 'Follow-up'] },
+                category_patient: { label: 'Category of Patient', type: 'select', options: ['General', 'Pregnant', 'Lactating', 'EVD Survivor', 'Disability'] }
             }
         },
         'Malaria': {
             description: 'Malaria testing and treatment for above five',
             fields: {
-                fever_cases_gen: { label: 'Fever Cases (Suspected Malaria)', type: 'yesno', summary_field: 'fever_suspected' },
-                fever_tested_rdt_gen: { label: 'Fever tested RDT', type: 'select', options: ['Positive', 'Negative', 'Not Done'], summary_mapping: 'rdt_result' },
-                fever_tested_microscopy_gen: { label: 'Fever tested Microscopy', type: 'select', options: ['Positive', 'Negative', 'Not Done'], summary_mapping: 'microscopy_result' },
-                malaria_act_facility_gen: { label: 'Malaria treated with ACT', type: 'select', options: ['<24 hours', '>24 hours', 'Not Applicable'], summary_mapping: 'act_timing' },
-                malaria_without_act_gen: { label: 'Malaria treated without ACT', type: 'select', options: ['<24 hours', '>24 hours', 'Not Applicable'], summary_mapping: 'no_act_timing' },
-                severe_malaria_gen: { label: 'Severe Malaria', type: 'yesno', summary_field: null }
+                fever_cases_gen: { label: 'No of Fever Cases (Suspected Malaria)', type: 'yesno' },
+                fever_tested_rdt_gen: { label: 'Fever case tested for Malaria (RDT)', type: 'select', options: ['Positive', 'Negative', 'Not Done'] },
+                fever_tested_microscopy_gen: { label: 'Fever case tested for Malaria (Microscopy)', type: 'select', options: ['Positive', 'Negative', 'Not Done'] },
+                malaria_act_facility_gen: { label: 'Malaria treated at Facility with ACT', type: 'select', options: ['<24 hours', '>24 hours', 'Not Applicable'] },
+                malaria_without_act_gen: { label: 'Malaria treated at Facility without ACT', type: 'select', options: ['<24 hours', '>24 hours', 'Not Applicable'] },
+                severe_malaria_gen: { label: 'Severe Malaria', type: 'yesno' }
             }
         },
         'Eye Conditions': {
             description: 'Eye infections and conditions',
             fields: {
-                eye_infection_gen: { label: 'Eye Infection', type: 'yesno', summary_field: 'eye_infection' },
-                other_eye_condition_gen: { label: 'Eye condition (except infection)', type: 'yesno', summary_field: null }
+                eye_infection_gen: { label: 'Eye Infection', type: 'yesno' },
+                other_eye_condition_gen: { label: 'Eye condition (all types, except for eye infection)', type: 'yesno' }
             }
         },
         'Infectious Diseases': {
-            description: 'Various infectious conditions',
+            description: 'Various infectious conditions and notifiable diseases',
             fields: {
-                moderate_malnutrition_gen: { label: 'Moderate Malnutrition', type: 'yesno', summary_field: null },
-                severe_malnutrition_gen: { label: 'Severe Malnutrition', type: 'yesno', summary_field: null },
-                afp: { label: 'AFP (Acute Flaccid Paralysis)', type: 'yesno', summary_field: null },
-                acute_viral_haemorragic_fever: { label: 'Acute Viral Haemorragic Fever', type: 'yesno', summary_field: null },
-                aids_gen: { label: 'AIDS', type: 'yesno', summary_field: null },
-                ari_treated_gen: { label: 'ARI treated', type: 'select', options: ['With Antibiotic', 'Without Antibiotic', 'Not Applicable'], summary_field: null },
-                pneumonia_treated_gen: { label: 'Pneumonia treated', type: 'select', options: ['With Antibiotic', 'Without Antibiotic', 'Not Applicable'], summary_field: null },
-                chicken_pox_gen: { label: 'Chicken Pox', type: 'yesno', summary_field: null },
-                cholera: { label: 'Cholera', type: 'yesno', summary_field: null },
-                diarrhoea_watery_gen: { label: 'Diarrhoea, watery', type: 'select', options: ['With ORS and Zinc', 'With ORS only', 'Not Applicable'], summary_field: null },
-                dysentery: { label: 'Dysentery (Bloody diarrhoea)', type: 'yesno', summary_field: null },
-                hepatitis_gen: { label: 'Hepatitis (all types)', type: 'yesno', summary_field: 'hepatitis_all' },
-                leprosy_gen: { label: 'Leprosy', type: 'yesno', summary_field: null },
-                measles: { label: 'Measles', type: 'yesno', summary_field: null },
-                rubella: { label: 'Rubella', type: 'yesno', summary_field: null },
-                meningitis_encephalitis: { label: 'Meningitis / Encephalitis', type: 'yesno', summary_field: null },
-                mumps_gen: { label: 'Mumps', type: 'yesno', summary_field: null },
-                buruli_ulcer: { label: 'Buruli Ulcer', type: 'yesno', summary_field: null },
-                yellow_fever: { label: 'Yellow Fever', type: 'yesno', summary_field: null },
-                typhoid_fever: { label: 'Typhoid Fever', type: 'yesno', summary_field: null },
-                animal_bites: { label: 'Animal Bites', type: 'yesno', summary_field: 'snake_bite' },
-                sepsis_gen: { label: 'Sepsis', type: 'yesno', summary_field: null },
-                skin_infection_gen: { label: 'Skin Infection', type: 'yesno', summary_field: null },
-                sti_pid_gen: { label: 'STI - PID', type: 'yesno', summary_mapping: 'sti_by_age' },
-                sti_genital_discharge_gen: { label: 'STI - Genital Discharge', type: 'yesno', summary_mapping: 'sti_by_age' },
-                sti_genital_ulcer_gen: { label: 'STI - Genital Ulcer', type: 'yesno', summary_mapping: 'sti_by_age' },
-                tetanus_gen: { label: 'Tetanus', type: 'yesno', summary_field: null },
-                tuberculosis_gen: { label: 'Tuberculosis (TB)', type: 'yesno', summary_field: null },
-                uti_gen: { label: 'UTI', type: 'yesno', summary_field: null },
-                worm_infestation_gen: { label: 'Worm Infestation', type: 'yesno', summary_field: 'worm_infestation' },
-                yaws_gen: { label: 'Yaws', type: 'yesno', summary_field: null },
-                onchocerciasis: { label: 'Onchocerciasis', type: 'yesno', summary_field: 'onchocerciasis' },
-                schistosomiasis: { label: 'Schistosomiasis', type: 'yesno', summary_field: 'schistosomiasis' },
-                trachoma: { label: 'Trachoma', type: 'yesno', summary_field: 'trachoma' },
-                other_infectious: { label: 'Other infectious conditions', type: 'yesno', summary_field: null }
+                moderate_malnutrition_gen: { label: 'Moderate Malnutrition', type: 'yesno' },
+                severe_malnutrition_gen: { label: 'Severe Malnutrition', type: 'yesno' },
+                afp: { label: 'AFP (Acute Flaccid Paralysis)', type: 'yesno' },
+                acute_viral_haemorragic_fever: { label: 'Acute Viral Haemorragic Fever', type: 'yesno' },
+                aids_gen: { label: 'AIDS (Acquired Immune Deficiency Syndrome)', type: 'yesno' },
+                ari_treated_gen: { label: 'ARI treated in Facility', type: 'select', options: ['With Antibiotic', 'Without Antibiotic', 'Not Applicable'] },
+                pneumonia_treated_gen: { label: 'Pneumonia treated in Facility', type: 'select', options: ['With Antibiotic', 'Without Antibiotic', 'Not Applicable'] },
+                chicken_pox_gen: { label: 'Chicken Pox', type: 'yesno' },
+                cholera: { label: 'Cholera', type: 'yesno' },
+                diarrhoea_watery_gen: { label: 'Diarrhoea, watery - treated at facility', type: 'select', options: ['With ORS and Zinc', 'With ORS only', 'Not Applicable'] },
+                dysentery: { label: 'Dysentery (Bloody diarrhoea)', type: 'yesno' },
+                hepatitis_gen: { label: 'Hepatitis (all types)', type: 'yesno' },
+                leprosy_gen: { label: 'Leprosy', type: 'yesno' },
+                measles: { label: 'Measles', type: 'yesno' },
+                rubella: { label: 'Rubella', type: 'yesno' },
+                meningitis_encephalitis: { label: 'Meningitis / Encephalitis', type: 'yesno' },
+                mumps_gen: { label: 'Mumps', type: 'yesno' },
+                buruli_ulcer: { label: 'Buruli Ulcer', type: 'yesno' },
+                yellow_fever: { label: 'Yellow Fever', type: 'yesno' },
+                typhoid_fever: { label: 'Typhoid Fever', type: 'yesno' },
+                animal_bites: { label: 'Animal Bites (dogs, cats and Snakes)', type: 'yesno' },
+                sepsis_gen: { label: 'Sepsis', type: 'yesno' },
+                skin_infection_gen: { label: 'Skin Infection', type: 'yesno' },
+                sti_pid_gen: { label: 'STI - Pelvic Inflammatory Disease (PID)', type: 'yesno' },
+                sti_genital_discharge_gen: { label: 'STI - Genital Discharge', type: 'yesno' },
+                sti_genital_ulcer_gen: { label: 'STI - Genital Ulcer', type: 'yesno' },
+                tetanus_gen: { label: 'Tetanus', type: 'yesno' },
+                tuberculosis_gen: { label: 'Tuberculosis (TB)', type: 'yesno' },
+                uti_gen: { label: 'UTI (Urinary Tract Infection)', type: 'yesno' },
+                worm_infestation_gen: { label: 'Worm Infestation', type: 'yesno' },
+                yaws_gen: { label: 'Yaws', type: 'yesno' },
+                onchocerciasis: { label: 'Onchocerciasis', type: 'yesno' },
+                schistosomiasis: { label: 'Schistosomiasis', type: 'yesno' },
+                trachoma: { label: 'Trachoma', type: 'yesno' },
+                other_infectious: { label: 'Other infectious conditions', type: 'yesno' }
             }
         },
         'Internal Medicine & NCD': {
-            description: 'Non-communicable diseases',
+            description: 'Non-communicable diseases and mental health',
             fields: {
-                adverse_drug_reaction_gen: { label: 'Adverse Drug Reaction', type: 'yesno', summary_field: 'adverse_drug_reaction' },
-                anaemia_gen: { label: 'Anaemia', type: 'yesno', summary_field: null },
-                sickle_cell_gen: { label: 'Sickle Cell Disease', type: 'yesno', summary_field: null },
-                cancer_gen: { label: 'Cancer (all types)', type: 'yesno', summary_field: null },
-                cardiovascular_gen: { label: 'Cardiovascular diseases', type: 'yesno', summary_field: null },
-                chronic_respiratory_gen: { label: 'Chronic Respiratory Diseases', type: 'yesno', summary_field: null },
-                diabetes_gen: { label: 'Diabetes', type: 'yesno', summary_mapping: 'diabetes_screening' },
-                epilepsy_gen: { label: 'Epilepsy', type: 'yesno', summary_field: 'epilepsy_followup' },
-                hypertension_gen: { label: 'Hypertension', type: 'yesno', summary_mapping: 'hypertension_screening' },
-                kidney_disorders_gen: { label: 'Kidney disorders', type: 'yesno', summary_field: null },
-                mental_disorder_gen: { label: 'Mental disorder', type: 'yesno', summary_field: 'mental_health_new_5plus' },
-                other_ncd: { label: 'Other NCD conditions', type: 'yesno', summary_field: null }
+                adverse_drug_reaction_gen: { label: 'Adverse Drug Reaction', type: 'yesno' },
+                anaemia_gen: { label: 'Anaemia', type: 'yesno' },
+                sickle_cell_gen: { label: 'Sickle Cell Disease', type: 'yesno' },
+                cancer_gen: { label: 'Cancer (all types)', type: 'yesno' },
+                cardiovascular_gen: { label: 'Cardiovascular diseases (All types)', type: 'yesno' },
+                chronic_respiratory_gen: { label: 'Chronic Respiratory Diseases (asthma, COPD, others)', type: 'yesno' },
+                diabetes_gen: { label: 'Diabetes (Type 1 or Type 2)', type: 'yesno' },
+                epilepsy_gen: { label: 'Epilepsy', type: 'yesno' },
+                hypertension_gen: { label: 'Hypertension', type: 'yesno' },
+                kidney_disorders_gen: { label: 'Kidney disorders', type: 'yesno' },
+                mental_disorder_gen: { label: 'Mental disorder (all types)', type: 'yesno' },
+                other_ncd: { label: 'Other NCD conditions', type: 'yesno' }
             }
         },
         'Neonatal Conditions': {
             description: 'Conditions affecting newborns',
             fields: {
-                asphyxia_gen: { label: 'Asphyxia', type: 'yesno', summary_mapping: 'neonatal_by_age' },
-                congenital_abnormality_gen: { label: 'Congenital Abnormality', type: 'yesno', summary_field: null },
-                prematurity_gen: { label: 'Prematurity', type: 'yesno', summary_field: null },
-                hypothermia_gen: { label: 'Hypothermia', type: 'yesno', summary_mapping: 'neonatal_by_age' },
-                respiratory_distress_gen: { label: 'Respiratory Distress Syndrome', type: 'yesno', summary_mapping: 'neonatal_by_age' }
+                asphyxia_gen: { label: 'Asphyxia', type: 'yesno' },
+                congenital_abnormality_gen: { label: 'Congenital Abnormality', type: 'yesno' },
+                prematurity_gen: { label: 'Prematurity', type: 'yesno' },
+                hypothermia_gen: { label: 'Hypothermia', type: 'yesno' },
+                respiratory_distress_gen: { label: 'Respiratory Distress Syndrome', type: 'yesno' }
             }
         },
         'Surgical Conditions': {
             description: 'Surgical and trauma conditions',
             fields: {
-                acute_abdomen_gen: { label: 'Acute Abdomen', type: 'yesno', summary_field: null },
-                appendicitis_gen: { label: 'Appendicitis', type: 'yesno', summary_field: null },
-                ent_disorder_gen: { label: 'ENT disorder', type: 'yesno', summary_field: null },
-                hernia_gen: { label: 'Hernia', type: 'yesno', summary_field: null },
-                hydrocele_gen: { label: 'Hydrocele', type: 'yesno', summary_field: null },
-                lymphodema_gen: { label: 'Lymphodema', type: 'yesno', summary_field: null },
-                oral_dental_gen: { label: 'Oral and dental conditions', type: 'yesno', summary_field: null },
-                pud_gen: { label: 'PUD', type: 'yesno', summary_field: null },
-                wounds_trauma_gen: { label: 'Wounds/Trauma', type: 'select', options: ['RTA', 'Non-RTA', 'Not Applicable'], summary_mapping: 'trauma_type' },
-                burns_gen: { label: 'Burns', type: 'yesno', summary_field: null },
-                other_surgical: { label: 'Other Surgical conditions', type: 'yesno', summary_field: null }
+                acute_abdomen_gen: { label: 'Acute Abdomen', type: 'yesno' },
+                appendicitis_gen: { label: 'Appendicitis', type: 'yesno' },
+                ent_disorder_gen: { label: 'Ear Nose and Throat (ENT) disorder', type: 'yesno' },
+                hernia_gen: { label: 'Hernia', type: 'yesno' },
+                hydrocele_gen: { label: 'Hydrocele', type: 'yesno' },
+                lymphodema_gen: { label: 'Lymphodema', type: 'yesno' },
+                oral_dental_gen: { label: 'Oral and dental conditions', type: 'yesno' },
+                pud_gen: { label: 'PUD (Peptic Ulcer Disease)', type: 'yesno' },
+                wounds_trauma_gen: { label: 'Wounds/Trauma', type: 'select', options: ['RTA', 'Non-RTA', 'Not Applicable'] },
+                burns_gen: { label: 'Burns', type: 'yesno' },
+                other_surgical: { label: 'Other Surgical conditions', type: 'yesno' }
             }
         },
-        'Tracer Medicines': {
-            description: 'Availability of medicines',
+        'Tracer and Life-Saving Medicines': {
+            description: 'Availability of essential tracer and life-saving medicines for general patients',
             fields: {
-                act_al24_asaq6_adult: { label: 'ACT (AL-24 or ASAQ-6, adult)', type: 'yesno', summary_field: null },
-                remarks_gen: { label: 'Remarks', type: 'text', summary_field: null }
+                albendazole_400mg_tab_gen: { label: 'Albendazole 400mg, Tab', type: 'yesno' },
+                aluminium_hydroxide_500mg: { label: 'Aluminium Hydroxide 500mg, Tab', type: 'yesno' },
+                amoxicillin_250mg_disp_gen: { label: 'Amoxicillin 250mg, dispersible, Tab', type: 'yesno' },
+                amoxicillin_500mg_cap: { label: 'Amoxicillin 500mg, Cap/Tab', type: 'yesno' },
+                ampicillin_500mg_inj_gen: { label: 'Ampicillin 500mg, powder for inj, Vial', type: 'yesno' },
+                ciprofloxacin_250mg: { label: 'Ciprofloxacin 250mg, Tab', type: 'yesno' },
+                ciprofloxacin_500mg: { label: 'Ciprofloxacin 500mg, Tab', type: 'yesno' },
+                clotrimazole_500mg_pessary: { label: 'Clotrimazole 500mg, Pessary', type: 'yesno' },
+                cotrimoxazole_480mg: { label: 'Cotrimoxazole 480 mg, Tab', type: 'yesno' },
+                dexamethasone_4mg_inj_gen: { label: 'Dexamethasone 4mg/ml, Inj, 1 ml, Amp', type: 'yesno' },
+                dextrose_5_sol_gen: { label: 'Dextrose 5%, Solution, 500ml, Bag', type: 'yesno' },
+                diazepam_5mg_inj_gen: { label: 'Diazepam 5mg/ml, Inj 2ml, Amp', type: 'yesno' },
+                erythromycin_250mg_tab_gen: { label: 'Erythromycin 250mg, Tab', type: 'yesno' },
+                erythromycin_500mg_tab: { label: 'Erythromycin 500mg, Tab', type: 'yesno' },
+                ferrous_sulphate_125mg_drop_gen: { label: 'Ferrous Sulphate 125mg/ml, Oral drop, 30ml, Bot', type: 'yesno' },
+                ferrous_sulphate_200mg_tab_gen: { label: 'Ferrous Sulphate 200mg, Tab', type: 'yesno' },
+                fefol_200_0_4mg: { label: '(Fefol) Ferrous/Folic acid, 200/0.4mg, Tab', type: 'yesno' },
+                folic_acid_5mg_tab_gen: { label: 'Folic Acid 5mg, Tab', type: 'yesno' },
+                gentamycin_0_5_eye_drop_gen: { label: 'Gentamycin 0.5%, eye drops, 10ml, Bot', type: 'yesno' },
+                gentamycin_40mg_inj_gen: { label: 'Gentamycin 40mg/ml, Inj, 2ml, Amp', type: 'yesno' },
+                hydralazine_20mg_inj: { label: 'Hydralazine 20mg/ml, powder for inj, 1ml, Vial', type: 'yesno' },
+                lidocaine_2_inj_gen: { label: 'Lidocaine HCl 2%, 50ml, Vial', type: 'yesno' },
+                magnesium_trisilicate: { label: 'Magnesium Trisilicate, Tab', type: 'yesno' },
+                magnesium_sulphate_20: { label: 'Magnesium Sulphate 20%, Inj, 10ml, Amp', type: 'yesno' },
+                metronidazole_250mg_tab_gen: { label: 'Metronidazole 250mg, Tab', type: 'yesno' },
+                metronidazole_5mg_solution: { label: 'Metronidazole 5mg/ml, Solution, 100ml IV, Bag', type: 'yesno' },
+                methyldopa_250mg: { label: 'Methyldopa 250mg, Tab', type: 'yesno' },
+                misoprostol_200mcg: { label: 'Misoprostol 200mcg, Tab', type: 'yesno' },
+                normal_saline_0_9_sol_gen: { label: 'Normal Saline 0.9%, Solution, 500ml, Bag', type: 'yesno' },
+                ors_sachet_gen: { label: '(ORS) Oral Rehydration Salt, Sachet', type: 'yesno' },
+                oxytocin_5iu: { label: 'Oxytocin 5IU, Inj, Amp', type: 'yesno' },
+                paracetamol_250mg_tab_gen: { label: 'Paracetamol 250mg, dispersible, Tab', type: 'yesno' },
+                paracetamol_500mg_tab_gen: { label: 'Paracetamol 500mg, Tab', type: 'yesno' },
+                ringers_lactate_500ml_gen: { label: "Ringer's Lactate, Solution, 500ml, Bag", type: 'yesno' },
+                rutf_sachet_gen: { label: '(RUTF) Ready to Use Therapeutic Food, Sachet', type: 'yesno' },
+                zinc_sulphate_20mg_tab_gen: { label: 'Zinc Sulfate 20mg, Tab', type: 'yesno' }
+            }
+        },
+        'Antimalarial Products': {
+            description: 'Antimalarial medicines and supplies',
+            fields: {
+                act_al6_asaq3_adolescent: { label: 'ACT (AL-6 Tab Blister* or ASAQ-3 Tab (adolescent) Blister*)', type: 'yesno' },
+                act_al12_asaq3_adolescent: { label: 'ACT (AL-12 Tab Blister* or ASAQ-3 Tab (adolescent) Blister*)', type: 'yesno' },
+                act_al18_asaq3_adolescent: { label: 'ACT (AL-18 Tab Blister or ASAQ-3 Tab (adolescent) Blister*)', type: 'yesno' },
+                act_al24_asaq6_adult: { label: 'ACT (AL-24 Tab Blister or ASAQ-6 Tab (adult) Blister*)', type: 'yesno' },
+                artesunate_60mg_inj_gen: { label: 'Artesunate 60mg/ml Inj, 1ml, Vial', type: 'yesno' },
+                llin_piece_gen: { label: 'LLIN (Long Lasting Insecticide-Treated Net), Piece', type: 'yesno' },
+                quinine_sulphate_300mg: { label: 'Quinine Sulphate 300mg, Tab', type: 'yesno' },
+                sp_500_25mg: { label: '(SP) Sulphadoxine/Pyrimethamine 500/25mg, Tab', type: 'yesno' }
+            }
+        },
+        'Medical Supplies': {
+            description: 'Medical supplies and consumables',
+            fields: {
+                glove_examination_piece_gen: { label: 'Glove, Examination, Disposable, Piece', type: 'yesno' },
+                needle_disposable_piece_gen: { label: 'Needle, Disposable, Piece', type: 'yesno' },
+                syringe_disposable_piece_gen: { label: 'Syringe, Disposable, Piece', type: 'yesno' }
+            }
+        },
+        'Cost': {
+            description: 'Patient cost information',
+            fields: {
+                free_health_care: { label: 'Free Health Care', type: 'yesno' },
+                cost_recovery: { label: 'Cost Recovery', type: 'yesno' }
+            }
+        },
+        'Remarks': {
+            description: 'Additional notes and comments',
+            fields: {
+                remarks_gen: { label: 'Remarks', type: 'text' }
             }
         }
     }
-};
-
-// ============================================
-// AGE GROUP MAPPING RULES
-// ============================================
-const AGE_GROUP_MAPPING = {
-    // Under-Five age groups to summary age groups
-    under_five: {
-        '<1 Month': '0_59m',
-        '1-5 Months': '0_59m',
-        '6-11 Months': '0_59m',
-        '12-23 Months': '0_59m',
-        '24-59 Months': '0_59m'
-    },
-    // General age (years) to summary age groups
-    general: function(age) {
-        if (age >= 5 && age <= 9) return '5_9y';
-        if (age >= 10 && age <= 14) return '10_14y';
-        if (age >= 15 && age <= 19) return '15_19y';
-        if (age >= 20 && age <= 24) return '20_24y';
-        if (age >= 25) return '25plus';
-        if (age < 5) return '0_59m'; // Catch for under 5 in general register
-        return null;
-    },
-    // Neonatal age groups
-    neonatal: function(age_group) {
-        if (age_group === '<1 Month') {
-            // Need to determine 0-7 days vs 8-28 days - would need date of birth
-            return '0_28d'; // Default
-        }
-        if (age_group === '1-5 Months') {
-            return '29d_2m';
-        }
-        return null;
-    },
-    // Child health specific
-    child_health: {
-        '1-5 Months': '1_59m',
-        '6-11 Months': '1_59m',
-        '12-23 Months': '1_59m',
-        '24-59 Months': '1_59m'
-    }
-};
-
-// ============================================
-// COMPLETE FIELD MAPPING TO SUMMARY
-// ============================================
-const FIELD_TO_SUMMARY_MAPPING = {
-    // MALARIA - Fever Cases
-    'fever_suspected_malaria': {
-        summary_base: 'fever_suspected',
-        age_groups: ['0_59m'],
-        sex_disaggregate: true,
-        conditions: []
-    },
-    'fever_cases_gen': {
-        summary_base: 'fever_suspected',
-        age_groups: ['5_9y', '10_14y', '15plus'],
-        sex_disaggregate: true,
-        conditions: []
-    },
-    
-    // MALARIA - RDT Results
-    'rdt_positive': {
-        summary_base: 'rdt_positive',
-        age_groups: ['0_59m'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'rdt_positive', value: 'Yes' }]
-    },
-    'rdt_negative': {
-        summary_base: 'rdt_negative',
-        age_groups: ['0_59m'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'rdt_negative', value: 'Yes' }]
-    },
-    'fever_tested_rdt_gen': {
-        summary_mapping: {
-            'Positive': { base: 'rdt_positive', age_groups: ['5_9y', '10_14y', '15plus'], sex_disaggregate: true },
-            'Negative': { base: 'rdt_negative', age_groups: ['5_9y', '10_14y', '15plus'], sex_disaggregate: true }
-        }
-    },
-    
-    // MALARIA - Microscopy Results
-    'microscopy_positive': {
-        summary_base: 'microscopy_positive',
-        age_groups: ['0_59m'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'microscopy_positive', value: 'Yes' }]
-    },
-    'microscopy_negative': {
-        summary_base: 'microscopy_negative',
-        age_groups: ['0_59m'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'microscopy_negative', value: 'Yes' }]
-    },
-    'fever_tested_microscopy_gen': {
-        summary_mapping: {
-            'Positive': { base: 'microscopy_positive', age_groups: ['5_9y', '10_14y', '15plus'], sex_disaggregate: true },
-            'Negative': { base: 'microscopy_negative', age_groups: ['5_9y', '10_14y', '15plus'], sex_disaggregate: true }
-        }
-    },
-    
-    // MALARIA - ACT Treatment
-    'act_less_24h': {
-        summary_base: 'act_less24h',
-        age_groups: ['0_59m'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'act_less_24h', value: 'Yes' }]
-    },
-    'act_more_24h': {
-        summary_base: 'act_more24h',
-        age_groups: ['0_59m'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'act_more_24h', value: 'Yes' }]
-    },
-    'malaria_act_facility_gen': {
-        summary_mapping: {
-            '<24 hours': { base: 'act_less24h', age_groups: ['5_9y', '10_14y', '15plus'], sex_disaggregate: true },
-            '>24 hours': { base: 'act_more24h', age_groups: ['5_9y', '10_14y', '15plus'], sex_disaggregate: true }
-        }
-    },
-    
-    // MALARIA - Without ACT
-    'treated_without_act_less_24h': {
-        summary_base: 'no_act_less24h',
-        age_groups: ['0_59m'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'treated_without_act_less_24h', value: 'Yes' }]
-    },
-    'treated_without_act_more_24h': {
-        summary_base: 'no_act_more24h',
-        age_groups: ['0_59m'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'treated_without_act_more_24h', value: 'Yes' }]
-    },
-    'malaria_without_act_gen': {
-        summary_mapping: {
-            '<24 hours': { base: 'no_act_less24h', age_groups: ['5_9y', '10_14y', '15plus'], sex_disaggregate: true },
-            '>24 hours': { base: 'no_act_more24h', age_groups: ['5_9y', '10_14y', '15plus'], sex_disaggregate: true }
-        }
-    },
-    
-    // CHILD HEALTH - Diarrhoea
-    'diarrhoea_ors_zinc': {
-        summary_base: 'child_diarrhoea_ors_zinc',
-        age_groups: ['child'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'diarrhoea_ors_zinc', value: 'Yes' }]
-    },
-    'diarrhoea_ors_only': {
-        summary_base: 'child_diarrhoea_ors_only',
-        age_groups: ['child'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'diarrhoea_ors_only', value: 'Yes' }]
-    },
-    
-    // CHILD HEALTH - ARI and Pneumonia
-    'ari_with_antibiotic': {
-        summary_base: 'child_ari',
-        age_groups: ['child'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'ari_with_antibiotic', value: 'Yes' }]
-    },
-    'ari_without_antibiotic': {
-        summary_base: 'child_ari',
-        age_groups: ['child'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'ari_without_antibiotic', value: 'Yes' }]
-    },
-    'pneumonia_with_antibiotic': {
-        summary_base: 'child_pneumonia',
-        age_groups: ['child'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'pneumonia_with_antibiotic', value: 'Yes' }],
-        additional_summary: {
-            base: 'child_pneumonia_antibiotic',
-            age_groups: ['child'],
-            sex_disaggregate: true
-        }
-    },
-    'pneumonia_without_antibiotic': {
-        summary_base: 'child_pneumonia',
-        age_groups: ['child'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'pneumonia_without_antibiotic', value: 'Yes' }],
-        additional_summary: {
-            base: 'child_pneumonia_no_antibiotic',
-            age_groups: ['child'],
-            sex_disaggregate: true
-        }
-    },
-    
-    // STI - By Age Group
-    'sti_genital_discharge_gen': {
-        summary_base: 'sti_genital_discharge',
-        age_groups: ['10_14y', '15_19y', '20_24y', '25plus'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'sti_genital_discharge_gen', value: 'Yes' }]
-    },
-    'sti_genital_ulcer_gen': {
-        summary_base: 'sti_genital_ulcer',
-        age_groups: ['10_14y', '15_19y', '20_24y', '25plus'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'sti_genital_ulcer_gen', value: 'Yes' }]
-    },
-    'sti_pid_gen': {
-        summary_base: 'sti_other',
-        age_groups: ['10_14y', '15_19y', '20_24y', '25plus'],
-        sex_disaggregate: true,
-        conditions: [{ field: 'sti_pid_gen', value: 'Yes' }]
-    },
-    
-    // MENTAL HEALTH
-    'mental_disorder': {
-        summary_base: 'mental_health_new_0_59m',
-        age_groups: ['0_59m'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'mental_disorder', value: 'Yes' }]
-    },
-    'mental_disorder_gen': {
-        summary_base: 'mental_health_new_5plus',
-        age_groups: ['5plus'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'mental_disorder_gen', value: 'Yes' }]
-    },
-    'epilepsy_gen': {
-        summary_base: 'epilepsy_followup',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'epilepsy_gen', value: 'Yes' }]
-    },
-    
-    // NTD
-    'worm_infestation': {
-        summary_base: 'worm_infestation',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'worm_infestation', value: 'Yes' }]
-    },
-    'worm_infestation_gen': {
-        summary_base: 'worm_infestation',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'worm_infestation_gen', value: 'Yes' }]
-    },
-    'schistosomiasis': {
-        summary_base: 'schistosomiasis',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'schistosomiasis', value: 'Yes' }]
-    },
-    'trachoma': {
-        summary_base: 'trachoma',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'trachoma', value: 'Yes' }]
-    },
-    'onchocerciasis': {
-        summary_base: 'onchocerciasis',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'onchocerciasis', value: 'Yes' }]
-    },
-    'snake_bites': {
-        summary_base: 'snake_bite',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'snake_bites', value: 'Yes' }]
-    },
-    'animal_bites': {
-        summary_base: 'snake_bite',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'animal_bites', value: 'Yes' }]
-    },
-    
-    // EMERGENCY CARE
-    'wounds_rta': {
-        summary_base: 'trauma_rta',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'wounds_rta', value: 'Yes' }]
-    },
-    'wounds_non_rta': {
-        summary_base: 'trauma_other',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'wounds_non_rta', value: 'Yes' }]
-    },
-    'wounds_trauma_gen': {
-        summary_mapping: {
-            'RTA': { base: 'trauma_rta', age_groups: ['all'], sex_disaggregate: false },
-            'Non-RTA': { base: 'trauma_other', age_groups: ['all'], sex_disaggregate: false }
-        }
-    },
-    'eye_infection': {
-        summary_base: 'eye_infection',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'eye_infection', value: 'Yes' }]
-    },
-    'eye_infection_gen': {
-        summary_base: 'eye_infection',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'eye_infection_gen', value: 'Yes' }]
-    },
-    
-    // OTHER CONDITIONS
-    'hepatitis': {
-        summary_base: 'hepatitis_all',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'hepatitis', value: 'Yes' }]
-    },
-    'hepatitis_gen': {
-        summary_base: 'hepatitis_all',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'hepatitis_gen', value: 'Yes' }]
-    },
-    'hypertension_gen': {
-        summary_base: 'hypertension_screening',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'hypertension_gen', value: 'Yes' }]
-    },
-    'diabetes_gen': {
-        summary_base: 'diabetes_screening',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'diabetes_gen', value: 'Yes' }]
-    },
-    'adverse_drug_reaction': {
-        summary_base: 'adverse_drug_reaction',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'adverse_drug_reaction', value: 'Yes' }]
-    },
-    'adverse_drug_reaction_gen': {
-        summary_base: 'adverse_drug_reaction',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'adverse_drug_reaction_gen', value: 'Yes' }]
-    },
-    
-    // SPECIAL CATEGORIES
-    'disability': {
-        summary_base: 'disabled_patient_total',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'disability', value: 'Yes' }]
-    },
-    'evd_survivor': {
-        summary_base: 'evd_survivor_total',
-        age_groups: ['all'],
-        sex_disaggregate: false,
-        conditions: [{ field: 'evd_survivor', value: 'Yes' }]
-    },
-    'category_patient': {
-        summary_mapping: {
-            'EVD Survivor': { base: 'evd_survivor_total', age_groups: ['all'], sex_disaggregate: false },
-            'Disability': { base: 'disabled_patient_total', age_groups: ['all'], sex_disaggregate: false },
-            'Pregnant': { base: 'fhc_anc_curative', age_groups: ['all'], sex_disaggregate: false },
-            'Lactating': { base: 'fhc_lactating_curative', age_groups: ['all'], sex_disaggregate: false }
-        }
-    },
-    
-    // CURATIVE CARE
-    'type_of_visit': {
-        summary_mapping: {
-            'New': { base: 'child_curative', age_group_specific: true, sex_disaggregate: true },
-            'Follow-up': { base: 'child_curative', age_group_specific: true, sex_disaggregate: true }
-        }
-    },
-    'type_of_visit_gen': {
-        summary_mapping: {
-            'New': { base: 'opd_new_followup', age_groups: ['0_59m', '5plus'], sex_disaggregate: false },
-            'Follow-up': { base: 'opd_new_followup', age_groups: ['0_59m', '5plus'], sex_disaggregate: false }
-        }
-    }
-};
-
-// ============================================
-// HF01 SUMMARY STRUCTURE
-// ============================================
-const HF01_SUMMARY_STRUCTURE = {
-    'Facility Information': [
-        'facility_name',
-        'facility_type',
-        'chiefdom',
-        'district',
-        'region',
-        'year',
-        'month',
-        'reporting_period_start',
-        'reporting_period_end'
-    ],
-    'Malaria - Fever Cases': [
-        'fever_suspected_0_59m_m', 'fever_suspected_0_59m_f',
-        'fever_suspected_5_9y_m', 'fever_suspected_5_9y_f',
-        'fever_suspected_10_14y_m', 'fever_suspected_10_14y_f',
-        'fever_suspected_15plus_m', 'fever_suspected_15plus_f'
-    ],
-    'Malaria - RDT Positive': [
-        'rdt_positive_0_59m_m', 'rdt_positive_0_59m_f',
-        'rdt_positive_5_9y_m', 'rdt_positive_5_9y_f',
-        'rdt_positive_10_14y_m', 'rdt_positive_10_14y_f',
-        'rdt_positive_15plus_m', 'rdt_positive_15plus_f'
-    ],
-    'Malaria - RDT Negative': [
-        'rdt_negative_0_59m_m', 'rdt_negative_0_59m_f',
-        'rdt_negative_5_9y_m', 'rdt_negative_5_9y_f',
-        'rdt_negative_10_14y_m', 'rdt_negative_10_14y_f',
-        'rdt_negative_15plus_m', 'rdt_negative_15plus_f'
-    ],
-    'Malaria - Microscopy Positive': [
-        'microscopy_positive_0_59m_m', 'microscopy_positive_0_59m_f',
-        'microscopy_positive_5_9y_m', 'microscopy_positive_5_9y_f',
-        'microscopy_positive_10_14y_m', 'microscopy_positive_10_14y_f',
-        'microscopy_positive_15plus_m', 'microscopy_positive_15plus_f'
-    ],
-    'Malaria - Microscopy Negative': [
-        'microscopy_negative_0_59m_m', 'microscopy_negative_0_59m_f',
-        'microscopy_negative_5_9y_m', 'microscopy_negative_5_9y_f',
-        'microscopy_negative_10_14y_m', 'microscopy_negative_10_14y_f',
-        'microscopy_negative_15plus_m', 'microscopy_negative_15plus_f'
-    ],
-    'Malaria - ACT <24 hours': [
-        'act_less24h_0_59m_m', 'act_less24h_0_59m_f',
-        'act_less24h_5_9y_m', 'act_less24h_5_9y_f',
-        'act_less24h_10_14y_m', 'act_less24h_10_14y_f',
-        'act_less24h_15plus_m', 'act_less24h_15plus_f'
-    ],
-    'Malaria - ACT >24 hours': [
-        'act_more24h_0_59m_m', 'act_more24h_0_59m_f',
-        'act_more24h_5_9y_m', 'act_more24h_5_9y_f',
-        'act_more24h_10_14y_m', 'act_more24h_10_14y_f',
-        'act_more24h_15plus_m', 'act_more24h_15plus_f'
-    ],
-    'Malaria - No ACT <24 hours': [
-        'no_act_less24h_0_59m_m', 'no_act_less24h_0_59m_f',
-        'no_act_less24h_5_9y_m', 'no_act_less24h_5_9y_f',
-        'no_act_less24h_10_14y_m', 'no_act_less24h_10_14y_f',
-        'no_act_less24h_15plus_m', 'no_act_less24h_15plus_f'
-    ],
-    'Malaria - No ACT >24 hours': [
-        'no_act_more24h_0_59m_m', 'no_act_more24h_0_59m_f',
-        'no_act_more24h_5_9y_m', 'no_act_more24h_5_9y_f',
-        'no_act_more24h_10_14y_m', 'no_act_more24h_10_14y_f',
-        'no_act_more24h_15plus_m', 'no_act_more24h_15plus_f'
-    ],
-    'Child Health': [
-        'child_curative_1_59m_m', 'child_curative_1_59m_f',
-        'child_curative_5_9y_m', 'child_curative_5_9y_f',
-        'child_diarrhoea_m', 'child_diarrhoea_f',
-        'child_diarrhoea_ors_zinc_m', 'child_diarrhoea_ors_zinc_f',
-        'child_diarrhoea_ors_only_m', 'child_diarrhoea_ors_only_f',
-        'child_ari_m', 'child_ari_f',
-        'child_pneumonia_m', 'child_pneumonia_f',
-        'child_pneumonia_antibiotic_m', 'child_pneumonia_antibiotic_f',
-        'child_pneumonia_no_antibiotic_m', 'child_pneumonia_no_antibiotic_f'
-    ],
-    'Child Mortality': [
-        'child_death_diarrhoea_1_59m', 'child_death_diarrhoea_5_9y', 'child_death_diarrhoea_10_14y',
-        'child_death_pneumonia_1_59m', 'child_death_pneumonia_5_9y', 'child_death_pneumonia_10_14y',
-        'child_death_malaria_1_59m', 'child_death_malaria_5_9y', 'child_death_malaria_10_14y',
-        'child_death_malnutrition_1_59m', 'child_death_malnutrition_5_9y', 'child_death_malnutrition_10_14y',
-        'child_death_hiv_1_59m', 'child_death_hiv_5_9y', 'child_death_hiv_10_14y',
-        'child_death_trauma_1_59m', 'child_death_trauma_5_9y', 'child_death_trauma_10_14y',
-        'child_death_other_1_59m', 'child_death_other_5_9y', 'child_death_other_10_14y',
-        'child_death_unspecified_1_59m', 'child_death_unspecified_5_9y', 'child_death_unspecified_10_14y'
-    ],
-    'STI - Genital Discharge': [
-        'sti_genital_discharge_10_14y_m', 'sti_genital_discharge_10_14y_f',
-        'sti_genital_discharge_15_19y_m', 'sti_genital_discharge_15_19y_f',
-        'sti_genital_discharge_20_24y_m', 'sti_genital_discharge_20_24y_f',
-        'sti_genital_discharge_25plus_m', 'sti_genital_discharge_25plus_f'
-    ],
-    'STI - Genital Ulcer': [
-        'sti_genital_ulcer_10_14y_m', 'sti_genital_ulcer_10_14y_f',
-        'sti_genital_ulcer_15_19y_m', 'sti_genital_ulcer_15_19y_f',
-        'sti_genital_ulcer_20_24y_m', 'sti_genital_ulcer_20_24y_f',
-        'sti_genital_ulcer_25plus_m', 'sti_genital_ulcer_25plus_f'
-    ],
-    'STI - Other': [
-        'sti_other_10_14y_m', 'sti_other_10_14y_f',
-        'sti_other_15_19y_m', 'sti_other_15_19y_f',
-        'sti_other_20_24y_m', 'sti_other_20_24y_f',
-        'sti_other_25plus_m', 'sti_other_25plus_f'
-    ],
-    'Mental Health': [
-        'mental_health_new_0_59m',
-        'mental_health_new_5plus',
-        'mental_health_followup_0_59m',
-        'mental_health_followup_5plus',
-        'epilepsy_followup'
-    ],
-    'NTD': [
-        'schistosomiasis',
-        'trachoma',
-        'worm_infestation',
-        'onchocerciasis',
-        'snake_bite'
-    ],
-    'Adolescent/Adult Mortality': [
-        'death_malaria_15plus_m', 'death_malaria_15plus_f',
-        'death_other_15plus_m', 'death_other_15plus_f'
-    ],
-    'Emergency Care': [
-        'trauma_rta',
-        'trauma_other',
-        'eye_infection'
-    ],
-    'Death Registration': [
-        'death_registered_under5',
-        'death_registered_5plus'
-    ],
-    'Neonatal Cases': [
-        'asphyxia_0_28d', 'asphyxia_29d_2m',
-        'hypothermia_0_28d', 'hypothermia_29d_2m',
-        'respiratory_distress_0_28d', 'respiratory_distress_29d_2m',
-        'serious_bacteria_0_28d', 'serious_bacteria_29d_2m',
-        'jaundice_0_28d', 'jaundice_29d_2m',
-        'diarrhoea_neo_0_28d', 'diarrhoea_neo_29d_2m'
-    ],
-    'Neonatal Deaths': [
-        'nnd_birth_trauma_0_7d', 'nnd_birth_trauma_8_28d',
-        'nnd_congenital_0_7d', 'nnd_congenital_8_28d',
-        'nnd_convulsions_0_7d', 'nnd_convulsions_8_28d',
-        'nnd_growth_0_7d', 'nnd_growth_8_28d',
-        'nnd_infection_0_7d', 'nnd_infection_8_28d',
-        'nnd_intrapartum_0_7d', 'nnd_intrapartum_8_28d',
-        'nnd_low_birthweight_0_7d', 'nnd_low_birthweight_8_28d',
-        'nnd_respiratory_cardio_0_7d', 'nnd_respiratory_cardio_8_28d',
-        'nnd_other_0_7d', 'nnd_other_8_28d',
-        'nnd_unspecified_0_7d', 'nnd_unspecified_8_28d'
-    ],
-    'All Other Morbidities': [
-        'all_other_morb_1_59m',
-        'hepatitis_all',
-        'hypertension_screening',
-        'hypertension_followup',
-        'diabetes_screening',
-        'diabetes_followup',
-        'adverse_drug_reaction'
-    ],
-    'Daily Clinic Attendance': [
-        'headcount_all_0_59m',
-        'headcount_all_5plus',
-        'opd_new_followup_0_59m',
-        'opd_new_followup_5plus',
-        'patient_referred'
-    ],
-    'Free Health Care': [
-        'fhc_child_0_59m',
-        'fhc_anc_curative',
-        'fhc_lactating_curative'
-    ],
-    'GBV': [
-        'gbv_0_9y',
-        'gbv_10_14y',
-        'gbv_15_19y',
-        'gbv_20_24y',
-        'gbv_25plus',
-        'sexual_assault'
-    ],
-    'Special Categories': [
-        'evd_survivor_total',
-        'disabled_patient_total'
-    ],
-    'Referrals': [
-        'referral_disease_0_59m',
-        'referral_disease_5_14y',
-        'referral_disease_15plus',
-        'total_referrals'
-    ]
 };
 
 // For backwards compatibility - flatten all fields
@@ -898,12 +403,16 @@ if (VARIABLE_SECTIONS['GENERAL']) {
     });
 }
 
-console.log('Complete config loaded:', Object.keys(VARIABLES).length, 'fields with full mapping');
+console.log('Config loaded: VARIABLES object created with', Object.keys(VARIABLES).length, 'fields');
 
 // ============================================
-// CASCADING DATA (Hierarchical Location Data)
+// CASCADING DATA FORMAT:
 // ============================================
-// Cascading data in pipe-delimited format (sample - you'll add the rest)
+// Region||District                           (2 columns - hierarchy)
+// District||Chiefdom                         (2 columns - hierarchy)
+// Chiefdom||Health Facility||DHIS2_UID       (3 columns - facility with UID)
+// ============================================
+
 const CASCADING_DATA = `Eastern Region||Kailahun District
 Eastern Region||Kenema District
 Eastern Region||Kono District
@@ -918,13 +427,13 @@ Southern Region||Bo District
 Southern Region||Bonthe District
 Southern Region||Moyamba District
 Southern Region||Pujehun District
-Western Area||Western Area Urban District
 Western Area||Western Area Rural District
-Bo District||Bo City
+Western Area||Western Area Urban District
 Bo District||Badjia Chiefdom
 Bo District||Bagbwe Chiefdom
 Bo District||Baoma Chiefdom
 Bo District||Bargbo Chiefdom
+Bo District||Bo City
 Bo District||Bongor Chiefdom
 Bo District||Bumpe Ngao Chiefdom
 Bo District||Gbo Chiefdom
@@ -937,20 +446,8 @@ Bo District||Selenga Chiefdom
 Bo District||Tikonko Chiefdom
 Bo District||Valunia Chiefdom
 Bo District||Wonde Chiefdom
-Bombali District||Biriwa Chiefdom
-Bombali District||Bombali Sebora Chiefdom
-Bombali District||Bombali Serry Chiefdom
-Bombali District||Gbanti (Bombali) Chiefdom
-Bombali District||Gbendembu Chiefdom
-Bombali District||Kamaranka Chiefdom
-Bombali District||Magbaimba Ndohahun Chiefdom
-Bombali District||Makarie Chiefdom
-Bombali District||Mara Chiefdom
-Bombali District||Ngowahun Chiefdom
-Bombali District||Paki Masabong Chiefdom
-Bombali District||Safroko Limba Chiefdom
-Bombali District||Makeni City
 Bonthe District||Bendu-Cha Chiefdom
+Bonthe District||Bonthe Town
 Bonthe District||Bum Chiefdom
 Bonthe District||Dema Chiefdom
 Bonthe District||Imperi Chiefdom
@@ -961,20 +458,34 @@ Bonthe District||Nongoba Bullom Chiefdom
 Bonthe District||Sittia Chiefdom
 Bonthe District||Sogbini Chiefdom
 Bonthe District||Yawbeko Chiefdom
-Bonthe District||Bonthe Town
-Falaba District||Barawa Wollay Chiefdom
-Falaba District||Delmandugu Chiefdom
-Falaba District||Dembelia-Sinkunia Chiefdom
-Falaba District||Folosaba Dembelia Chiefdom
-Falaba District||Folosaba Kamba Chiefdom
-Falaba District||Kabelia Chiefdom
-Falaba District||Kamadugu Yiraia Chiefdom
-Falaba District||Kulor Saradu Chiefdom
-Falaba District||Mongo Chiefdom
-Falaba District||Morifindu Chiefdom
-Falaba District||Neya Chiefdom
-Falaba District||Nyedu Chiefdom
-Falaba District||Sulima Chiefdom
+Moyamba District||Bagruwa Chiefdom
+Moyamba District||Bumpeh Chiefdom
+Moyamba District||Dasse Chiefdom
+Moyamba District||Fakunya Chiefdom
+Moyamba District||Kaiyamba Chiefdom
+Moyamba District||Kamajei Chiefdom
+Moyamba District||Kargboro Chiefdom
+Moyamba District||Kongbora Chiefdom
+Moyamba District||Kori Chiefdom
+Moyamba District||Kowa Chiefdom
+Moyamba District||Lower Banta Chiefdom
+Moyamba District||Ribbi Chiefdom
+Moyamba District||Timdale Chiefdom
+Moyamba District||Upper Banta Chiefdom
+Pujehun District||Barri Chiefdom
+Pujehun District||Galliness Chiefdom
+Pujehun District||Kabonde Chiefdom
+Pujehun District||Kpaka Chiefdom
+Pujehun District||Kpanga Chiefdom
+Pujehun District||Kpanga Krim Chiefdom
+Pujehun District||Makpele Chiefdom
+Pujehun District||Malen Chiefdom
+Pujehun District||Mano Sakrim Chiefdom
+Pujehun District||Peje Chiefdom
+Pujehun District||Perri Chiefdom
+Pujehun District||Soro Gbeima Chiefdom
+Pujehun District||Sowa Chiefdom
+Pujehun District||Yakemoh Kpukumu Krim Chiefdom
 Kailahun District||Dea Chiefdom
 Kailahun District||Jahn Chiefdom
 Kailahun District||Jawei Chiefdom
@@ -990,6 +501,93 @@ Kailahun District||Peje West Chiefdom
 Kailahun District||Penguia Chiefdom
 Kailahun District||Upper Bambara Chiefdom
 Kailahun District||Yawei Chiefdom
+Kenema District||Dama Chiefdom
+Kenema District||Dodo Chiefdom
+Kenema District||Gaura Chiefdom
+Kenema District||Gorama Mende Chiefdom
+Kenema District||Kandu Leppiama Chiefdom
+Kenema District||Kenema City
+Kenema District||Koya (Kenema) Chiefdom
+Kenema District||Langroma Chiefdom
+Kenema District||Lower Bambara Chiefdom
+Kenema District||Malegohun Chiefdom
+Kenema District||Niawa Chiefdom
+Kenema District||Nomo Chiefdom
+Kenema District||Nongowa Chiefdom
+Kenema District||Simbaru Chiefdom
+Kenema District||Small Bo Chiefdom
+Kenema District||Tunkia Chiefdom
+Kenema District||Wandor Chiefdom
+Kono District||Fiama Chiefdom
+Kono District||Gbane Chiefdom
+Kono District||Gbane Kandor Chiefdom
+Kono District||Gbense Chiefdom
+Kono District||Gorama Kono Chiefdom
+Kono District||Kamara Chiefdom
+Kono District||Koidu New Sembehun City
+Kono District||Lei Chiefdom
+Kono District||Mafindor Chiefdom
+Kono District||Nimikoro Chiefdom
+Kono District||Nimiyama Chiefdom
+Kono District||Sandor Chiefdom
+Kono District||Soa Chiefdom
+Kono District||Tankoro Chiefdom
+Kono District||Toli Chiefdom
+Bombali District||Biriwa Chiefdom
+Bombali District||Bombali Sebora Chiefdom
+Bombali District||Bombali Serry Chiefdom
+Bombali District||Gbanti (Bombali) Chiefdom
+Bombali District||Gbendembu Chiefdom
+Bombali District||Kamaranka Chiefdom
+Bombali District||Magbaimba Ndohahun Chiefdom
+Bombali District||Makarie Chiefdom
+Bombali District||Makeni City
+Bombali District||Mara Chiefdom
+Bombali District||Ngowahun Chiefdom
+Bombali District||Paki Masabong Chiefdom
+Bombali District||Safroko Limba Chiefdom
+Falaba District||Barawa Wollay Chiefdom
+Falaba District||Delmandugu Chiefdom
+Falaba District||Dembelia-Sinkunia Chiefdom
+Falaba District||Folosaba Dembelia Chiefdom
+Falaba District||Folosaba Kamba Chiefdom
+Falaba District||Kabelia Chiefdom
+Falaba District||Kamadugu Yiraia Chiefdom
+Falaba District||Kulor Saradu Chiefdom
+Falaba District||Mongo Chiefdom
+Falaba District||Morifindu Chiefdom
+Falaba District||Neya Chiefdom
+Falaba District||Nyedu Chiefdom
+Falaba District||Sulima Chiefdom
+Koinadugu District||Diang Chiefdom
+Koinadugu District||Gbonkorbor Kayaka Chiefdom
+Koinadugu District||Kallian Chiefdom
+Koinadugu District||Kamukeh Chiefdom
+Koinadugu District||Kasunko Kakellay Chiefdom
+Koinadugu District||Nieni Chiefdom
+Koinadugu District||Sengbeh Chiefdom
+Koinadugu District||Thamiso Chiefdom
+Koinadugu District||Wara Wara Bafodia Chiefdom
+Koinadugu District||Wara Wara Yagala Chiefdom
+Tonkolili District||Dansogoia Chiefdom
+Tonkolili District||Gbokolenken Masankong Chiefdom
+Tonkolili District||Gbokolenken Mayeppoh Chiefdom
+Tonkolili District||Gbokolenken Polie Chiefdom
+Tonkolili District||Gbokolenken Yele Chiefdom
+Tonkolili District||Kafe Chiefdom
+Tonkolili District||Kalantuba Chiefdom
+Tonkolili District||Kholifa Mabang Chiefdom
+Tonkolili District||Kholifa Mamuntha Chiefdom
+Tonkolili District||Kholifa Rowalla Chiefdom
+Tonkolili District||Kunike Barina Chiefdom
+Tonkolili District||Kunike Fulawusu Chiefdom
+Tonkolili District||Kunike Sanda Chiefdom
+Tonkolili District||Malal Chiefdom
+Tonkolili District||Sambaya Bendugu Chiefdom
+Tonkolili District||Simiria Chiefdom
+Tonkolili District||Tane Chiefdom
+Tonkolili District||Yoni Mabanta Chiefdom
+Tonkolili District||Yoni Mamala Chiefdom
 Kambia District||Bramaia Chiefdom
 Kambia District||Dixon Chiefdom
 Kambia District||Gbinleh Chiefdom
@@ -1013,63 +611,6 @@ Karene District||Sanda Tendaren Chiefdom
 Karene District||Sella Limba Chiefdom
 Karene District||Tambaka Simibungie Chiefdom
 Karene District||Tambaka Yobangie Chiefdom
-Kenema District||Kenema City
-Kenema District||Dama Chiefdom
-Kenema District||Dodo Chiefdom
-Kenema District||Gaura Chiefdom
-Kenema District||Gorama Mende Chiefdom
-Kenema District||Kandu Leppiama Chiefdom
-Kenema District||Koya (Kenema) Chiefdom
-Kenema District||Langroma Chiefdom
-Kenema District||Lower Bambara Chiefdom
-Kenema District||Malegohun Chiefdom
-Kenema District||Niawa Chiefdom
-Kenema District||Nomo Chiefdom
-Kenema District||Nongowa Chiefdom
-Kenema District||Simbaru Chiefdom
-Kenema District||Small Bo Chiefdom
-Kenema District||Tunkia Chiefdom
-Kenema District||Wandor Chiefdom
-Koinadugu District||Diang Chiefdom
-Koinadugu District||Gbonkorbor Kayaka Chiefdom
-Koinadugu District||Kallian Chiefdom
-Koinadugu District||Kamukeh Chiefdom
-Koinadugu District||Kasunko Kakellay Chiefdom
-Koinadugu District||Nieni Chiefdom
-Koinadugu District||Sengbeh Chiefdom
-Koinadugu District||Thamiso Chiefdom
-Koinadugu District||Wara Wara Bafodia Chiefdom
-Koinadugu District||Wara Wara Yagala Chiefdom
-Kono District||Koidu New Sembehun City
-Kono District||Fiama Chiefdom
-Kono District||Gbane Chiefdom
-Kono District||Gbane Kandor Chiefdom
-Kono District||Gbense Chiefdom
-Kono District||Gorama Kono Chiefdom
-Kono District||Kamara Chiefdom
-Kono District||Lei Chiefdom
-Kono District||Mafindor Chiefdom
-Kono District||Nimikoro Chiefdom
-Kono District||Nimiyama Chiefdom
-Kono District||Sandor Chiefdom
-Kono District||Soa Chiefdom
-Kono District||Tankoro Chiefdom
-Kono District||Toli Chiefdom
-Moyamba District||Bagruwa Chiefdom
-Moyamba District||Bumpeh Chiefdom
-Moyamba District||Dasse Chiefdom
-Moyamba District||Fakunya Chiefdom
-Moyamba District||Kaiyamba Chiefdom
-Moyamba District||Kamajei Chiefdom
-Moyamba District||Kargboro Chiefdom
-Moyamba District||Kongbora Chiefdom
-Moyamba District||Kori Chiefdom
-Moyamba District||Kowa Chiefdom
-Moyamba District||Lower Banta Chiefdom
-Moyamba District||Ribbi Chiefdom
-Moyamba District||Timdale Chiefdom
-Moyamba District||Upper Banta Chiefdom
-Port Loko District||Port Loko City
 Port Loko District||Bake-Loko Chiefdom
 Port Loko District||Bureh Chiefdom
 Port Loko District||Kaffu Bullom Chiefdom
@@ -1082,40 +623,8 @@ Port Loko District||Maforki Chiefdom
 Port Loko District||Makama Chiefdom
 Port Loko District||Marampa Chiefdom
 Port Loko District||Masimera Chiefdom
+Port Loko District||Port Loko City
 Port Loko District||Tainkatopa Chiefdom
-Pujehun District||Barri Chiefdom
-Pujehun District||Galliness Chiefdom
-Pujehun District||Kabonde Chiefdom
-Pujehun District||Kpaka Chiefdom
-Pujehun District||Kpanga Chiefdom
-Pujehun District||Kpanga Krim Chiefdom
-Pujehun District||Makpele Chiefdom
-Pujehun District||Malen Chiefdom
-Pujehun District||Mano Sakrim Chiefdom
-Pujehun District||Peje Chiefdom
-Pujehun District||Perri Chiefdom
-Pujehun District||Soro Gbeima Chiefdom
-Pujehun District||Sowa Chiefdom
-Pujehun District||Yakemoh Kpukumu Krim Chiefdom
-Tonkolili District||Dansogoia Chiefdom
-Tonkolili District||Gbokolenken Masankong Chiefdom
-Tonkolili District||Gbokolenken Mayeppoh Chiefdom
-Tonkolili District||Gbokolenken Polie Chiefdom
-Tonkolili District||Gbokolenken Yele Chiefdom
-Tonkolili District||Kafe Chiefdom
-Tonkolili District||Kalantuba Chiefdom
-Tonkolili District||Kholifa Mabang Chiefdom
-Tonkolili District||Kholifa Mamuntha Chiefdom
-Tonkolili District||Kholifa Rowalla Chiefdom
-Tonkolili District||Kunike Barina Chiefdom
-Tonkolili District||Kunike Fulawusu Chiefdom
-Tonkolili District||Kunike Sanda Chiefdom
-Tonkolili District||Malal Chiefdom
-Tonkolili District||Sambaya Bendugu Chiefdom
-Tonkolili District||Simiria Chiefdom
-Tonkolili District||Tane Chiefdom
-Tonkolili District||Yoni Mabanta Chiefdom
-Tonkolili District||Yoni Mamala Chiefdom
 Western Area Rural District||Koya Rural Zone
 Western Area Rural District||Mountain Rural Zone
 Western Area Rural District||Waterloo Rural Zone
@@ -1128,1776 +637,1819 @@ Western Area Urban District||East 3 Zone
 Western Area Urban District||West 1 Zone
 Western Area Urban District||West 2 Zone
 Western Area Urban District||West 3 Zone
-Bo City||Aethel CHP
-Bo City||Agape Way CHP
-Bo City||Anglican Diocese Clinic
-Bo City||Batiama Layout MCHP
-Bo City||Bo Government Hospital
-Bo City||Bo School Bay CHP
-Bo City||Breakthrough MCHP
-Bo City||Brima Town CHP
-Bo City||EDC Unit CHP
-Bo City||Favour MCHP
-Bo City||Gbanja Town MCHP
-Bo City||Gbotima CHP
-Bo City||Genda CHP
-Bo City||Genda MCHP
-Bo City||Gilas Hospital
-Bo City||Haikel CHP
-Bo City||Kakua Static CHC
-Bo City||Kandeh Town CHP
-Bo City||Kindoya Hospital
-Bo City||Kowama (Kakua) CHP
-Bo City||Lewaibu CHP
-Bo City||Lyn Maternity MCHP
-Bo City||Manjiama CHC
-Bo City||Mercy Ships (Bo City) Hospital
-Bo City||Mid Land MCHP
-Bo City||Morning Star CHP
-Bo City||Nafaya MCHP
-Bo City||Needy CHP
-Bo City||New Police Barracks CHC
-Bo City||Praise Foundation CHC
-Bo City||Red Cross (Bo City) CHC
-Bo City||Rescue Health Care Clinic
-Bo City||Simbo Town CHP
-Bo City||Sowa's Clinic
-Bo City||Spllenz Clinic
-Bo City||St Monica's Clinic
-Bo City||Tengbewabu MCHP
-Bo City||Topkoi Town CHP
-Bo City||UNIMUS MCHP
-Bo City||Walk In Medical Associate Clinic
-Bo City||Yemoh Town CHC
-Badjia Chiefdom||Ngelehun (Badjia) CHC
-Badjia Chiefdom||Njagbahun (Badjia) MCHP
-Badjia Chiefdom||Njandama MCHP
-Bagbwe Chiefdom||Barlie MCHP
-Bagbwe Chiefdom||Benduma (Bagbwe) MCHP
-Bagbwe Chiefdom||Kondiama MCHP
-Bagbwe Chiefdom||Kpetema (Bagbwe) MCHP
-Bagbwe Chiefdom||Mendewa MCHP
-Bagbwe Chiefdom||Ngalu CHC
-Bagbwe Chiefdom||Samie Buma MCHP
-Baoma Chiefdom||Baoma Station CHP
-Baoma Chiefdom||Blamawo MCHP
-Baoma Chiefdom||Faabu CHP
-Baoma Chiefdom||Foindu (Baoma) MCHP
-Baoma Chiefdom||Gbahama (Baoma) CHP
-Baoma Chiefdom||Gerehun CHC
-Baoma Chiefdom||Golu MCHP
-Baoma Chiefdom||Jan Christian Helvings Clinic
-Baoma Chiefdom||Jembe CHC
-Baoma Chiefdom||Jormu (Baoma) MCHP
-Baoma Chiefdom||Kigbai MCHP
-Baoma Chiefdom||Kpunbu MCHP
-Baoma Chiefdom||Mbundorbu MCHP
-Baoma Chiefdom||Pelewahun (Baoma) MCHP
-Baoma Chiefdom||Tugbebu CHP
-Baoma Chiefdom||Yakaji MCHP
-Baoma Chiefdom||Yamandu CHC
-Bargbo Chiefdom||Bum Kaku MCHP
-Bargbo Chiefdom||Gbangbalia MCHP
-Bargbo Chiefdom||Jimmi CHC
-Bargbo Chiefdom||Kakama MCHP
-Bargbo Chiefdom||Kasse MCHP
-Bargbo Chiefdom||Limba CHP
-Bargbo Chiefdom||Mano Yorgbo MCHP
-Bargbo Chiefdom||Momajo CHP
-Bargbo Chiefdom||Niagorehun (Bargbo) CHP
-Bargbo Chiefdom||Senehun Ngolan MCHP
-Bongor Chiefdom||Gbaama MCHP
-Bongor Chiefdom||Lowoma (Bongor) MCHP
-Bongor Chiefdom||Mamboma (Bongor) CHC
-Bongor Chiefdom||Telu CHC
-Bumpe Ngao Chiefdom||Bongor (Bumpe Ngao) MCHP
-Bumpe Ngao Chiefdom||Buma MCHP
-Bumpe Ngao Chiefdom||Bumpe CHC
-Bumpe Ngao Chiefdom||Kabiyama MCHP
-Bumpe Ngao Chiefdom||Kaniya MCHP
-Bumpe Ngao Chiefdom||Kpetema (Bumpe Ngao) CHP
-Bumpe Ngao Chiefdom||Makayonie MCHP
-Bumpe Ngao Chiefdom||Mokoba MCHP
-Bumpe Ngao Chiefdom||Mokpende MCHP
-Bumpe Ngao Chiefdom||Ngolahun (Bumpe Ngao) CHC
-Bumpe Ngao Chiefdom||Niagorehun Vaakie MCHP
-Bumpe Ngao Chiefdom||Sahn (Bumpe Ngao) CHP
-Bumpe Ngao Chiefdom||Serabu (Bumpe Ngao) CHC
-Bumpe Ngao Chiefdom||Serabu Mission Hospital
-Bumpe Ngao Chiefdom||Taninahun (Bumpe Ngao) CHP
-Bumpe Ngao Chiefdom||Walihun (Bumpe Ngao) MCHP
-Bumpe Ngao Chiefdom||Yengema (Bumpe Ngao) MCHP
-Gbo Chiefdom||Gbaiima CHC
-Gbo Chiefdom||Sembehun Mamagewoh CHC
-Jaiama Chiefdom||Koribondo CHC
-Jaiama Chiefdom||Mano-Jaiama CHP
-Jaiama Chiefdom||Niayahun CHP
-Kakua Chiefdom||Bandajuma MCHP
-Kakua Chiefdom||Bo Childrens Hospital
-Kakua Chiefdom||Egyptian (Bo) Clinic
-Kakua Chiefdom||Fengehun MCHP
-Kakua Chiefdom||Fullawahun MCHP
-Kakua Chiefdom||Gbongboma MCHP
-Kakua Chiefdom||Gender CHP
-Kakua Chiefdom||Keindeyella MCHP
-Kakua Chiefdom||Maguama CHP
-Kakua Chiefdom||Mamasa Life Saving Hospital
-Kakua Chiefdom||Manjiama CHC
-Kakua Chiefdom||Marie Stopes (Kakua) Clinic
-Kakua Chiefdom||Massah Memorial Maternity MCHP
-Kakua Chiefdom||Ndegbomie MCHP
-Kakua Chiefdom||Nduvuibu MCHP
-Kakua Chiefdom||United Methodist Church Manjama CHC
-Kakua Chiefdom||Veronical MCHP
-Komboya Chiefdom||Gumahun MCHP
-Komboya Chiefdom||Komboya Gbauja MCHP
-Komboya Chiefdom||Kpamajama MCHP
-Komboya Chiefdom||Mano (Komboya) MCHP
-Komboya Chiefdom||Niagorehun (Komboya) MCHP
-Komboya Chiefdom||Njala (Komboya) CHC
-Komboya Chiefdom||Teibor CHP
-Lugbu Chiefdom||Bontiwo MCHP
-Lugbu Chiefdom||Feiba CHP
-Lugbu Chiefdom||Hima MCHP
-Lugbu Chiefdom||Karleh MCHP
-Lugbu Chiefdom||Kpetewoma CHP
-Lugbu Chiefdom||Ngieyehun MCHP
-Lugbu Chiefdom||Sumbuya (Lugbu) CHC
-Lugbu Chiefdom||Upper Saama MCHP
-Lugbu Chiefdom||Yambama CHP
-Niawa Lenga Chiefdom||Korbu MCHP
-Niawa Lenga Chiefdom||Nengbema CHP
-Niawa Lenga Chiefdom||Ngogbebu MCHP
-Niawa Lenga Chiefdom||Pendebu MCHP
-Niawa Lenga Chiefdom||Sahn (Niawa Lenga) CHC
-Selenga Chiefdom||Damballa CHC
-Selenga Chiefdom||Gbangba MCHP
-Tikonko Chiefdom||Gondama (Tikonko) CHC
-Tikonko Chiefdom||Griema MCHP
-Tikonko Chiefdom||Haikal CHP
-Tikonko Chiefdom||Kassama MCHP
-Tikonko Chiefdom||Mattru on the Rail MCHP
-Tikonko Chiefdom||Mendewa 2 Clinic
-Tikonko Chiefdom||Mendewa CHP
-Tikonko Chiefdom||Sebehun Tarbay MCHP
-Tikonko Chiefdom||Sembehun 17 (Tikonko) CHP
-Tikonko Chiefdom||Theresa Hakim CHP
-Tikonko Chiefdom||Tikonko (Bo) CHC
-Tikonko Chiefdom||Towama MCHP
-Tikonko Chiefdom||Veronica MCHP
-Tikonko Chiefdom||We Care Health Centre Clinic
-Tikonko Chiefdom||Zion CHC
-Valunia Chiefdom||Baomahun CHC
-Valunia Chiefdom||Foya (Valunia) CHP
-Valunia Chiefdom||Grima (Valunia) CHP
-Valunia Chiefdom||Kenema Blango CHC
-Valunia Chiefdom||Kpewama MCHP
-Valunia Chiefdom||Kpuabu MCHP
-Valunia Chiefdom||Mongere CHC
-Valunia Chiefdom||Ngolahun Jabaty CHP
-Valunia Chiefdom||Pujehun (Valunia) CHP
-Wonde Chiefdom||Bathurst MCHP
-Wonde Chiefdom||Fanima (Wonde) MCHP
-Wonde Chiefdom||Gboyama CHC
-Wonde Chiefdom||Kambawama MCHP
-Biriwa Chiefdom||Bumban CHP
-Biriwa Chiefdom||Bumbanday MCHP
-Biriwa Chiefdom||Kagbaneh CHC
-Biriwa Chiefdom||Kagbankona MCHP
-Biriwa Chiefdom||Kakorla MCHP
-Biriwa Chiefdom||Kamabai CHC
-Biriwa Chiefdom||Kamasikie CHP
-Biriwa Chiefdom||Kamathudgu MCHP
-Biriwa Chiefdom||Kanikay MCHP
-Biriwa Chiefdom||Karina CHP
-Biriwa Chiefdom||Kathakeya CHP
-Biriwa Chiefdom||Kayainkassa CHP
-Biriwa Chiefdom||Kayonkoro CHP
-Biriwa Chiefdom||Manjoro MCHP
-Biriwa Chiefdom||Waridala Clinic
-Bombali Sebora Chiefdom||Arab (Makeni) Clinic
-Bombali Sebora Chiefdom||Maboleh CHP
-Bombali Sebora Chiefdom||Maforay (Bombali Sebora) CHP
-Bombali Sebora Chiefdom||Makama CHP
-Bombali Sebora Chiefdom||Makump CHP
-Bombali Sebora Chiefdom||Masory CHP
-Bombali Sebora Chiefdom||Pate-Bana Masimbo CHP
-Bombali Sebora Chiefdom||Patebana CHC
-Bombali Sebora Chiefdom||Rescue International (Bombali Sebora) Clinic
-Bombali Sebora Chiefdom||Robat CHP
-Bombali Serry Chiefdom||Manonkoh Clinic
-Bombali Serry Chiefdom||Rokonta CHC
-Gbanti (Bombali) Chiefdom||Kunsho CHP
-Gbanti (Bombali) Chiefdom||Panlap CHP
-Gbanti (Bombali) Chiefdom||Stocco CHP
-Gbanti (Bombali) Chiefdom||Yoni (Gbanti) CHP
-Gbendembu Chiefdom||Gbendembu CHC
-Gbendembu Chiefdom||Kortohun MCHP
-Gbendembu Chiefdom||Madina Loko CHP
-Gbendembu Chiefdom||Mamaka (Gbendembu) MCHP
-Gbendembu Chiefdom||Mambala MCHP
-Kamaranka Chiefdom||Kamaranka CHC
-Kamaranka Chiefdom||Makaiba MCHP
-Kamaranka Chiefdom||Makassa MCHP
-Kamaranka Chiefdom||Rosint MCHP
-Kamaranka Chiefdom||Royeama CHP
-Magbaimba Ndohahun Chiefdom||Hunduwa MCHP
-Magbaimba Ndohahun Chiefdom||Kagbere CHC
-Magbaimba Ndohahun Chiefdom||Mambiama MCHP
-Magbaimba Ndohahun Chiefdom||Manjaka MCHP
-Makarie Chiefdom||Fullah Town 1 (Makarie) CHP
-Makarie Chiefdom||Karefay Themne CHP
-Makarie Chiefdom||Kerefay Loko MCHP
-Makarie Chiefdom||Kolisokoh CHP
-Makarie Chiefdom||Mabayo MCHP
-Makarie Chiefdom||Magbaikoli MCHP
-Makarie Chiefdom||Magbenteh Hospital
-Makarie Chiefdom||Makarie MCHP
-Makarie Chiefdom||Mangay Loko MCHP
-Makarie Chiefdom||Marie Stopes (Makarie) Clinic
-Makarie Chiefdom||Masongbo (Makarie) CHC
-Makarie Chiefdom||Mateneh MCHP
-Makarie Chiefdom||Punthun MCHP
-Makarie Chiefdom||Thonkoba CHP
-Makarie Chiefdom||Yainkassa CHP
-Mara Chiefdom||Kiampkakolo MCHP
-Mara Chiefdom||Manewa MCHP
-Mara Chiefdom||Mara CHC
-Ngowahun Chiefdom||Kalangba (Ngowahun) CHC
-Ngowahun Chiefdom||Maharie CHP
-Ngowahun Chiefdom||Makiteh (Ngowahun) MCHP
-Ngowahun Chiefdom||Masongbo Loko CHP
-Ngowahun Chiefdom||Tambiama CHP
-Paki Masabong Chiefdom||Kathanta Bana CHP
-Paki Masabong Chiefdom||Kathekeya Kaboli CHP
-Paki Masabong Chiefdom||Makeni Lol MCHP
-Paki Masabong Chiefdom||Makolor CHP
-Paki Masabong Chiefdom||Mapaki CHC
-Paki Masabong Chiefdom||Masabong Pil MCHP
-Paki Masabong Chiefdom||Masingbi Lol MCHP
-Safroko Limba Chiefdom||Binkolo CHC
-Safroko Limba Chiefdom||Kabombeh MCHP
-Safroko Limba Chiefdom||Kabonka MCHP
-Safroko Limba Chiefdom||Kagbo MCHP
-Safroko Limba Chiefdom||Kapethe MCHP
-Safroko Limba Chiefdom||Kateneh MCHP
-Safroko Limba Chiefdom||Kayasie CHP
-Safroko Limba Chiefdom||Mabonkani MCHP
-Safroko Limba Chiefdom||Maselleh MCHP
-Safroko Limba Chiefdom||Masongbo Limba MCHP
-Makeni City||Bombali Police CHC
-Makeni City||Branda Medical Centre Hospital
-Makeni City||Caring Hands Clinic
-Makeni City||City Garden Clinic
-Makeni City||Fullah Town 2 (Makeni City) CHP
-Makeni City||Hamanda Clinic
-Makeni City||Happy Kid and Adolescent (Makeni City) Clinic
-Makeni City||Holy Spirit Hospital
-Makeni City||Holy Spirit Mobile Clinic
-Makeni City||Loreto Clinic
-Makeni City||Makeni Correctional Centre Clinic
-Makeni City||Makeni Government Hospital
-Makeni City||Masuba Clinic
-Makeni City||Modern Clinic
-Makeni City||Mordan Clinic
-Makeni City||New Hope Hospital
-Makeni City||Red Cross (Makeni City) CHP
-Makeni City||Sanda Clinic
-Makeni City||Stocco Leprosy and TB Hospital
-Makeni City||Teko Barracks CHP
-Makeni City||Tonko CHP
-Bendu-Cha Chiefdom||Bendu (Bendu-Cha) CHC
-Bendu-Cha Chiefdom||Foya (Bendu-Cha) CHP
-Bendu-Cha Chiefdom||Giebina CHP
-Bendu-Cha Chiefdom||Mindohun MCHP
-Bendu-Cha Chiefdom||Mo-Davies CHP
-Bendu-Cha Chiefdom||Taigbe CHP
-Bum Chiefdom||Karlleh MCHP
-Bum Chiefdom||Madina (Bum) CHC
-Bum Chiefdom||Mammy CHP
-Bum Chiefdom||Ngepehun CHP
-Bum Chiefdom||Ngessehun MCHP
-Bum Chiefdom||Sogballeh MCHP
-Bum Chiefdom||Tassor CHP
-Bum Chiefdom||Torma Bum CHP
-Dema Chiefdom||Bumpetoke (Dema) CHP
-Dema Chiefdom||Mbaoma (Dema) CHP
-Dema Chiefdom||Tissana (Dema) CHC
-Dema Chiefdom||Tombay CHP
-Imperi Chiefdom||Gaindema CHP
-Imperi Chiefdom||Gbamgbaia CHC
-Imperi Chiefdom||Gbamgbama CHC
-Imperi Chiefdom||Jangallor CHP
-Imperi Chiefdom||Junctionla MCHP
-Imperi Chiefdom||Mo-Kepay CHP
-Imperi Chiefdom||Mogbwemo CHC
-Imperi Chiefdom||Mokaba MCHP
-Imperi Chiefdom||Moriba Town (Imperri) CHC
-Imperi Chiefdom||Mount Hope Hospital
-Imperi Chiefdom||Sierra Rutile Hospital
-Imperi Chiefdom||Victoria MCHP
-Imperi Chiefdom||Yargoi CHP
-Jong Chiefdom||Barbar MCHP
-Jong Chiefdom||Gambia CHC
-Jong Chiefdom||Gbaninga CHP
-Jong Chiefdom||Henry Kormoi Community Hospital
-Jong Chiefdom||Jorma CHP
-Jong Chiefdom||Kabati CHP
-Jong Chiefdom||Komende (Jong) MCHP
-Jong Chiefdom||Mattru CHC
-Jong Chiefdom||Mattru UBC Hospital
-Jong Chiefdom||Mo-Savie MCHP
-Jong Chiefdom||Mogbwe MCHP
-Jong Chiefdom||Mongerewa MCHP
-Jong Chiefdom||Moyowa MCHP
-Jong Chiefdom||Red Cross (Mattru) CHP
-Jong Chiefdom||Segbwema (Jong) CHP
-Jong Chiefdom||Semabu (Jong) CHP
-Jong Chiefdom||Tissana (Jong) CHP
-Kpanda Kemoh Chiefdom||Gambia Popayma MCHP
-Kpanda Kemoh Chiefdom||Gbongeh MCHP
-Kpanda Kemoh Chiefdom||Lawana (Kpanda Kemo) MCHP
-Kpanda Kemoh Chiefdom||Mottuo CHC
-Kpanda Kemoh Chiefdom||Senjehun MCHP
-Kwamebai Krim Chiefdom||Benduma CHC
-Kwamebai Krim Chiefdom||Hoya CHP
-Kwamebai Krim Chiefdom||Massah Kpoanguma CHP
-Kwamebai Krim Chiefdom||Mosenteh CHP
-Kwamebai Krim Chiefdom||Tei CHP
-Kwamebai Krim Chiefdom||Topain CHP
-Nongoba Bullom Chiefdom||Batahall CHP
-Nongoba Bullom Chiefdom||Gbamani CHP
-Nongoba Bullom Chiefdom||Gbap CHC
-Nongoba Bullom Chiefdom||Maamu MCHP
-Nongoba Bullom Chiefdom||Mbaoma Kpengeh CHC
-Nongoba Bullom Chiefdom||Mbaoma Kpengeh CHP
-Nongoba Bullom Chiefdom||Minah CHP
-Nongoba Bullom Chiefdom||Ngaringa MCHP
-Nongoba Bullom Chiefdom||Sembehun (Nongoba Bullom) MCHP
-Nongoba Bullom Chiefdom||Subu MCHP
-Nongoba Bullom Chiefdom||Torma Gbagba CHP
-Nongoba Bullom Chiefdom||Waiba MCHP
-Sittia Chiefdom||Delken CHC
-Sittia Chiefdom||Delken MCHP
-Sittia Chiefdom||Mania MCHP
-Sittia Chiefdom||Mbokie MCHP
-Sittia Chiefdom||Mo-Sandi CHP
-Sittia Chiefdom||Ngepay CHP
-Sittia Chiefdom||Sanhaya CHP
-Sittia Chiefdom||Yoni (Sittia) CHC
-Sogbini Chiefdom||Grima (Sogbini) CHP
-Sogbini Chiefdom||Kanga (Sogbini) MCHP
-Sogbini Chiefdom||Kpetema (Sogbini) MCHP
-Sogbini Chiefdom||Mandu CHP
-Sogbini Chiefdom||Ngueh MCHP
-Sogbini Chiefdom||Tihun CHC
-Yawbeko Chiefdom||Mobefa MCHP
-Yawbeko Chiefdom||Sargor CHP
-Yawbeko Chiefdom||Senehun Gbloh MCHP
-Yawbeko Chiefdom||Talia (Yawbeko) CHC
-Yawbeko Chiefdom||Tuakan CHP
-Bonthe Town||Bonthe Government Hospital
-Bonthe Town||Bonthe Under Fives Clinic
-Bonthe Town||Red Cross (Bonthe) CHP
-Bonthe Town||St Joseph's Clinic
-Bonthe Town||York Island CHP
-Barawa Wollay Chiefdom||Banadakafaia CHP
-Barawa Wollay Chiefdom||Bandakoro MCHP
-Barawa Wollay Chiefdom||Firawa CHC
-Barawa Wollay Chiefdom||Konombaia CHP
-Barawa Wollay Chiefdom||Kulanko MCHP
-Delmandugu Chiefdom||Deldu Kamaron MCHP
-Delmandugu Chiefdom||Mansadu CHC
-Delmandugu Chiefdom||Masadu CHC
-Delmandugu Chiefdom||Mongo Kamaron CHP
-Delmandugu Chiefdom||Seremudu MCHP
-Delmandugu Chiefdom||Tambalia Balia MCHP
-Dembelia-Sinkunia Chiefdom||Fullamansa MCHP
-Dembelia-Sinkunia Chiefdom||Gbindi CHP
-Dembelia-Sinkunia Chiefdom||Manna MCHP
-Dembelia-Sinkunia Chiefdom||Sinkunia CHC
-Folosaba Dembelia Chiefdom||Dogoloya CHP
-Folosaba Dembelia Chiefdom||Koromasilaia MCHP
-Folosaba Dembelia Chiefdom||Largo MCHP
-Folosaba Dembelia Chiefdom||Musaia (Dembelia) CHC
-Folosaba Kamba Chiefdom||Gbentu CHC
-Folosaba Kamba Chiefdom||Hamdalia MCHP
-Folosaba Kamba Chiefdom||Kalia MCHP
-Folosaba Kamba Chiefdom||Kamba Mamudia CHP
-Kabelia Chiefdom||Ganya CHP
-Kamadugu Yiraia Chiefdom||Dankawalie CHC
-Kamadugu Yiraia Chiefdom||Kamadu Badala MCHP
-Kamadugu Yiraia Chiefdom||Kamadu Sokuralla CHP
-Kamadugu Yiraia Chiefdom||Yiraia CHP
-Kulor Saradu Chiefdom||Bandapirie CHP
-Kulor Saradu Chiefdom||Durukoro MCHP
-Kulor Saradu Chiefdom||Kulia CHP
-Kulor Saradu Chiefdom||Yarawadu MCHP
-Mongo Chiefdom||Mongo Bendugu CHC
-Mongo Chiefdom||Mongo Karifaia MCHP
-Mongo Chiefdom||Seria CHP
-Mongo Chiefdom||Walia MCHP
-Morifindu Chiefdom||Gberefeh MCHP
-Morifindu Chiefdom||Kombili CHP
-Morifindu Chiefdom||Serekolia CHC
-Morifindu Chiefdom||Tubah MCHP
-Neya Chiefdom||Banboria MCHP
-Neya Chiefdom||Kurubonla CHC
-Neya Chiefdom||Mansofinia CHP
-Neya Chiefdom||Porpon MCHP
-Nyedu Chiefdom||Bumbukoro CHC
-Nyedu Chiefdom||Masonia MCHP
-Sulima Chiefdom||Falaba CHC
-Sulima Chiefdom||Gberia Timbakor CHP
-Sulima Chiefdom||Kaliyereh MCHP
-Sulima Chiefdom||Koindu Kura CHP
-Sulima Chiefdom||Sonkoya MCHP
-Dea Chiefdom||Baiwala CHP
-Dea Chiefdom||Nagbena CHP
-Dea Chiefdom||Sienga CHP
-Jahn Chiefdom||Gbeika CHP
-Jawei Chiefdom||Bombohun MCHP
-Jawei Chiefdom||Daru CHC
-Jawei Chiefdom||Kambama CHP
-Jawei Chiefdom||Kortuma MCHP
-Jawei Chiefdom||Mamabu CHP
-Jawei Chiefdom||Njala-Grima CHP
-Jawei Chiefdom||Nyeama CHP
-Jawei Chiefdom||Pellie CHP
-Jawei Chiefdom||Pewama CHP
-Jawei Chiefdom||SWAKAB (Jawei) Clinic
-Kissi Kama Chiefdom||Dia CHC
-Kissi Kama Chiefdom||Foidu CHP
-Kissi Teng Chiefdom||Bayama (Kissi Teng) CHP
-Kissi Teng Chiefdom||Kangama (Kissi Teng) CHP
-Kissi Teng Chiefdom||Koindu CHC
-Kissi Tongi Chiefdom||Buedu CHC
-Kissi Tongi Chiefdom||Dawa CHP
-Kissi Tongi Chiefdom||Gbandiwulo CHP
-Kissi Tongi Chiefdom||Madopolahun CHP
-Kissi Tongi Chiefdom||Sandia (Kissi Tongi) MCHP
-Kissi Tongi Chiefdom||Voahun CHP
-Kissi Tongi Chiefdom||Weh CHP
-Luawa Chiefdom||Bandajuma Sinneh MCHP
-Luawa Chiefdom||Baoma (Luawa) CHP
-Luawa Chiefdom||Dodo-Kortuma CHP
-Luawa Chiefdom||Gbalahun CHP
-Luawa Chiefdom||Gbeworbu Gao CHP
-Luawa Chiefdom||Giema (Luawa) CHP
-Luawa Chiefdom||Jengbellu CHP
-Luawa Chiefdom||Kailahun Government Hospital
-Luawa Chiefdom||Konjo (Luawa) CHP
-Luawa Chiefdom||Kpandebu (Luawa) MCHP
-Luawa Chiefdom||Luawa Under Fives CHC
-Luawa Chiefdom||Madina (Luawa) MCHP
-Luawa Chiefdom||Mano-Sewalu CHP
-Luawa Chiefdom||Marie Stopes (Luawa) Clinic
-Luawa Chiefdom||Mende Buima MCHP
-Luawa Chiefdom||Morfindor CHP
-Luawa Chiefdom||Ngiehun (Luawa) CHP
-Luawa Chiefdom||Nyandehun (Luawa) CHP
-Luawa Chiefdom||Sandeyallu CHP
-Luawa Chiefdom||Sengema (Luawa) CHP
-Luawa Chiefdom||Talia (Luawa) MCHP
-Malema Chiefdom||Bumpeh (Malema) CHP
-Malema Chiefdom||Fobu CHP
-Malema Chiefdom||Jojoima CHC
-Malema Chiefdom||Madina (Malema) CHP
-Malema Chiefdom||Njama (Malema) MCHP
-Mandu Chiefdom||Baiima CHP
-Mandu Chiefdom||Levuma (Mandu) CHP
-Mandu Chiefdom||Mobai CHC
-Mandu Chiefdom||Yoyah CHP
-Njaluahun Chiefdom||Bandajuma Kpolihun CHP
-Njaluahun Chiefdom||Dambu CHC
-Njaluahun Chiefdom||Daru Field Hospital Clinic
-Njaluahun Chiefdom||Follah MCHP
-Njaluahun Chiefdom||Laleihun (Njaluahun) CHP
-Njaluahun Chiefdom||Mano-Menima CHP
-Njaluahun Chiefdom||Niahun Gbuyama CHP
-Njaluahun Chiefdom||Nixon Hospital
-Njaluahun Chiefdom||Nixon Under Fives CHC
-Njaluahun Chiefdom||Njaluahun Military Hospital
-Njaluahun Chiefdom||Nyandehun Nguvoihun CHP
-Njaluahun Chiefdom||Pendembu-Njeigbla CHP
-Njaluahun Chiefdom||Segbwema (Njaluahun) MCHP
-Peje Bongre Chiefdom||Gbahama (Peje Bongre) CHP
-Peje Bongre Chiefdom||Grima MCHP
-Peje Bongre Chiefdom||Mamboma (Peje Bongre) CHP
-Peje Bongre Chiefdom||Manowa CHC
-Peje Bongre Chiefdom||Ngolahun MCHP
-Peje Bongre Chiefdom||Pujehun (Peje Bongre) CHP
-Peje West Chiefdom||Bunumbu CHC
-Peje West Chiefdom||El-Shaddai (Peje West) Clinic
-Peje West Chiefdom||Jokibu CHP
-Peje West Chiefdom||Peje Baoma CHP
-Peje West Chiefdom||Pejewa (Peje West) CHP
-Penguia Chiefdom||Kono-Bendu CHP
-Penguia Chiefdom||Lalehun CHP
-Penguia Chiefdom||Sandaru (Penguia) CHC
-Penguia Chiefdom||Woroma CHP
-Upper Bambara Chiefdom||Bomaru CHP
-Upper Bambara Chiefdom||Hand Maid Clinic
-Upper Bambara Chiefdom||Jenneh MCHP
-Upper Bambara Chiefdom||Mendekelema (Upper Bambara) CHP
-Upper Bambara Chiefdom||Pendembu (Upper Bambara) CHC
-Upper Bambara Chiefdom||Siama (Upper Bambara) CHP
-Yawei Chiefdom||Bandajuma CHC
-Yawei Chiefdom||Bendu CHP
-Yawei Chiefdom||Kwellu-Ngieya CHP
-Yawei Chiefdom||Macca CHP
-Yawei Chiefdom||Malema (Yawei) CHP
-Yawei Chiefdom||Massayeima CHP
-Bramaia Chiefdom||Gbolon MCHP
-Bramaia Chiefdom||Kanku Bramaia MCHP
-Bramaia Chiefdom||Kukuna CHC
-Bramaia Chiefdom||Shekaia MCHP
-Dixon Chiefdom||Fodaya MCHP
-Dixon Chiefdom||Mafaray CHP
-Gbinleh Chiefdom||Gbalamuya CHC
-Gbinleh Chiefdom||Madamaya Good Grace Clinic
-Gbinleh Chiefdom||Magbengbeh MCHP
-Gbinleh Chiefdom||Tawuya MCHP
-Gbinleh Chiefdom||Worreh MCHP
-Konimaka Chiefdom||Barakuya MCHP
-Konimaka Chiefdom||Konta (Bramaia) CHP
-Magbema Chiefdom||Ahmadiyya Mission Clinic
-Magbema Chiefdom||Arab (Magbema) Clinic
-Magbema Chiefdom||Barmoi Luma CHP
-Magbema Chiefdom||Dibia CHP
-Magbema Chiefdom||Gbonkomaria CHP
-Magbema Chiefdom||Kamba MCHP
-Magbema Chiefdom||Kambia Government Hospital
-Magbema Chiefdom||Magbema Under Fives Clinic
-Magbema Chiefdom||Magbethy MCHP
-Magbema Chiefdom||Mathuraneh MCHP
-Magbema Chiefdom||Menicurve MCHP
-Magbema Chiefdom||Mile 18 MCHP
-Magbema Chiefdom||Modia MCHP
-Magbema Chiefdom||Red Cross (Magbema) CHP
-Magbema Chiefdom||Rokupr CHC
-Magbema Chiefdom||Senthai MCHP
-Magbema Chiefdom||Wullah Thenkle MCHP
-Mambolo Chiefdom||Kalainkay MCHP
-Mambolo Chiefdom||Macoth MCHP
-Mambolo Chiefdom||Mambolo (Kambia) CHC
-Mambolo Chiefdom||Mayakie MCHP
-Mambolo Chiefdom||Rokel (Mambolo) MCHP
-Mambolo Chiefdom||Romando MCHP
-Mambolo Chiefdom||Rotain Bana CHP
-Mambolo Chiefdom||Tombo Wallah CHP
-Masumgbala Chiefdom||Kania CHC
-Masumgbala Chiefdom||Kawula CHC
-Munu Thalla Chiefdom||Banka Makuloh MCHP
-Munu Thalla Chiefdom||Barmoi Munu CHC
-Munu Thalla Chiefdom||Gbalan Thallan MCHP
-Samu Chiefdom||Bapuya CHP
-Samu Chiefdom||Kangbor MCHP
-Samu Chiefdom||Kassirie CHC
-Samu Chiefdom||Kortimoh MCHP
-Samu Chiefdom||Koya (Samu) MCHP
-Samu Chiefdom||Kychom CHC
-Samu Chiefdom||Mafufuneh CHC
-Samu Chiefdom||Mange Bissan MCHP
-Samu Chiefdom||Mapotolon CHC
-Samu Chiefdom||Moribaya MCHP
-Samu Chiefdom||Rokai MCHP
-Samu Chiefdom||Rosinor CHP
-Samu Chiefdom||Soriebolomia MCHP
-Samu Chiefdom||Yelieboya CHP
-Tonko Limba Chiefdom||Bubuya MCHP
-Tonko Limba Chiefdom||Kamagbewu MCHP
-Tonko Limba Chiefdom||Kamassasa CHC
-Tonko Limba Chiefdom||Kamawala MCHP
-Tonko Limba Chiefdom||Kasoria CHP
-Tonko Limba Chiefdom||Katherie MCHP
-Tonko Limba Chiefdom||Layia Gboray CHP
-Tonko Limba Chiefdom||Madina (Tonko Limba) CHC
-Tonko Limba Chiefdom||Madina Wesleyan Clinic
-Tonko Limba Chiefdom||Masaralie MCHP
-Tonko Limba Chiefdom||Masselleh CHP
-Tonko Limba Chiefdom||Masunthun CHP
-Tonko Limba Chiefdom||Mile 14 CHP
-Tonko Limba Chiefdom||Numea CHP
-Tonko Limba Chiefdom||Samaia MCHP
-Tonko Limba Chiefdom||Sellah Kafta MCHP
-Tonko Limba Chiefdom||Timbo MCHP
-Tonko Limba Chiefdom||Yebaya MCHP
-Buya Chiefdom||Kamasondo CHC
-Buya Chiefdom||Manumtheneh MCHP
-Buya Chiefdom||Masamboi MCHP
-Buya Chiefdom||Rosint Buya MCHP
-Dibia Chiefdom||Gbinti CHC
-Dibia Chiefdom||Gbombana MCHP
-Dibia Chiefdom||Magborognor MCHP
-Dibia Chiefdom||Roctolon MCHP
-Dibia Chiefdom||Rogballan (Dibia) CHP
-Gbanti (Karene) Chiefdom||Borongoh Makarankay MCHP
-Gbanti (Karene) Chiefdom||Gbainkfay MCHP
-Gbanti (Karene) Chiefdom||Gbanti CHP
-Gbanti (Karene) Chiefdom||Gbinti Maria MCHP
-Gbanti (Karene) Chiefdom||Gbonkobana MCHP
-Gbanti (Karene) Chiefdom||Kambia CHP
-Gormbahun Chiefdom||BatKanu CHC
-Gormbahun Chiefdom||Kiamunday MCHP
-Gormbahun Chiefdom||Magbaingba MCHP
-Gormbahun Chiefdom||Matoto MCHP
-Mafonda Makerembay Chiefdom||Gbonkonka MCHP
-Mafonda Makerembay Chiefdom||Rochain Loko CHP
-Romende Chiefdom||Foredugu MCHP
-Romende Chiefdom||Gbomsamba MCHP
-Romende Chiefdom||Mabureh Mende MCHP
-Romende Chiefdom||Rokamba MCHP
-Romende Chiefdom||Worreh Bana MCHP
-Safroko Chiefdom||Maron CHP
-Sanda Loko Chiefdom||Kamalo CHC
-Sanda Loko Chiefdom||Laiya MCHP
-Sanda Loko Chiefdom||Laminaya CHP
-Sanda Loko Chiefdom||Madina Fullah MCHP
-Sanda Loko Chiefdom||Maharibo CHP
-Sanda Loko Chiefdom||Marcorba Loko MCHP
-Sanda Loko Chiefdom||Mayolla CHP
-Sanda Loko Chiefdom||Rochain Salcost CHP
-Sanda Loko Chiefdom||Rothatha MCHP
-Sanda Magbolonthor Chiefdom||Gbogbodo MCHP
-Sanda Magbolonthor Chiefdom||Kantia MCHP
-Sanda Magbolonthor Chiefdom||Komneh CHP
-Sanda Magbolonthor Chiefdom||Magbolonthor MCHP
-Sanda Magbolonthor Chiefdom||Sendugu CHC
-Sanda Tendaren Chiefdom||Mabunduka CHC
-Sanda Tendaren Chiefdom||Malontho MCHP
-Sanda Tendaren Chiefdom||Manack MCHP
-Sanda Tendaren Chiefdom||Mateboi CHC
-Sanda Tendaren Chiefdom||Rogbin MCHP
-Sanda Tendaren Chiefdom||Rokulan CHC
-Sanda Tendaren Chiefdom||Royanka Lol CHP
-Sella Limba Chiefdom||Kabba Ferry CHP
-Sella Limba Chiefdom||Kagboray MCHP
-Sella Limba Chiefdom||Kamabaio MCHP
-Sella Limba Chiefdom||Kamakwie CHP
-Sella Limba Chiefdom||Kamakwie Wesleyan Hospital
-Sella Limba Chiefdom||Kamawornie MCHP
-Sella Limba Chiefdom||Kaponkie MCHP
-Sella Limba Chiefdom||Kathanta Yimbor CHC
-Sella Limba Chiefdom||Masankorie CHP
-Tambaka Simibungie Chiefdom||Komoya CHP
-Tambaka Simibungie Chiefdom||Samaya MCHP
-Tambaka Yobangie Chiefdom||Dombaya CHP
-Tambaka Yobangie Chiefdom||Fintonia CHC
-Tambaka Yobangie Chiefdom||Sanya MCHP
-Kenema City||African Muslim Agency Clinic
-Kenema City||Ahmadiyya Muslim (Nongowa) Hospital
-Kenema City||BL Services Clinic
-Kenema City||Burma 2 MCHP
-Kenema City||Degbuama MCHP
-Kenema City||Direct Aid Orphanage (Kenema City) Clinic
-Kenema City||Egyptian (Kenema City) Clinic
-Kenema City||Ensah Foundation Clinic
-Kenema City||Friends For Lives Clinic
-Kenema City||Gbo-Kakajama 1 MCHP
-Kenema City||Gbo-Kakajama 2 MCHP
-Kenema City||Gbo-Lambayama 1 CHC
-Kenema City||Gbo-Lambayama 2 MCHP
-Kenema City||Kenema City Military Clinic
-Kenema City||Kenema Government Hospital
-Kenema City||Kenema Under Fives CHP
-Kenema City||Kondebotihun MCHP
-Kenema City||Koyagbema MCHP
-Kenema City||Kpayama 1 MCHP
-Kenema City||Kpayama 2 MCHP
-Kenema City||Kpetema (Kenema City) CHC
-Kenema City||Lango Town MCHP
-Kenema City||Malian Friendship Hospital
-Kenema City||Marie Stopes (Kenema City) Clinic
-Kenema City||Nongowa Static MCHP
-Kenema City||Nyandeyama MCHP
-Kenema City||Rainbow Clinic
-Kenema City||Red Cross (Kenema City) CHP
-Kenema City||Samai Town CHC
-Kenema City||Torkpombu MCHP
-Dama Chiefdom||Diamei MCHP
-Dama Chiefdom||Gao MCHP
-Dama Chiefdom||Giema (Dama) CHP
-Dama Chiefdom||Konia (Dama) MCHP
-Dama Chiefdom||Konjo (Dama) CHP
-Dama Chiefdom||Kpandebu CHC
-Dama Chiefdom||Lileima MCHP
-Dama Chiefdom||Loppa CHP
-Dama Chiefdom||Majihun MCHP
-Dama Chiefdom||Patama MCHP
-Dama Chiefdom||Tawahun MCHP
-Dama Chiefdom||Tokpombu (Dama) CHP
-Dodo Chiefdom||Dodo CHC
-Dodo Chiefdom||Guala MCHP
-Dodo Chiefdom||Kundorma CHP
-Dodo Chiefdom||Mbowohun CHP
-Gaura Chiefdom||Joru CHC
-Gaura Chiefdom||Kokoru CHP
-Gaura Chiefdom||Mendekelema (Gaura) CHP
-Gaura Chiefdom||Perrie MCHP
-Gaura Chiefdom||Sandaru (Gaura) MCHP
-Gaura Chiefdom||Sembehun (Gaura) MCHP
-Gaura Chiefdom||Tikonko (Gaura) MCHP
-Gaura Chiefdom||Venima CHP
-Gorama Mende Chiefdom||Bambara Kaima CHP
-Gorama Mende Chiefdom||Fomaya CHP
-Gorama Mende Chiefdom||Konta (Gorama Mende) CHP
-Gorama Mende Chiefdom||Kortuhun (Gorama Mende) MCHP
-Gorama Mende Chiefdom||Mondema CHC
-Gorama Mende Chiefdom||Ngiegboiye CHP
-Gorama Mende Chiefdom||Njagbewema (Gorama Mende) MCHP
-Gorama Mende Chiefdom||Punduru CHP
-Gorama Mende Chiefdom||Tungie CHC
-Kandu Leppiama Chiefdom||Baoma Oil Mill CHC
-Kandu Leppiama Chiefdom||Diema MCHP
-Kandu Leppiama Chiefdom||Gbado CHP
-Kandu Leppiama Chiefdom||Levuma (Kandu Leppiama) CHC
-Kandu Leppiama Chiefdom||Sembehun (Kandu Leppiama) MCHP
-Koya (Kenema) Chiefdom||Baoma (Koya) CHC
-Koya (Kenema) Chiefdom||Bongor (Koya) MCHP
-Koya (Kenema) Chiefdom||Jui (Koya) CHP
-Koya (Kenema) Chiefdom||Menima MCHP
-Koya (Kenema) Chiefdom||Njaluahun (Koya) MCHP
-Koya (Kenema) Chiefdom||Nyandehun (Koya) MCHP
-Koya (Kenema) Chiefdom||Serabu (Koya) CHP
-Langroma Chiefdom||Woyama MCHP
-Langroma Chiefdom||Yabaima CHP
-Lower Bambara Chiefdom||Bomie MCHP
-Lower Bambara Chiefdom||Foindu (Lower Bambara) CHC
-Lower Bambara Chiefdom||Foindu (Lower Bambara) CHP
-Lower Bambara Chiefdom||Kamboma (Lower Bambara) CHC
-Lower Bambara Chiefdom||Kamboma (Lower Bambara) MCHP
-Lower Bambara Chiefdom||Komende Getewalu CHP
-Lower Bambara Chiefdom||Komende Luyema MCHP
-Lower Bambara Chiefdom||Konjo (Lower Bambara) CHC
-Lower Bambara Chiefdom||Konjo (Lower Bambara) MCHP
-Lower Bambara Chiefdom||Kornia Kpindema CHP
-Lower Bambara Chiefdom||Kpandebu (Lower Bambara) CHC
-Lower Bambara Chiefdom||Kpandebu (Lower Bambara) MCHP
-Lower Bambara Chiefdom||Kpetema (Lower Bambara) CHP
-Lower Bambara Chiefdom||Lowoma (Lower Bambara) CHC
-Lower Bambara Chiefdom||Ngiehun (Lower Bambara) CHC
-Lower Bambara Chiefdom||Njagbahun (Lower Bambara) MCHP
-Lower Bambara Chiefdom||Panguma CHC
-Lower Bambara Chiefdom||Panguma Hospital
-Lower Bambara Chiefdom||Pelewahun (Lower Bambara) MCHP
-Lower Bambara Chiefdom||Saama CHP
-Lower Bambara Chiefdom||Sandeyiema MCHP
-Lower Bambara Chiefdom||Sembiema MCHP
-Lower Bambara Chiefdom||Semewabu MCHP
-Lower Bambara Chiefdom||Tongo CHC
-Lower Bambara Chiefdom||Wiema CHC
-Malegohun Chiefdom||Bendu (Malegohun) CHC
-Malegohun Chiefdom||Benduma (Malegohun) MCHP
-Malegohun Chiefdom||Helegombu MCHP
-Malegohun Chiefdom||Ngiehun Konjo CHP
-Niawa Chiefdom||Bandawor MCHP
-Niawa Chiefdom||Gandorhun (Niawa) CHP
-Niawa Chiefdom||Sendumei CHC
-Nomo Chiefdom||Baoma (Nomo) CHP
-Nomo Chiefdom||Damabara MCHP
-Nomo Chiefdom||Faama CHC
-Nongowa Chiefdom||Bambawo MCHP
-Nongowa Chiefdom||Hangah CHC
-Nongowa Chiefdom||Jormu (Nongowa) CHP
-Nongowa Chiefdom||Komende (Nongowa) MCHP
-Nongowa Chiefdom||Konabu MCHP
-Nongowa Chiefdom||Largo CHC
-Nongowa Chiefdom||Massahun MCHP
-Nongowa Chiefdom||Medicins Sans Frontiere Hospital
-Nongowa Chiefdom||Ngelehun (Nongowa) MCHP
-Nongowa Chiefdom||Niahun Buima MCHP
-Nongowa Chiefdom||Niekabu CHC
-Nongowa Chiefdom||Panderu MCHP
-Nongowa Chiefdom||Potehun MCHP
-Nongowa Chiefdom||Talia (Nongowa) CHC
-Nongowa Chiefdom||Vaahun MCHP
-Simbaru Chiefdom||Boajibu CHC
-Simbaru Chiefdom||Gbageima MCHP
-Small Bo Chiefdom||Blama CHC
-Small Bo Chiefdom||Doujo CHP
-Small Bo Chiefdom||Gelehun MCHP
-Small Bo Chiefdom||London (Blama) MCHP
-Small Bo Chiefdom||Nyangbe-Bo MCHP
-Small Bo Chiefdom||Sarabu CHP
-Small Bo Chiefdom||Tobanda CHC
-Tunkia Chiefdom||Belebu CHP
-Tunkia Chiefdom||Fayiema CHP
-Tunkia Chiefdom||Gbeworbu CHP
-Tunkia Chiefdom||Gegbwema CHC
-Tunkia Chiefdom||Gorahun CHC
-Tunkia Chiefdom||Jao (Tunkia) CHP
-Tunkia Chiefdom||Mano Ngiebla CHP
-Tunkia Chiefdom||Ngiewahun CHP
-Tunkia Chiefdom||Nyiemiga MCHP
-Tunkia Chiefdom||Shenge MCHP
-Wandor Chiefdom||Baama CHC
-Wandor Chiefdom||Bambara MCHP
-Wandor Chiefdom||Faala CHP
-Wandor Chiefdom||Gendema MCHP
-Wandor Chiefdom||Kamboma (Wandor) MCHP
-Diang Chiefdom||Badala MCHP
-Diang Chiefdom||Dalakuru CHP
-Diang Chiefdom||Diang Kamaron MCHP
-Diang Chiefdom||Diang Sokurala MCHP
-Diang Chiefdom||Foria CHP
-Diang Chiefdom||Kania (Diang) CHP
-Diang Chiefdom||Kondembaia CHC
-Diang Chiefdom||Lengekoro CHP
-Diang Chiefdom||Nyawulia MCHP
-Diang Chiefdom||Solia MCHP
-Diang Chiefdom||Waia MCHP
-Diang Chiefdom||Yara CHP
-Diang Chiefdom||Yiben MCHP
-Gbonkorbor Kayaka Chiefdom||Kakarima MCHP
-Gbonkorbor Kayaka Chiefdom||Kasassie CHP
-Gbonkorbor Kayaka Chiefdom||Madina Gbonkorbor CHP
-Gbonkorbor Kayaka Chiefdom||Sawuria CHP
-Kallian Chiefdom||Alkalia CHP
-Kallian Chiefdom||Kandeya MCHP
-Kallian Chiefdom||Kumala CHP
-Kallian Chiefdom||Sesawulia MCHP
-Kallian Chiefdom||Tukolie CHP
-Kallian Chiefdom||Worombalia MCHP
-Kamukeh Chiefdom||Kambalia MCHP
-Kamukeh Chiefdom||Kambia MCHP
-Kamukeh Chiefdom||Mandia MCHP
-Kamukeh Chiefdom||Thellia CHP
-Kasunko Kakellay Chiefdom||Fadugu CHC
-Kasunko Kakellay Chiefdom||Kagbasia MCHP
-Kasunko Kakellay Chiefdom||Kassasie Kakeleh MCHP
-Kasunko Kakellay Chiefdom||Madina Kamandie MCHP
-Kasunko Kakellay Chiefdom||Sawuria CHP
-Nieni Chiefdom||Fankoya CHP
-Nieni Chiefdom||Kaya MCHP
-Nieni Chiefdom||Krutor CHP
-Nieni Chiefdom||Mangae MCHP
-Nieni Chiefdom||Safinia MCHP
-Nieni Chiefdom||Sumbaria CHP
-Nieni Chiefdom||Yiffin CHC
-Sengbeh Chiefdom||Arab (Sengbeh) Clinic
-Sengbeh Chiefdom||Bambukoro CHP
-Sengbeh Chiefdom||Bambukura MCHP
-Sengbeh Chiefdom||Gbenikoro MCHP
-Sengbeh Chiefdom||Koinadugu 2 CHC
-Sengbeh Chiefdom||Kondeya (Sengbeh) MCHP
-Sengbeh Chiefdom||Momorimaria MCHP
-Sengbeh Chiefdom||Nasarah Clinic
-Sengbeh Chiefdom||Red Cross (Sengbeh) Clinic
-Thamiso Chiefdom||Kamathoi MCHP
-Thamiso Chiefdom||Karasa MCHP
-Thamiso Chiefdom||Kasanikoro CHP
-Wara Wara Bafodia Chiefdom||Bafodia CHC
-Wara Wara Bafodia Chiefdom||Kadanso MCHP
-Wara Wara Bafodia Chiefdom||Kakoya MCHP
-Wara Wara Bafodia Chiefdom||Karpakie MCHP
-Wara Wara Bafodia Chiefdom||Sakuta MCHP
-Wara Wara Bafodia Chiefdom||Samamaia MCHP
-Wara Wara Yagala Chiefdom||Arab (Wara Wara Yagala) Clinic
-Wara Wara Yagala Chiefdom||Heremakono CHP
-Wara Wara Yagala Chiefdom||Kabala Government Hospital
-Wara Wara Yagala Chiefdom||Kabala Static CHC
-Wara Wara Yagala Chiefdom||Kayako MCHP
-Wara Wara Yagala Chiefdom||Konkoba MCHP
-Wara Wara Yagala Chiefdom||Mamudia Koro MCHP
-Wara Wara Yagala Chiefdom||Marie Stopes (Kabala) Clinic
-Wara Wara Yagala Chiefdom||Sarakoh MCHP
-Wara Wara Yagala Chiefdom||Senekedugu CHP
-Wara Wara Yagala Chiefdom||Wara Wara Faith Clinic
-Wara Wara Yagala Chiefdom||Yataya CHP
-Koidu New Sembehun City||Adama Martha Memorial CHC
-Koidu New Sembehun City||Arabic Clinic
-Koidu New Sembehun City||Dabundeh Clinic
-Koidu New Sembehun City||Egyptian (Koidu) Clinic
-Koidu New Sembehun City||Gbongonlekeh Clinic
-Koidu New Sembehun City||Gbongonleken Clinic
-Koidu New Sembehun City||Hussein Mackie Memorial Hospital
-Koidu New Sembehun City||In God Be Truth Clinic
-Koidu New Sembehun City||Joanna Enterprise Clinic
-Koidu New Sembehun City||Kamadu CHP
-Koidu New Sembehun City||Kensay CHP
-Koidu New Sembehun City||Kimbadu CHC
-Koidu New Sembehun City||Kissi Bona CHP
-Koidu New Sembehun City||Koakoyima CHC
-Koidu New Sembehun City||Koeyor CHP
-Koidu New Sembehun City||Koidu Government Hospital
-Koidu New Sembehun City||Koidu Static CHC
-Koidu New Sembehun City||Koidu Static CHP
-Koidu New Sembehun City||Marie Stopes (Koidu) Clinic
-Koidu New Sembehun City||Obama Clinic
-Koidu New Sembehun City||Paul Sorie Farma's Hospital
-Koidu New Sembehun City||Pessima Clinic
-Koidu New Sembehun City||Simbakoro MCHP
-Koidu New Sembehun City||Small Sefadu CHP
-Koidu New Sembehun City||White House Clinic
-Fiama Chiefdom||Bandasuma (Fiama) CHP
-Fiama Chiefdom||Bombordu CHP
-Fiama Chiefdom||Gbetema (Fiama) MCHP
-Fiama Chiefdom||Njagbwema (Fiama) CHC
-Fiama Chiefdom||Yekior MCHP
-Gbane Chiefdom||Bandama (Gbane) MCHP
-Gbane Chiefdom||Fembedu CHP
-Gbane Chiefdom||Foindu (Gbane) CHP
-Gbane Chiefdom||Gandorhun (Gbane) CHC
-Gbane Chiefdom||Kanekor MCHP
-Gbane Chiefdom||Kuangor MCHP
-Gbane Chiefdom||Mbaoma (Gbane) CHP
-Gbane Chiefdom||Sunga MCHP
-Gbane Kandor Chiefdom||Koardu CHC
-Gbane Kandor Chiefdom||Sindadu MCHP
-Gbense Chiefdom||Boroma CHP
-Gbense Chiefdom||Gbangadu MCHP
-Gbense Chiefdom||Koakor MCHP
-Gbense Chiefdom||Musa and Family CHC
-Gbense Chiefdom||Quidadu MCHP
-Gbense Chiefdom||Small Sefadu CHP
-Gbense Chiefdom||Well Body Clinic
-Gorama Kono Chiefdom||Bunabu CHP
-Gorama Kono Chiefdom||Kangama (Gorama Kono) CHC
-Gorama Kono Chiefdom||Njagbwema (Gorama Kono) CHP
-Gorama Kono Chiefdom||Torkpumbu MCHP
-Kamara Chiefdom||Peyima CHP
-Kamara Chiefdom||Samiquidu MCHP
-Kamara Chiefdom||Sukudu (Kamara) CHP
-Kamara Chiefdom||Tombodu CHC
-Lei Chiefdom||Foakor MCHP
-Lei Chiefdom||Gbongongor MCHP
-Lei Chiefdom||Kenewa MCHP
-Lei Chiefdom||Koima (Lei) MCHP
-Lei Chiefdom||Komba Yendeh CHC
-Lei Chiefdom||Kongoifeh CHP
-Lei Chiefdom||Kulunbaya CHP
-Lei Chiefdom||Kunundu MCHP
-Lei Chiefdom||Saiama (Lei) CHP
-Mafindor Chiefdom||Kamiendor CHC
-Mafindor Chiefdom||Kamiendor MCHP
-Mafindor Chiefdom||Koindu-Kuteh MCHP
-Mafindor Chiefdom||Sambaya (Mafindor) CHP
-Nimikoro Chiefdom||Aiah Mass Clinic
-Nimikoro Chiefdom||Ashley Clinic
-Nimikoro Chiefdom||Bumpeh (Nimikoro) CHC
-Nimikoro Chiefdom||Bumpeh (Nimikoro) CHP
-Nimikoro Chiefdom||Gondama (Nimikoro) MCHP
-Nimikoro Chiefdom||Jaiama CHC
-Nimikoro Chiefdom||Mansundu (Nimikoro) MCHP
-Nimikoro Chiefdom||Motema CHC
-Nimikoro Chiefdom||Ngaiya MCHP
-Nimikoro Chiefdom||Njagbwema (Nimikoro) CHC
-Nimikoro Chiefdom||Njagbwema (Nimikoro) CHP
-Nimikoro Chiefdom||Njala (Nimikoro) CHC
-Nimikoro Chiefdom||Seidu MCHP
-Nimikoro Chiefdom||Senjekoro MCHP
-Nimikoro Chiefdom||Tongorma MCHP
-Nimikoro Chiefdom||United Methodist Church Jaiama Clinic
-Nimikoro Chiefdom||Yengema (Nimikoro) CHC
-Nimiyama Chiefdom||Condama CHP
-Nimiyama Chiefdom||Jaiama Sewafe CHC
-Nimiyama Chiefdom||Massabendu MCHP
-Nimiyama Chiefdom||Ngo Town CHP
-Nimiyama Chiefdom||Peya MCHP
-Nimiyama Chiefdom||Sandia (Nimiyama) MCHP
-Nimiyama Chiefdom||Walihun (Nimiyama) MCHP
-Sandor Chiefdom||Bangambaya CHP
-Sandor Chiefdom||Dunamor CHP
-Sandor Chiefdom||Fabandu MCHP
-Sandor Chiefdom||Fanema MCHP
-Sandor Chiefdom||Fensedu MCHP
-Sandor Chiefdom||Gbambiadu MCHP
-Sandor Chiefdom||Gbeya MCHP
-Sandor Chiefdom||Kayima CHC
-Sandor Chiefdom||Kochero MCHP
-Sandor Chiefdom||Koima (Sandor) MCHP
-Sandor Chiefdom||Kondeya (Sandor) MCHP
-Sandor Chiefdom||Mansundu (Sandor) MCHP
-Sandor Chiefdom||Samandu MCHP
-Sandor Chiefdom||Seidu Sandor MCHP
-Sandor Chiefdom||Taiya MCHP
-Sandor Chiefdom||Tefeya CHC
-Sandor Chiefdom||Tefeya CHP
-Sandor Chiefdom||Wordu CHP
-Sandor Chiefdom||Yardu CHC
-Sandor Chiefdom||Yardu MCHP
-Sandor Chiefdom||Yengema Sandor CHP
-Sandor Chiefdom||Yormandu CHC
-Soa Chiefdom||Bandasuma (Soa) MCHP
-Soa Chiefdom||Feuror MCHP
-Soa Chiefdom||Foindu Mongor CHP
-Soa Chiefdom||Gbamandu MCHP
-Soa Chiefdom||Kainkordu CHC
-Soa Chiefdom||Kainkordu CHP
-Soa Chiefdom||Kamindu MCHP
-Soa Chiefdom||Manjama CHC
-Soa Chiefdom||Manjama MCHP
-Soa Chiefdom||Semendu MCHP
-Soa Chiefdom||Sukudu (Soa) MCHP
-Tankoro Chiefdom||Adama Marth Memorial CHC
-Tankoro Chiefdom||Baiama CHC
-Tankoro Chiefdom||Kensay CHP
-Tankoro Chiefdom||Kimbadu CHC
-Tankoro Chiefdom||Kissi Bona CHP
-Tankoro Chiefdom||Koakoyima CHC
-Tankoro Chiefdom||Koyadu CHC
-Tankoro Chiefdom||Tongoro MCHP
-Tankoro Chiefdom||White House Clinic
-Tankoro Chiefdom||Woama CHP
-Toli Chiefdom||Kondewakoro MCHP
-Toli Chiefdom||Kpetema (Toli) MCHP
-Bagruwa Chiefdom||Benkeh MCHP
-Bagruwa Chiefdom||Kawaya CHP
-Bagruwa Chiefdom||Mokassie CHP
-Bagruwa Chiefdom||Mosenegor MCHP
-Bagruwa Chiefdom||Ngiebu CHC
-Bagruwa Chiefdom||Sembehun (Bagruwa) CHC
-Bagruwa Chiefdom||Sembehunwo MCHP
-Bumpeh Chiefdom||Belletin CHP
-Bumpeh Chiefdom||Bumpeh River CHP
-Bumpeh Chiefdom||Mende Town MCHP
-Bumpeh Chiefdom||Moforay MCHP
-Bumpeh Chiefdom||Mokaiyegbeh MCHP
-Bumpeh Chiefdom||Mosella CHP
-Bumpeh Chiefdom||Motorbong MCHP
-Bumpeh Chiefdom||Moyeamoh CHP
-Bumpeh Chiefdom||Rotifunk CHC
-Bumpeh Chiefdom||Sahun (Bumpeh) MCHP
-Bumpeh Chiefdom||Samu CHP
-Bumpeh Chiefdom||Seweima MCHP
-Bumpeh Chiefdom||UMC Rotifunk Hospital
-Bumpeh Chiefdom||Yenkessa MCHP
-Dasse Chiefdom||Bambuibu Tommy MCHP
-Dasse Chiefdom||Hope Rising CHP
-Dasse Chiefdom||Kabaima MCHP
-Dasse Chiefdom||Kenema Gbandoma MCHP
-Dasse Chiefdom||Laugh Out Loud Clinic
-Dasse Chiefdom||Laught Out Loud Clinic
-Dasse Chiefdom||Mano (Dasse) CHC
-Dasse Chiefdom||Mogbaske CHP
-Dasse Chiefdom||Taninihun Kapuima MCHP
-Fakunya Chiefdom||Falaba MCHP
-Fakunya Chiefdom||Gandorhun (Fakunya) CHC
-Fakunya Chiefdom||Mokalley MCHP
-Fakunya Chiefdom||Mokorewa MCHP
-Fakunya Chiefdom||Moyamba Junction CHC
-Fakunya Chiefdom||Moyollo MCHP
-Fakunya Chiefdom||Njagbahun (Fakunya) MCHP
-Fakunya Chiefdom||Rotawa CHP
-Kaiyamba Chiefdom||Gbonjeima MCHP
-Kaiyamba Chiefdom||Kangahun CHC
-Kaiyamba Chiefdom||Komende (Kaiyamba) MCHP
-Kaiyamba Chiefdom||Korgbotuma MCHP
-Kaiyamba Chiefdom||Levuma (Kaiyamba) MCHP
-Kaiyamba Chiefdom||Moyamba Government Hospital
-Kaiyamba Chiefdom||Moyamba Static 1 CHP
-Kaiyamba Chiefdom||Moyamba Static 2 CHC
-Kaiyamba Chiefdom||Salina CHP
-Kaiyamba Chiefdom||Yoyema MCHP
-Kamajei Chiefdom||Gondama (Kamajei) CHP
-Kamajei Chiefdom||Joyah MCHP
-Kamajei Chiefdom||Mogbuama MCHP
-Kamajei Chiefdom||Senehun (Kamajei) CHC
-Kargboro Chiefdom||Bumpetoke (Kargboro) CHP
-Kargboro Chiefdom||Mokaisumana CHP
-Kargboro Chiefdom||Mokandoh CHP
-Kargboro Chiefdom||Mokobo MCHP
-Kargboro Chiefdom||Mokonbetty MCHP
-Kargboro Chiefdom||Mopailleh MCHP
-Kargboro Chiefdom||Ngeihun (Kargboro) MCHP
-Kargboro Chiefdom||Plaintain Island MCHP
-Kargboro Chiefdom||Shenge CHC
-Kargboro Chiefdom||Yorgbofore CHC
-Kargboro Chiefdom||Yorgbofore MCHP
-Kargboro Chiefdom||Youndu CHP
-Kongbora Chiefdom||Bauya (Kongbora) CHC
-Kongbora Chiefdom||Lawana (Kongbora) MCHP
-Kongbora Chiefdom||Levuma Nyomeh CHP
-Kongbora Chiefdom||Magbenka CHP
-Kongbora Chiefdom||Taninihun Mboka MCHP
-Kori Chiefdom||Bai Largo MCHP
-Kori Chiefdom||Fogbo (Kori) CHP
-Kori Chiefdom||Gbuihun MCHP
-Kori Chiefdom||Judy Smith CHP
-Kori Chiefdom||Juma MCHP
-Kori Chiefdom||Konda CHP
-Kori Chiefdom||Manjeihun MCHP
-Kori Chiefdom||Mosongo MCHP
-Kori Chiefdom||Njala (Kori) CHC
-Kori Chiefdom||Njala University Hospital
-Kori Chiefdom||Taiama (Kori) CHC
-Kori Chiefdom||United Methodist Church Taiama CHP
-Kori Chiefdom||Waiima (Kori) MCHP
-Kowa Chiefdom||Bendu (Kowa) MCHP
-Kowa Chiefdom||Mofombo MCHP
-Kowa Chiefdom||Njama (Kowa) CHC
-Kowa Chiefdom||Tabe MCHP
-Lower Banta Chiefdom||Gbangbatoke CHC
-Lower Banta Chiefdom||Kanga (Lower Banta) MCHP
-Lower Banta Chiefdom||Mokanji CHC
-Lower Banta Chiefdom||Mokotawa CHP
-Lower Banta Chiefdom||Moriba Town (Lower Banta) CHC
-Lower Banta Chiefdom||Moriba Town (Lower Banta) CHP
-Lower Banta Chiefdom||Mosenesie Junction CHP
-Lower Banta Chiefdom||Njagbahun (Lower Banta) MCHP
-Lower Banta Chiefdom||St Mary's Clinic
-Ribbi Chiefdom||Bradford CHC
-Ribbi Chiefdom||Ferry CHP
-Ribbi Chiefdom||Mabang (Ribbi) MCHP
-Ribbi Chiefdom||Mogbongisseh MCHP
-Ribbi Chiefdom||Mokorbu MCHP
-Ribbi Chiefdom||Motoni CHC
-Ribbi Chiefdom||Motoni MCHP
-Ribbi Chiefdom||Motonkoh MCHP
-Ribbi Chiefdom||Rokolor MCHP
-Ribbi Chiefdom||Suen CHP
-Timdale Chiefdom||Bomotoke CHC
-Timdale Chiefdom||Mokaiyamba MCHP
-Timdale Chiefdom||Mokpanabom MCHP
-Timdale Chiefdom||Mosagbeh MCHP
-Timdale Chiefdom||Mosanda CHP
-Upper Banta Chiefdom||Children of the Nation Ngolala CHP
-Upper Banta Chiefdom||Gondama (Upper Banta) MCHP
-Upper Banta Chiefdom||Modonkor CHP
-Upper Banta Chiefdom||Mogomgbe MCHP
-Upper Banta Chiefdom||Mokelleh CHC
-Port Loko City||Arab (Port Loko) Clinic
-Port Loko City||Ernest Bai Koroma University (EBK-PL) Clinic
-Port Loko City||Port Loko Government Hospital
-Port Loko City||Port Loko Under Fives CHP
-Bake-Loko Chiefdom||Arab (Bake-Loko) Clinic
-Bake-Loko Chiefdom||Ernest Bai Koroma University (EBK-PL) Clinic
-Bake-Loko Chiefdom||Gbonkoh Kereneh MCHP
-Bake-Loko Chiefdom||Kamaranka Under Fives CHP
-Bake-Loko Chiefdom||Malal CHP
-Bake-Loko Chiefdom||Sierra Leone Church Maforki CHP
-Bureh Chiefdom||Bureh MCHP
-Bureh Chiefdom||Kalangba (Bureh) MCHP
-Bureh Chiefdom||Mange CHC
-Bureh Chiefdom||Masseseh MCHP
-Kaffu Bullom Chiefdom||Al-Amin Clinic
-Kaffu Bullom Chiefdom||Alimamy Amara Clinic
-Kaffu Bullom Chiefdom||Arab (Lungi) Clinic
-Kaffu Bullom Chiefdom||Bai Bureh Memorial Hospital
-Kaffu Bullom Chiefdom||Conakry Dee CHC
-Kaffu Bullom Chiefdom||Direct Aid Orphanage (Port Loko) Clinic
-Kaffu Bullom Chiefdom||Evans CHC
-Kaffu Bullom Chiefdom||Gbaneh Bana CHP
-Kaffu Bullom Chiefdom||Gbaneh Lol MCHP
-Kaffu Bullom Chiefdom||Grace Community Clinic
-Kaffu Bullom Chiefdom||Kasongha CHP
-Kaffu Bullom Chiefdom||Long Life Centre Clinic
-Kaffu Bullom Chiefdom||Lungi Airport Centre Clinic
-Kaffu Bullom Chiefdom||Lungi Government Hospital
-Kaffu Bullom Chiefdom||Lungi Under Fives CHP
-Kaffu Bullom Chiefdom||Mahera CHC
-Kaffu Bullom Chiefdom||Mamankie MCHP
-Kaffu Bullom Chiefdom||Mkamsondo MCHP
-Kaffu Bullom Chiefdom||Modia CHC
-Kaffu Bullom Chiefdom||Modia General Clinic
-Kaffu Bullom Chiefdom||St John of God CHP
-Kaffu Bullom Chiefdom||Tagrin CHC
-Kaffu Bullom Chiefdom||Yongoro CHC
-Kamasondo Chiefdom||Benkia MCHP
-Kamasondo Chiefdom||Bundulai MCHP
-Kamasondo Chiefdom||Katongha MCHP
-Kamasondo Chiefdom||Konta Wallah CHC
-Kamasondo Chiefdom||Malap CHP
-Kamasondo Chiefdom||Mana 2 CHP
-Kamasondo Chiefdom||Mapillah MCHP
-Kamasondo Chiefdom||Pepel CHC
-Kasseh Chiefdom||Barmoi CHP
-Kasseh Chiefdom||Kagbantama CHP
-Kasseh Chiefdom||Kawengha MCHP
-Kasseh Chiefdom||Rogballan (Kasseh) MCHP
-Kasseh Chiefdom||Romeni MCHP
-Koya (Port Loko) Chiefdom||Kissy Koya MCHP
-Koya (Port Loko) Chiefdom||Komrabai Ngolla CHP
-Koya (Port Loko) Chiefdom||Kurankoh CHP
-Koya (Port Loko) Chiefdom||M'baimba Adama MCHP
-Koya (Port Loko) Chiefdom||Mabora MCHP
-Koya (Port Loko) Chiefdom||Magbeni MCHP
-Koya (Port Loko) Chiefdom||Makalie MCHP
-Koya (Port Loko) Chiefdom||Makarankay CHP
-Koya (Port Loko) Chiefdom||Makiteh (Koya) CHP
-Koya (Port Loko) Chiefdom||Malenki MCHP
-Koya (Port Loko) Chiefdom||Masiaka (Koya) CHC
-Koya (Port Loko) Chiefdom||Masumana CHP
-Koya (Port Loko) Chiefdom||Mawoma MCHP
-Koya (Port Loko) Chiefdom||Mile 38 CHC
-Koya (Port Loko) Chiefdom||Rofoindu CHP
-Koya (Port Loko) Chiefdom||Rokon MCHP
-Koya (Port Loko) Chiefdom||Sumbuya (Koya) CHP
-Koya (Port Loko) Chiefdom||Warima (Koya) MCHP
-Lokomasama Chiefdom||Babara CHC
-Lokomasama Chiefdom||Bailor CHP
-Lokomasama Chiefdom||Gbainty Wallah CHP
-Lokomasama Chiefdom||Kalangba (Lokomasama) MCHP
-Lokomasama Chiefdom||Kargbulor CHP
-Lokomasama Chiefdom||Love Bridge Hospital
-Lokomasama Chiefdom||Masulamani CHP
-Lokomasama Chiefdom||Mathen MCHP
-Lokomasama Chiefdom||Menika CHP
-Lokomasama Chiefdom||Musaia (Lokomasama) CHP
-Lokomasama Chiefdom||Petifu Junction CHC
-Maconteh Chiefdom||Mabain MCHP
-Maconteh Chiefdom||Minthomore CHP
-Maforki Chiefdom||Mabonie CHP
-Maforki Chiefdom||Mafoimara CHP
-Maforki Chiefdom||Maforay (Maforki) MCHP
-Maforki Chiefdom||Magbengbenra MCHP
-Maforki Chiefdom||Makaba MCHP
-Maforki Chiefdom||Mapawn MCHP
-Maforki Chiefdom||Maronko MCHP
-Maforki Chiefdom||New Maforki CHP
-Maforki Chiefdom||Petifu (Maforki) MCHP
-Maforki Chiefdom||Rogbere Junction CHC
-Makama Chiefdom||Kambia Makama CHP
-Makama Chiefdom||Malekuray CHC
-Marampa Chiefdom||Arab (Lunsar) Clinic
-Marampa Chiefdom||Baptist Eye Hospital
-Marampa Chiefdom||Lunsar CHC
-Marampa Chiefdom||Magbele MCHP
-Marampa Chiefdom||Magbill CHP
-Marampa Chiefdom||Makabo MCHP
-Marampa Chiefdom||Mamusa MCHP
-Marampa Chiefdom||Mange Acre CHC
-Marampa Chiefdom||Pincer's Lunsar Clinic
-Marampa Chiefdom||Poor Man's Clinic
-Marampa Chiefdom||Rolembray MCHP
-Marampa Chiefdom||St John of God Hospital
-Marampa Chiefdom||St John of God Under Fives Clinic
-Masimera Chiefdom||Katick CHP
-Masimera Chiefdom||Konta Line CHC
-Masimera Chiefdom||Mamaligie MCHP
-Masimera Chiefdom||Masimera CHC
-Masimera Chiefdom||Mathineh CHP
-Masimera Chiefdom||Mayola Lal Ratun MCHP
-Masimera Chiefdom||Mayombo MCHP
-Masimera Chiefdom||Nonkoba CHP
-Masimera Chiefdom||Rokassa CHC
-Masimera Chiefdom||Rokel (Masimera) MCHP
-Masimera Chiefdom||Rotheren MCHP
-Masimera Chiefdom||Rothuma MCHP
-Masimera Chiefdom||Royeiben CHP
-Tainkatopa Chiefdom||Asheea MCHP
-Tainkatopa Chiefdom||Robaka MCHP
-Tainkatopa Chiefdom||Rogbaneh MCHP
-Barri Chiefdom||Bandasuma (Barri) CHC
-Barri Chiefdom||Jeoma Barri MCHP
-Barri Chiefdom||Konia (Barri) MCHP
-Barri Chiefdom||Kundorwahun CHP
-Barri Chiefdom||Njaluahun (Barri) CHP
-Barri Chiefdom||Potoru CHC
-Barri Chiefdom||Saahun (Barri) MCHP
-Barri Chiefdom||Tambeiyama MCHP
-Barri Chiefdom||Taninahun (Barri) MCHP
-Barri Chiefdom||Vaama (Barri) CHP
-Barri Chiefdom||Waiima (Barri) MCHP
-Galliness Chiefdom||Bandama (Galliness) MCHP
-Galliness Chiefdom||Blama Massaquoi CHC
-Galliness Chiefdom||Fonikoh MCHP
-Galliness Chiefdom||Funyehun CHP
-Galliness Chiefdom||Kpetema (Galliness) MCHP
-Galliness Chiefdom||Kpowubu MCHP
-Galliness Chiefdom||Makorma CHP
-Kabonde Chiefdom||Pehala CHC
-Kpaka Chiefdom||Liya MCHP
-Kpaka Chiefdom||Massam CHC
-Kpaka Chiefdom||Saahun (Kpaka) MCHP
-Kpaka Chiefdom||Semabu (Kpaka) MCHP
-Kpaka Chiefdom||Sumbuya Bessima CHP
-Kpanga Chiefdom||Basalleh MCHP
-Kpanga Chiefdom||Blama Puilla MCHP
-Kpanga Chiefdom||Bomu Samba MCHP
-Kpanga Chiefdom||Dandabu CHP
-Kpanga Chiefdom||Gbondapi CHC
-Kpanga Chiefdom||Gibina MCHP
-Kpanga Chiefdom||Mandeima MCHP
-Kpanga Chiefdom||Pujehun Government Hospital
-Kpanga Chiefdom||Pujehun Static CHC
-Kpanga Chiefdom||Salima Samba MCHP
-Kpanga Chiefdom||Sawula MCHP
-Kpanga Chiefdom||Sorbeh Grima MCHP
-Kpanga Chiefdom||Taninahun Makemuma MCHP
-Kpanga Chiefdom||Tongay MCHP
-Kpanga Chiefdom||Vawahun Kayimba MCHP
-Kpanga Krim Chiefdom||Bayama MCHP
-Kpanga Krim Chiefdom||Borborbu MCHP
-Kpanga Krim Chiefdom||Gobaru CHC
-Kpanga Krim Chiefdom||Vaama (Kpanga Krim) MCHP
-Makpele Chiefdom||Dumagbe MCHP
-Makpele Chiefdom||Gbaa (Makpele) CHP
-Makpele Chiefdom||Gbahama (Makpele) MCHP
-Makpele Chiefdom||Gissiwolo MCHP
-Makpele Chiefdom||Gofor CHP
-Makpele Chiefdom||Ndombu MCHP
-Makpele Chiefdom||Pewa MCHP
-Makpele Chiefdom||Zimmi CHC
-Malen Chiefdom||Bendu (Malen) MCHP
-Malen Chiefdom||Hongai CHP
-Malen Chiefdom||Jao (Malen) MCHP
-Malen Chiefdom||Ngandorhun MCHP
-Malen Chiefdom||Nianyahun MCHP
-Malen Chiefdom||Nyandehun (Malen) MCHP
-Malen Chiefdom||Sahn (Malen) CHC
-Malen Chiefdom||Sengema (Malen) CHP
-Malen Chiefdom||Taninahun (Malen) CHP
-Mano Sakrim Chiefdom||Bengani MCHP
-Mano Sakrim Chiefdom||Gombu MCHP
-Mano Sakrim Chiefdom||Kassay MCHP
-Mano Sakrim Chiefdom||Mano Gbongema CHC
-Mano Sakrim Chiefdom||Mende MSK MCHP
-Mano Sakrim Chiefdom||Nyandehun (Mano Sakrim) MCHP
-Mano Sakrim Chiefdom||Senbengu MCHP
-Peje Chiefdom||Bongay MCHP
-Peje Chiefdom||Bumbeh MCHP
-Peje Chiefdom||Futa Pejeh CHC
-Peje Chiefdom||Helebu Pejeh MCHP
-Peje Chiefdom||Pejewa (Futa Peje) MCHP
-Perri Chiefdom||Blama Perri MCHP
-Perri Chiefdom||Bomi MCHP
-Perri Chiefdom||Bumpeh (Perri) CHC
-Perri Chiefdom||Falaba CHP
-Perri Chiefdom||Kowama (Perri) MCHP
-Perri Chiefdom||Ngajubaoma/Missibu MCHP
-Perri Chiefdom||Saama Perri MCHP
-Soro Gbeima Chiefdom||Fairo CHC
-Soro Gbeima Chiefdom||Fanima (Soro) CHP
-Soro Gbeima Chiefdom||Futa Golawoma MCHP
-Soro Gbeima Chiefdom||Gondama Massaquoi MCHP
-Soro Gbeima Chiefdom||Jendema CHC
-Soro Gbeima Chiefdom||Koijeh MCHP
-Soro Gbeima Chiefdom||Malema 1 MCHP
-Soro Gbeima Chiefdom||Malema 2 MCHP
-Soro Gbeima Chiefdom||Navai MCHP
-Soro Gbeima Chiefdom||Sengama Soro MCHP
-Soro Gbeima Chiefdom||Sulima CHP
-Soro Gbeima Chiefdom||Tindor MCHP
-Soro Gbeima Chiefdom||Wai MCHP
-Sowa Chiefdom||Bandajuma Sowa CHC
-Sowa Chiefdom||Geoma Jarjoh CHP
-Sowa Chiefdom||Lower Komende MCHP
-Sowa Chiefdom||Upper Komende MCHP
-Sowa Chiefdom||Vaawahun Sowa MCHP
-Yakemoh Kpukumu Krim Chiefdom||Bangorma MCHP
-Yakemoh Kpukumu Krim Chiefdom||Borma (Yakemu Kpukumu) MCHP
-Yakemoh Kpukumu Krim Chiefdom||Karlu CHC
-Yakemoh Kpukumu Krim Chiefdom||Kombeima MCHP
-Yakemoh Kpukumu Krim Chiefdom||Kombopi MCHP
-Yakemoh Kpukumu Krim Chiefdom||Messima MCHP
-Yakemoh Kpukumu Krim Chiefdom||Saama Sowunde MCHP
-Dansogoia Chiefdom||Bassaia MCHP
-Dansogoia Chiefdom||Bumbuna CHC
-Dansogoia Chiefdom||Kemedugu MCHP
-Dansogoia Chiefdom||New Ferengbeya CHP
-Gbokolenken Masankong Chiefdom||Mansumana CHP
-Gbokolenken Masankong Chiefdom||Warrima (Gbonkolenken) MCHP
-Gbokolenken Mayeppoh Chiefdom||Makonkorie CHP
-Gbokolenken Mayeppoh Chiefdom||Mayepoh CHC
-Gbokolenken Mayeppoh Chiefdom||Mayepoh CHP
-Gbokolenken Mayeppoh Chiefdom||Petifu Mayepoh MCHP
-Gbokolenken Polie Chiefdom||Mabankra MCHP
-Gbokolenken Polie Chiefdom||Mabarr Polie MCHP
-Gbokolenken Polie Chiefdom||Magbolu Ferry MCHP
-Gbokolenken Polie Chiefdom||Maraka MCHP
-Gbokolenken Polie Chiefdom||Mathamp MCHP
-Gbokolenken Yele Chiefdom||Lion Heart Hospital
-Gbokolenken Yele Chiefdom||Mafay MCHP
-Gbokolenken Yele Chiefdom||Manowo CHC
-Gbokolenken Yele Chiefdom||Yeben MCHP
-Gbokolenken Yele Chiefdom||Yele CHC
-Kafe Chiefdom||Kamarugu MCHP
-Kafe Chiefdom||Masumbrie CHC
-Kalantuba Chiefdom||Kamasaypana MCHP
-Kalantuba Chiefdom||Kathombo MCHP
-Kholifa Mabang Chiefdom||Komrabai Station MCHP
-Kholifa Mabang Chiefdom||Mabai (Kholifa Mabang) MCHP
-Kholifa Mabang Chiefdom||Mabang (Kholifa Mabang) CHC
-Kholifa Mabang Chiefdom||Mamanso Kafla MCHP
-Kholifa Mabang Chiefdom||Marunia MCHP
-Kholifa Mabang Chiefdom||Mathinkalol MCHP
-Kholifa Mamuntha Chiefdom||Maborie MCHP
-Kholifa Mamuntha Chiefdom||Magbass CHP
-Kholifa Mamuntha Chiefdom||Mamuntha MCHP
-Kholifa Mamuntha Chiefdom||Masagbill MCHP
-Kholifa Mamuntha Chiefdom||Masoko MCHP
-Kholifa Mamuntha Chiefdom||Mayossoh MCHP
-Kholifa Rowalla Chiefdom||Alim MCHP
-Kholifa Rowalla Chiefdom||Family (Magburaka) Clinic
-Kholifa Rowalla Chiefdom||Mabai (Kholifa Rowalla) MCHP
-Kholifa Rowalla Chiefdom||Mabom CHC
-Kholifa Rowalla Chiefdom||Magburaka Government Hospital
-Kholifa Rowalla Chiefdom||Magburaka Under Fives Clinic
-Kholifa Rowalla Chiefdom||Malone MCHP
-Kholifa Rowalla Chiefdom||Masanga Hospital
-Kholifa Rowalla Chiefdom||Masanga MCHP
-Kunike Barina Chiefdom||Makali CHC
-Kunike Barina Chiefdom||Makoni Line MCHP
-Kunike Barina Chiefdom||Mapamurie MCHP
-Kunike Barina Chiefdom||Massaba MCHP
-Kunike Barina Chiefdom||Wonkibor MCHP
-Kunike Fulawusu Chiefdom||Fothaneh Bana MCHP
-Kunike Fulawusu Chiefdom||Mafulka MCHP
-Kunike Fulawusu Chiefdom||Magbanabom MCHP
-Kunike Fulawusu Chiefdom||Magbanto Bana MCHP
-Kunike Fulawusu Chiefdom||Mamanso Sanka CHP
-Kunike Fulawusu Chiefdom||Petifu Mandugu MCHP
-Kunike Sanda Chiefdom||Fothaneh Junction MCHP
-Kunike Sanda Chiefdom||Kamanthor MCHP
-Kunike Sanda Chiefdom||Mabineh MCHP
-Kunike Sanda Chiefdom||Maconteh Tama MCHP
-Kunike Sanda Chiefdom||Masiaka (Kunike Sanda) MCHP
-Kunike Sanda Chiefdom||Masingbi CHC
-Kunike Sanda Chiefdom||Matholey MCHP
-Kunike Sanda Chiefdom||Petifuline CHP
-Malal Chiefdom||Makoba Bana MCHP
-Malal Chiefdom||Robina CHP
-Malal Chiefdom||Rochen Malal CHP
-Sambaya Bendugu Chiefdom||Bendugu CHC
-Sambaya Bendugu Chiefdom||Dankawalia CHP
-Sambaya Bendugu Chiefdom||Kholifaga MCHP
-Sambaya Bendugu Chiefdom||Kunya CHP
-Sambaya Bendugu Chiefdom||Ninkikoro MCHP
-Simiria Chiefdom||Mabontor CHC
-Simiria Chiefdom||Mabontor CHP
-Simiria Chiefdom||Makonthanday MCHP
-Simiria Chiefdom||Masumbrie CHC
-Simiria Chiefdom||Mayassoh MCHP
-Tane Chiefdom||Makelleh MCHP
-Tane Chiefdom||Makona MCHP
-Tane Chiefdom||Makrugbeh CHP
-Tane Chiefdom||Mananthelie MCHP
-Tane Chiefdom||Mangaybana MCHP
-Tane Chiefdom||Masankoro MCHP
-Tane Chiefdom||Mathonkara MCHP
-Tane Chiefdom||Mathufulie MCHP
-Tane Chiefdom||Matotoka CHC
-Tane Chiefdom||Rosengbeh MCHP
-Yoni Mabanta Chiefdom||Bakeloko CHP
-Yoni Mabanta Chiefdom||Bath Bana MCHP
-Yoni Mabanta Chiefdom||Magbaesa MCHP
-Yoni Mabanta Chiefdom||Magbaft MCHP
-Yoni Mabanta Chiefdom||Magbassabana MCHP
-Yoni Mabanta Chiefdom||Magbosie MCHP
-Yoni Mabanta Chiefdom||Makeni-Rokfullah MCHP
-Yoni Mabanta Chiefdom||Makundu MCHP
-Yoni Mabanta Chiefdom||Matawa MCHP
-Yoni Mabanta Chiefdom||Petifu Fulamasa CHP
-Yoni Mabanta Chiefdom||Robarie MCHP
-Yoni Mabanta Chiefdom||Ronietta MCHP
-Yoni Mabanta Chiefdom||Rorocks CHC
-Yoni Mamala Chiefdom||Ahmadiyya Muslim (Yoni Mamala) Hospital
-Yoni Mamala Chiefdom||Bonkababay CHP
-Yoni Mamala Chiefdom||Community Health Foundation (Mile 91) Hospital
-Yoni Mamala Chiefdom||Foindu (Yoni Mamala) MCHP
-Yoni Mamala Chiefdom||Hinistas CHC
-Yoni Mamala Chiefdom||Kumrabai Yoni CHP
-Yoni Mamala Chiefdom||Macrogba CHP
-Yoni Mamala Chiefdom||Magboki Road Mile 91 CHP
-Yoni Mamala Chiefdom||Magbosie MCHP
-Yoni Mamala Chiefdom||Makelleh CHP
-Yoni Mamala Chiefdom||Mamaka (Yoni Mamala) MCHP
-Yoni Mamala Chiefdom||Mananie MCHP
-Yoni Mamala Chiefdom||Masengbeh CHP
-Yoni Mamala Chiefdom||Maseperr MCHP
-Yoni Mamala Chiefdom||Mathoir CHC
-Yoni Mamala Chiefdom||Mayorgbor MCHP
-Yoni Mamala Chiefdom||Our Lady of Guadalupe Clinic
-Yoni Mamala Chiefdom||Rochen Kamandao CHP
-Yoni Mamala Chiefdom||Rokimbi MCHP
-Yoni Mamala Chiefdom||United Methodist Church Yonibana CHC
-Yoni Mamala Chiefdom||Yonibana MCHP
-Yoni Mamala Chiefdom||Yonibana Sai Hospital
-Koya Rural Zone||Christ the King Clinic
-Koya Rural Zone||Crossing MCHP
-Koya Rural Zone||Don Bosco Fambul Clinic
-Koya Rural Zone||Fogbo (Koya Rural) MCHP
-Koya Rural Zone||Madaka MCHP
-Koya Rural Zone||Makobeh MCHP
-Koya Rural Zone||Makonkonday MCHP
-Koya Rural Zone||Malambay CHP
-Koya Rural Zone||Masorie CHP
-Koya Rural Zone||MedZain MCHP
-Koya Rural Zone||Monsignor Daniel Sullivan Health Clinic
-Koya Rural Zone||Newton CHC
-Koya Rural Zone||Songo CHC
-Mountain Rural Zone||Charlotte CHP
-Mountain Rural Zone||Fourah Bay College CHC
-Mountain Rural Zone||Gloucester CHP
-Mountain Rural Zone||Leicester (Mountain Rural) CHP
-Mountain Rural Zone||Regent (Mountain Rural) CHC
-Waterloo Rural Zone||ADRA Mobile Clinic
-Waterloo Rural Zone||Adra Hospital
-Waterloo Rural Zone||African Christian Fellowship (ACF) Clinic
-Waterloo Rural Zone||Afro Arab Clinic
-Waterloo Rural Zone||Arab (Waterloo) Clinic
-Waterloo Rural Zone||Benguema Grassfield MCHP
-Waterloo Rural Zone||Benguema Military (MI Room) Clinic
-Waterloo Rural Zone||Biola Wright Memorial Clinic
-Waterloo Rural Zone||Borah Maternity Clinic
-Waterloo Rural Zone||Brown Memorial Clinic
-Waterloo Rural Zone||Campbell Town CHP
-Waterloo Rural Zone||Cashew Farm MCHP
-Waterloo Rural Zone||Christ the King Clinic
-Waterloo Rural Zone||Deep Eye Water MCHP
-Waterloo Rural Zone||El-Shaddai (Waterloo Rural) Clinic
-Waterloo Rural Zone||Evangelical College of Theology Clinic
-Waterloo Rural Zone||Freetown Teachers College Clinic
-Waterloo Rural Zone||Gift of Life Clinic
-Waterloo Rural Zone||Grafton CHC
-Waterloo Rural Zone||Hastings CHC
-Waterloo Rural Zone||Heart and Hands Care Clinic
-Waterloo Rural Zone||Jays Clinic
-Waterloo Rural Zone||John Thorpe MCHP
-Waterloo Rural Zone||Jui Police (MI Room) Clinic
-Waterloo Rural Zone||Kissy Town CHP
-Waterloo Rural Zone||Lumpa CHP
-Waterloo Rural Zone||Mabureh CHP
-Waterloo Rural Zone||MacDonald MCHP
-Waterloo Rural Zone||Maila Clinic
-Waterloo Rural Zone||Mapac Grafton Clinic
-Waterloo Rural Zone||Margaret and Johnny MCHP
-Waterloo Rural Zone||Mariama Hassan Hospital
-Waterloo Rural Zone||Matainkay and Masantigie MCHP
-Waterloo Rural Zone||MedZain MCHP
-Waterloo Rural Zone||Monsignor Daniel Sullivan Health Clinic
-Waterloo Rural Zone||New London MCHP
-Waterloo Rural Zone||Rogbangba MCHP
-Waterloo Rural Zone||Rokel (Waterloo Rural) CHP
-Waterloo Rural Zone||Rokel Arab (Waterloo) Clinic
-Waterloo Rural Zone||SWAKAB (Waterloo) Clinic
-Waterloo Rural Zone||Salifu Kondeh Clinic
-Waterloo Rural Zone||Sierra Leone-China Teaching Hospital
-Waterloo Rural Zone||TECT Jui CHP
-Waterloo Rural Zone||Waterloo CHC
-Waterloo Rural Zone||Waterloo People's Clinic
-Waterloo Rural Zone||Waterloo Rural Community Hospital
-Waterloo Rural Zone||White Stone MCHP
-Waterloo Rural Zone||Women in National Development AAPDEP Clinic
-Waterloo Rural Zone||Yams Farm CHP
-York Rural Zone||Adonkia CHP
-York Rural Zone||Banana Island MCHP
-York Rural Zone||Bethlehem Clinic
-York Rural Zone||Emergency (Goderich) Hospital
-York Rural Zone||Friends of God Clinic
-York Rural Zone||Goderich CHC
-York Rural Zone||Goderich Military (MI Room) Clinic
-York Rural Zone||Hamilton MCHP
-York Rural Zone||Kent CHP
-York Rural Zone||Lakka Government Hospital
-York Rural Zone||Lakka/Ogoo Farm CHC
-York Rural Zone||Lion for Lion Clinic
-York Rural Zone||Mambo CHP
-York Rural Zone||Metchen MCHP
-York Rural Zone||Milton Margai College (MMCET) Clinic
-York Rural Zone||Mutual Faith Clinic
-York Rural Zone||Sussex MCHP
-York Rural Zone||Tissana (York Rural) MCHP
-York Rural Zone||Tokeh MCHP
-York Rural Zone||Tombo (York Rural) CHC
-York Rural Zone||York CHC
-Central 1 Zone||Abernita Hospital
-Central 1 Zone||Blessed Mokaba Central CHP
-Central 1 Zone||Bojojo Clinic
-Central 1 Zone||Don Bosco Fambul Clinic
-Central 1 Zone||Dr A Edwin Clinic
-Central 1 Zone||Dr Abdulai Jalloh Clinic
-Central 1 Zone||Dr Donald Harding Clinic
-Central 1 Zone||Dr Dunstan Thomas Clinic
-Central 1 Zone||Dr Finda Ngongor Clinic
-Central 1 Zone||Dr Hassan Hariri Clinic
-Central 1 Zone||Farm Care Clinic
-Central 1 Zone||Macauley Street Government Hospital
-Central 1 Zone||Marina House Birth Centre Clinic
-Central 1 Zone||Parliament CHC
-Central 1 Zone||Susan's Bay CHC
-Central 1 Zone||Takish Clinic
-Central 1 Zone||Women Health Centre Clinic
-Central 2 Zone||Central 2 Medical Clinic
-Central 2 Zone||Connaught Chest Clinic
-Central 2 Zone||Connaught Hospital
-Central 2 Zone||Dr ADO Wright Clinic
-Central 2 Zone||Dr Asale Ganda Clinic
-Central 2 Zone||Dr Daniel Bash Taqi Clinic
-Central 2 Zone||Dr Effie Gooding Clinic
-Central 2 Zone||Dr Frazer Whitfield Clinic
-Central 2 Zone||Dr Isatou Hyde-Forster Clinic
-Central 2 Zone||Dr J Russel Clinic
-Central 2 Zone||Dr Kelvin Nicolls Clinic
-Central 2 Zone||Dr Len-Gordon Harris Clinic
-Central 2 Zone||Dr Patrick Coker Clinic
-Central 2 Zone||Dr Shuman Medical Clinic and Laboratory
-Central 2 Zone||Dr Taquis Clinic
-Central 2 Zone||Dr VR Willoughby Clinic
-Central 2 Zone||Dr Victor Willoughby Memorial Hospital
-Central 2 Zone||Khadijah Clinic
-Central 2 Zone||Kroo Bay CHC
-Central 2 Zone||Liverpool Street (Jimmy Pratt) Clinic
-Central 2 Zone||Mano River Countries Clinic
-Central 2 Zone||NASSIT Mobile Clinic
-Central 2 Zone||Pikin Welbodi Centre Clinic
-Central 2 Zone||Prime Care Clinic
-Central 2 Zone||Red Cross (Pultney Street) Clinic
-Central 2 Zone||Shuman (Kroo Bay) Hospital
-Central 2 Zone||Sing Song Hospital
-Central 2 Zone||St Mary's Immaculate Hospital
-Central 2 Zone||West End Clinic
-East 1 Zone||Arab (Ferry Junction) Clinic
-East 1 Zone||China Friendship Clinic
-East 1 Zone||Fourah Bay Community MCHP
-East 1 Zone||Guoji (Cline Town) Clinic
-East 1 Zone||Happy Kid and Adolescence (East 1 Zone) Clinic
-East 1 Zone||Jenner Wright Clinic
-East 1 Zone||Kargbo Dockyard CHP
-East 1 Zone||Mabella CHC
-East 1 Zone||Mayorba Hospital
-East 1 Zone||Ola During Children's Hospital
-East 1 Zone||Ola During Under Fives CHP
-East 1 Zone||Princess Christian Maternity Hospital
-East 1 Zone||Principal Medical Office (Cline Town) CHP
-East 1 Zone||Ross Road CHC
-East 1 Zone||Sierra Leone Port Authority Clinic
-East 1 Zone||Thullahs Community Health Clinic
-East 2 Zone||Arab (Shad) Clinic
-East 2 Zone||Better Health Clinic
-East 2 Zone||Coconut Farm MCHP
-East 2 Zone||Dr Songo Williams Clinic
-East 2 Zone||Ginger Hall CHC
-East 2 Zone||Julipha Ashobie Corner MCHP
-East 2 Zone||Mabella CHC
-East 2 Zone||New Harvest Clinic
-East 2 Zone||Quarry MCHP
-East 3 Zone||AWAKE CHP
-East 3 Zone||Ad-Bangs Quarry MCHP
-East 3 Zone||Ahmadiyya Muslim (Calaba Town) Hospital
-East 3 Zone||Al-Khatab CHC
-East 3 Zone||Allen Town CHC
-East 3 Zone||Approved School CHC
-East 3 Zone||Arab (Calaba Town) Clinic
-East 3 Zone||Arab (Shell) Clinic
-East 3 Zone||Blessed Mokaba East Clinic
-East 3 Zone||Calaba Town CHC
-East 3 Zone||Edemsil Hospital
-East 3 Zone||Egyptian (Calaba Town) Clinic
-East 3 Zone||Egyptian (Shell) Clinic
-East 3 Zone||Esther Faith Healing Clinic
-East 3 Zone||Evangelical Lutheran Clinic
-East 3 Zone||Faith Community Clinic
-East 3 Zone||Family Home Movement CHP
-East 3 Zone||Gbaneh Hospital
-East 3 Zone||Haja Neneh CHC
-East 3 Zone||Hamdalaye Mission Clinic
-East 3 Zone||Holy Mary Clinic
-East 3 Zone||Iscon CHP
-East 3 Zone||Kamba of Charity Clinic
-East 3 Zone||Kissy CHC
-East 3 Zone||Kissy Dockyard Missionary Clinic
-East 3 Zone||Kola Tree MCHP
-East 3 Zone||Konikay Clinic
-East 3 Zone||Koya Town CHC
-East 3 Zone||Kuntorloh CHP
-East 3 Zone||Life Care (Kissy) Hospital
-East 3 Zone||Looking Town MCHP
-East 3 Zone||Lowell and Ruth Gess UMC Eye Hospital
-East 3 Zone||Madina (East 3) CHC
-East 3 Zone||Marie Stopes (Kissy) Clinic
-East 3 Zone||Mayemi MCHP
-East 3 Zone||Methodist Church Sierra Leone Clinic
-East 3 Zone||Moyiba CHC
-East 3 Zone||Orugu MCHP
-East 3 Zone||Philip Street Clinic
-East 3 Zone||Rokupa Government Hospital
-East 3 Zone||Rokupa Under Fives CHP
-East 3 Zone||SLIMS Clinic
-East 3 Zone||Shuman (Kissy) Hospital
-East 3 Zone||Sierra Leone Psychiatric Hospital
-East 3 Zone||St Joseph's CHC
-East 3 Zone||St Luke's Wellington Clinic
-East 3 Zone||Tasley Global Clinic
-East 3 Zone||Tassoh MCHP
-East 3 Zone||Thunder Hill MCHP
-East 3 Zone||UPAL MCHP
-East 3 Zone||United Methodist Church PLHA Kissy Clinic
-East 3 Zone||United Methodist Church Urban Centre Hospital
-East 3 Zone||Up-Wata CHP
-East 3 Zone||Wellington CHC
-East 3 Zone||Wesleyan Health Clinic
-West 1 Zone||Affordable Health Clinic
-West 1 Zone||Childrens Day Clinic
-West 1 Zone||Cupid Health Centre Clinic
-West 1 Zone||Day Krim Clinic
-West 1 Zone||Dr Claudius Cole Clinic
-West 1 Zone||God Grace Clinic
-West 1 Zone||Grey Bush CHC
-West 1 Zone||Kingtom Police Hospital
-West 1 Zone||Kingtom Police Under Fives CHP
-West 1 Zone||Marie Stopes (Waterloo Street) Clinic
-West 1 Zone||Methodist Community Health Clinic
-West 1 Zone||Rejanic Clinic
-West 1 Zone||St Anthony's CHC
-West 2 Zone||AMI Expeditionary Healthcare Clinic
-West 2 Zone||Al-Farouk Clinic
-West 2 Zone||Arab (Dwarzak) Clinic
-West 2 Zone||Blue Shield Hospital
-West 2 Zone||Dr Daniel Bash Taqi Clinic
-West 2 Zone||EPI Headquarter (New England) CHP
-West 2 Zone||EcoMed Medical Centre Clinic
-West 2 Zone||George Brook CHC
-West 2 Zone||Grey Bush CHC
-West 2 Zone||Hope and New Life Clinic
-West 2 Zone||Kingharman Road Hospital
-West 2 Zone||Kingharman Road Under Fives CHP
-West 2 Zone||Methodist Community Health Clinic
-West 2 Zone||Mubarak Clinic
-West 2 Zone||NACTIB New Life Hospital
-West 2 Zone||New England CHP
-West 2 Zone||PPASL Clinic
-West 2 Zone||Pademba Correctional Hospital
-West 2 Zone||Redeemer Health Clinic
-West 2 Zone||Rina Clinic
-West 2 Zone||St John Clinic and Nursing Home
-West 2 Zone||Treasure Health Hospital
-West 3 Zone||AIDS Health Foundation (AHF) Clinic
-West 3 Zone||Aberdeen Women Centre Hospital
-West 3 Zone||Al-Sheefa Arab Clinic
-West 3 Zone||Arab (Malama) Clinic
-West 3 Zone||Cheaper Land Clinic
-West 3 Zone||Choithrams Memorial Hospital
-West 3 Zone||Christ Healing Center And Community College Clinic
-West 3 Zone||Christ Healing Centre and Community College Clinic
-West 3 Zone||Davidson Nicol Medical Centre Hospital
-West 3 Zone||Dr DJO Robin-Coker Clinic
-West 3 Zone||Family CHP
-West 3 Zone||Good Shepherd Hospital
-West 3 Zone||Healing Clinic
-West 3 Zone||Healthy Step Paediatric Clinic
-West 3 Zone||Hill Station CHP
-West 3 Zone||Iranian Red Crescent Clinic
-West 3 Zone||Juba Military (MI Room) CHP
-West 3 Zone||Life Care (Lumley) Hospital
-West 3 Zone||Lumley Government Hospital
-West 3 Zone||Lumley Under Fives CHP
-West 3 Zone||Malama MCHP
-West 3 Zone||Marie Stopes (Aberdeen Rd) Clinic
-West 3 Zone||Marie Stopes (Ahmed Drive) Clinic
-West 3 Zone||Marie Stopes (Ahmed Drive) EPI Clinic
-West 3 Zone||Mariposa Hospital
-West 3 Zone||Mercy Ships (Aberdeen Fistula Centre) Clinic
-West 3 Zone||Murray Town (MI Room) CHP
-West 3 Zone||Murray Town CHC
-West 3 Zone||No 9 Community Clinic
-West 3 Zone||PAYCY's Clinic
-West 3 Zone||Pentagon CHP
-West 3 Zone||Samaritan Hospital
-West 3 Zone||Satu's Clinic
-West 3 Zone||Scan Drive MCHP
-West 3 Zone||Sea Coach Aberdeen CHC
-West 3 Zone||Signal Hill MCHP
-West 3 Zone||St Mark Evangelical Lutheran Health Centre Clinic
-West 3 Zone||Stella Maris Clinic
-West 3 Zone||Sunshine MCHP
-West 3 Zone||Thompson Bay MCHP
-West 3 Zone||UN Joint Medical Services Clinic
-West 3 Zone||Well Woman Clinic
-West 3 Zone||Wellness (West 3) Clinic
-West 3 Zone||Wilberforce 34 Military Hospital
-West 3 Zone||Wilberforce CHC`;
+Badjia Chiefdom||Ngelehun (Badjia) CHC||xxAfuLUYASs
+Badjia Chiefdom||Njagbahun (Badjia) MCHP||cOJo1p4XAxY
+Badjia Chiefdom||Njandama MCHP||gHahSf0ocWN
+Bagbwe Chiefdom||Barlie MCHP||AXDmrJDUPHu
+Bagbwe Chiefdom||Benduma (Bagbwe) MCHP||HOJJW4KMJ40
+Bagbwe Chiefdom||Kondiama MCHP||d5zcRw5mpNg
+Bagbwe Chiefdom||Kpetema (Bagbwe) MCHP||NTDg30BR5aE
+Bagbwe Chiefdom||Mendewa MCHP||E0Nx6sv2jQl
+Bagbwe Chiefdom||Ngalu CHC||AAucxqkPCCs
+Bagbwe Chiefdom||Samie Buma MCHP||PbAKKoY2Xn2
+Baoma Chiefdom||Baoma Station CHP||l89SIj2IW4s
+Baoma Chiefdom||Blamawo MCHP||CE5pnIxyC8N
+Baoma Chiefdom||Faabu CHP||QzYcIsVOkkl
+Baoma Chiefdom||Foindu (Baoma) MCHP||UNw3KKkLz5L
+Baoma Chiefdom||Gbahama (Baoma) CHP||u3r73ievj9X
+Baoma Chiefdom||Gerehun CHC||N2qh71tlndR
+Baoma Chiefdom||Golu MCHP||R5RPPcOT42N
+Baoma Chiefdom||Jan Christian Helvings Clinic||oyUsxRqvJuq
+Baoma Chiefdom||Jembe CHC||NRQhr9mRbvg
+Baoma Chiefdom||Jormu (Baoma) MCHP||LINvRs3TuWz
+Baoma Chiefdom||Kigbai MCHP||pmB4RJrX7Yg
+Baoma Chiefdom||Kpunbu MCHP||R68XPuxE2pQ
+Baoma Chiefdom||Mbundorbu MCHP||rBXWCqasEep
+Baoma Chiefdom||Pelewahun (Baoma) MCHP||l4xpXraVCEr
+Baoma Chiefdom||Tugbebu CHP||o4uvc9G7Iea
+Baoma Chiefdom||Yakaji MCHP||hI8RctfeeRG
+Baoma Chiefdom||Yamandu CHC||xr9oim3iNeN
+Bargbo Chiefdom||Bum Kaku MCHP||nEKRLODGSvu
+Bargbo Chiefdom||Gbangbalia MCHP||TWs7r2pwgA2
+Bargbo Chiefdom||Jimmi CHC||GFOA7ElH2nz
+Bargbo Chiefdom||Kakama MCHP||f43ANgdLi4n
+Bargbo Chiefdom||Kasse MCHP||dVeSQNy2JnM
+Bargbo Chiefdom||Limba CHP||nsKVgBvE0Cu
+Bargbo Chiefdom||Mano Yorgbo MCHP||ldBdI5h4oYh
+Bargbo Chiefdom||Momajo CHP||JkhTT88Yd3L
+Bargbo Chiefdom||Niagorehun (Bargbo) CHP||y75f9JLGGxi
+Bargbo Chiefdom||Senehun Ngolan MCHP||KMIVkhMUIdq
+Bo City||Aethel CHP||WSwok5mgGTQ
+Bo City||Agape Way CHP||eAZY7IezaJG
+Bo City||Anglican Diocese Clinic||I7W07ZGu670
+Bo City||Batiama Layout MCHP||ha9n2GGrji4
+Bo City||Bo Government Hospital||D7qLI3Fw3kb
+Bo City||Bo School Bay CHP||oFSPdjhEbtD
+Bo City||Breakthrough MCHP||LuCtUscwaKK
+Bo City||Brima Town CHP||WdbymisCUKY
+Bo City||EDC Unit CHP||kpmDNRJp2Tf
+Bo City||Favour MCHP||lBCScMxoXCK
+Bo City||Gbanja Town MCHP||yU9j7RDpFXR
+Bo City||Gbotima CHP||L8CvmIKRbX4
+Bo City||Genda CHP||ZTwV55096uQ
+Bo City||Genda MCHP||h939elM5K3i
+Bo City||Gilas Hospital||z86IRChoV4i
+Bo City||Haikel CHP||EFrGrDPvbEU
+Bo City||Kakua Static CHC||T2zV9tsJrfV
+Bo City||Kandeh Town CHP||u3wsHXrJQeW
+Bo City||Kindoya Hospital||LPTEUCSHLxG
+Bo City||Kowama (Kakua) CHP||cLKNf16CTLk
+Bo City||Lewaibu CHP||Mm8LY8fBEiU
+Bo City||Lyn Maternity MCHP||qxS4hiJlwU9
+Bo City||Manjiama CHC||cvYKC4osWt6
+Bo City||Mercy Ships (Bo City) Hospital||XLyiQcXoF7G
+Bo City||Mid Land MCHP||d58PMi0xtf1
+Bo City||Morning Star CHP||o51nzNzzpSk
+Bo City||Nafaya MCHP||rFtT506fyLX
+Bo City||Needy CHP||TFAeqrUzDW0
+Bo City||New Police Barracks CHC||Bx40lRUXCUJ
+Bo City||Praise Foundation CHC||YxSM8NSSbMg
+Bo City||Red Cross (Bo City) CHC||FifERVq2d4i
+Bo City||Rescue Health Care Clinic||oRNjjpi62YM
+Bo City||Simbo Town CHP||bfMRCekrHr9
+Bo City||Sowa's Clinic||jiYUnjN9QvC
+Bo City||Spllenz Clinic||VJnDFf60fKD
+Bo City||St Monica's Clinic||smFURXEtVbk
+Bo City||Tengbewabu MCHP||rc7YGmeRmyj
+Bo City||Topkoi Town CHP||VraSTB5CQXk
+Bo City||UNIMUS MCHP||WhZ5SLuarTR
+Bo City||Walk In Medical Associate Clinic||PGPC9HH1tom
+Bo City||Yemoh Town CHC||lUI6wH9tsB6
+Bongor Chiefdom||Gbaama MCHP||zwVTPgv0ryi
+Bongor Chiefdom||Lowoma (Bongor) MCHP||Awk7ww8OM80
+Bongor Chiefdom||Mamboma (Bongor) CHC||bFuRoF35FXE
+Bongor Chiefdom||Telu CHC||dIeej0sV2V7
+Bumpe Ngao Chiefdom||Bongor (Bumpe Ngao) MCHP||XYloe0omDWO
+Bumpe Ngao Chiefdom||Buma MCHP||YptqXbFt3DG
+Bumpe Ngao Chiefdom||Bumpe CHC||RrTVO31OxpA
+Bumpe Ngao Chiefdom||Kabiyama MCHP||UMR51omy4q1
+Bumpe Ngao Chiefdom||Kaniya MCHP||f1t6jNWBFVd
+Bumpe Ngao Chiefdom||Kpetema (Bumpe Ngao) CHP||fheE9dp532A
+Bumpe Ngao Chiefdom||Makayonie MCHP||jSozK0PVtWP
+Bumpe Ngao Chiefdom||Mokoba MCHP||pCHMk80BzXO
+Bumpe Ngao Chiefdom||Mokpende MCHP||FwN4Rsm5TEY
+Bumpe Ngao Chiefdom||Ngolahun (Bumpe Ngao) CHC||nS2on8qVTQM
+Bumpe Ngao Chiefdom||Niagorehun Vaakie MCHP||pILvKo2lqdG
+Bumpe Ngao Chiefdom||Sahn (Bumpe Ngao) CHP||cfkFiNU6nnX
+Bumpe Ngao Chiefdom||Serabu (Bumpe Ngao) CHC||cy9IVBoiNXa
+Bumpe Ngao Chiefdom||Serabu Mission Hospital||HcYYi1fDRey
+Bumpe Ngao Chiefdom||Taninahun (Bumpe Ngao) CHP||L0cnW68A5WE
+Bumpe Ngao Chiefdom||Walihun (Bumpe Ngao) MCHP||XRDHnQLSHUZ
+Bumpe Ngao Chiefdom||Yengema (Bumpe Ngao) MCHP||NfNKUofwip4
+Gbo Chiefdom||Gbaiima CHC||AtWuGFSTeVa
+Gbo Chiefdom||Sembehun Mamagewoh CHC||bWO8OMmimpO
+Jaiama Chiefdom||Koribondo CHC||i6iY8CjKw1s
+Jaiama Chiefdom||Mano-Jaiama CHP||tkKtRG1rnxS
+Jaiama Chiefdom||Niayahun CHP||uiPiTHCfDIZ
+Kakua Chiefdom||Bandajuma MCHP||AjT1vKkEbqM
+Kakua Chiefdom||Bo Childrens Hospital||FRl0pZuDmud
+Kakua Chiefdom||Egyptian (Bo) Clinic||si6mjhFEeiL
+Kakua Chiefdom||Fengehun MCHP||PVw34YtWIiV
+Kakua Chiefdom||Fullawahun MCHP||aMufnPUnfFn
+Kakua Chiefdom||Gbongboma MCHP||njX42Os6K4I
+Kakua Chiefdom||Gender CHP||qqYhq4M99dW
+Kakua Chiefdom||Keindeyella MCHP||Q9MxLIVCPRB
+Kakua Chiefdom||Maguama CHP||btBGqJ4974o
+Kakua Chiefdom||Mamasa Life Saving Hospital||jsOtOB8BqL4
+Kakua Chiefdom||Manjiama CHC||cvYKC4osWt6
+Kakua Chiefdom||Marie Stopes (Kakua) Clinic||qAb2QoUbso9
+Kakua Chiefdom||Massah Memorial Maternity MCHP||VhE0ClYdhrP
+Kakua Chiefdom||Ndegbomie MCHP||zoFXL4QsT8P
+Kakua Chiefdom||Nduvuibu MCHP||GRyvlErDEZK
+Kakua Chiefdom||United Methodist Church Manjama CHC||P44v7FIDPHi
+Kakua Chiefdom||Veronical MCHP||v1fYCa9bwAz
+Komboya Chiefdom||Gumahun MCHP||KzLUzAFG4vk
+Komboya Chiefdom||Komboya Gbauja MCHP||TAcdD59nhF1
+Komboya Chiefdom||Kpamajama MCHP||Cmj8RzTSado
+Komboya Chiefdom||Mano (Komboya) MCHP||ragWKvb9T6b
+Komboya Chiefdom||Niagorehun (Komboya) MCHP||OcdvWKsGoGN
+Komboya Chiefdom||Njala (Komboya) CHC||JFLbrxGTTAy
+Komboya Chiefdom||Teibor CHP||GRJA3dqasxe
+Lugbu Chiefdom||Bontiwo MCHP||RDmjwGyoSES
+Lugbu Chiefdom||Feiba CHP||t0Vax156I3m
+Lugbu Chiefdom||Hima MCHP||gWwcVMzf77Q
+Lugbu Chiefdom||Karleh MCHP||IfaHaauqm0n
+Lugbu Chiefdom||Kpetewoma CHP||HZGZi0i7BNa
+Lugbu Chiefdom||Ngieyehun MCHP||ArrJA8PRSDj
+Lugbu Chiefdom||Sumbuya (Lugbu) CHC||z2QZDeWxL6K
+Lugbu Chiefdom||Upper Saama MCHP||nmlr4KF8x8h
+Lugbu Chiefdom||Yambama CHP||Np0E9ki4nMM
+Niawa Lenga Chiefdom||Korbu MCHP||YSwiqygcxoD
+Niawa Lenga Chiefdom||Nengbema CHP||cMVwxnX3dLf
+Niawa Lenga Chiefdom||Ngogbebu MCHP||bzqVVjEyjZz
+Niawa Lenga Chiefdom||Pendebu MCHP||rR5lwQ3xsRz
+Niawa Lenga Chiefdom||Sahn (Niawa Lenga) CHC||ObMHcW3CqYl
+Selenga Chiefdom||Damballa CHC||Q2BpOwSDTGF
+Selenga Chiefdom||Gbangba MCHP||vzSBxowlHgB
+Tikonko Chiefdom||Gondama (Tikonko) CHC||mP23PpJgFhZ
+Tikonko Chiefdom||Griema MCHP||upuYzgLwdFq
+Tikonko Chiefdom||Haikal CHP||QH4mNtvUYRr
+Tikonko Chiefdom||Kassama MCHP||HXQKXYjAmxU
+Tikonko Chiefdom||Mattru on the Rail MCHP||CITC0cxFHeS
+Tikonko Chiefdom||Mendewa 2 Clinic||MYe9FskMmvY
+Tikonko Chiefdom||Mendewa CHP||f4m51PDIUwM
+Tikonko Chiefdom||Sebehun Tarbay MCHP||wI928yx6PoZ
+Tikonko Chiefdom||Sembehun 17 (Tikonko) CHP||js5XC46QfPl
+Tikonko Chiefdom||Theresa Hakim CHP||I8AeFtHBbLs
+Tikonko Chiefdom||Tikonko (Bo) CHC||Vt8oBytNoCk
+Tikonko Chiefdom||Towama MCHP||qg0ySgyJVtM
+Tikonko Chiefdom||Veronica MCHP||J99Dc48MRAd
+Tikonko Chiefdom||We Care Health Centre Clinic||XnxQS4CBwqu
+Tikonko Chiefdom||Zion CHC||aa8238JXtLW
+Valunia Chiefdom||Baomahun CHC||oZBaoi3X5Fm
+Valunia Chiefdom||Foya (Valunia) CHP||gzXdO9HoEuz
+Valunia Chiefdom||Grima (Valunia) CHP||di0qSeDN03U
+Valunia Chiefdom||Kenema Blango CHC||HUXsIOV95tE
+Valunia Chiefdom||Kpewama MCHP||Uhm5DvUFHj6
+Valunia Chiefdom||Kpuabu MCHP||Vt0bSqXM0Dv
+Valunia Chiefdom||Mongere CHC||mnNuvytqVBz
+Valunia Chiefdom||Ngolahun Jabaty CHP||SSKjfaYvTIs
+Valunia Chiefdom||Pujehun (Valunia) CHP||aiUAveCpORI
+Wonde Chiefdom||Bathurst MCHP||tjjzKnV5O34
+Wonde Chiefdom||Fanima (Wonde) MCHP||iohL3LoFsaw
+Wonde Chiefdom||Gboyama CHC||reUdH29BAmv
+Wonde Chiefdom||Kambawama MCHP||Ufj92A9cwNR
+Bendu-Cha Chiefdom||Bendu (Bendu-Cha) CHC||wKVf3oDEm51
+Bendu-Cha Chiefdom||Foya (Bendu-Cha) CHP||Mvn2GKJmDQC
+Bendu-Cha Chiefdom||Giebina CHP||p5kBeNos0M5
+Bendu-Cha Chiefdom||Mindohun MCHP||wHtfN7v9m77
+Bendu-Cha Chiefdom||Mo-Davies CHP||AJ43cn9A4eB
+Bendu-Cha Chiefdom||Taigbe CHP||U8od9V8N9hW
+Bonthe Town||Bonthe Government Hospital||Or0PYldj2sY
+Bonthe Town||Bonthe Under Fives Clinic||gg9ILXQyOTo
+Bonthe Town||Red Cross (Bonthe) CHP||xYjeE5229M9
+Bonthe Town||St Joseph's Clinic||L6PN6DEwUDL
+Bonthe Town||York Island CHP||HJHoHLTAaa8
+Bum Chiefdom||Karlleh MCHP||PDWhySxcS5X
+Bum Chiefdom||Madina (Bum) CHC||jPifO0P2rgR
+Bum Chiefdom||Mammy CHP||xBBqRJiNvp2
+Bum Chiefdom||Ngepehun CHP||oJQ9xxNxcwq
+Bum Chiefdom||Ngessehun MCHP||KmJFBSPtB54
+Bum Chiefdom||Sogballeh MCHP||MopAmGVQWMx
+Bum Chiefdom||Tassor CHP||KKlzTwglE6K
+Bum Chiefdom||Torma Bum CHP||GChq3aSncSt
+Dema Chiefdom||Bumpetoke (Dema) CHP||jSVtKyWsftB
+Dema Chiefdom||Mbaoma (Dema) CHP||mgpoNFQtlEy
+Dema Chiefdom||Tissana (Dema) CHC||ppHuX58L9Gd
+Dema Chiefdom||Tombay CHP||pKNXcOdPuJE
+Imperi Chiefdom||Gaindema CHP||imL8IokwAtN
+Imperi Chiefdom||Gbamgbaia CHC||Co1dfRCfMbm
+Imperi Chiefdom||Gbamgbama CHC||sOABByKQN2C
+Imperi Chiefdom||Jangallor CHP||S7enj70xwme
+Imperi Chiefdom||Junctionla MCHP||sTPNHdC0WB3
+Imperi Chiefdom||Mo-Kepay CHP||F095zzRZ6OW
+Imperi Chiefdom||Mogbwemo CHC||nWBKiK5UGjh
+Imperi Chiefdom||Mokaba MCHP||IyLyjwKuhQ7
+Imperi Chiefdom||Moriba Town (Imperri) CHC||VPgrzDl4lIZ
+Imperi Chiefdom||Mount Hope Hospital||ydEHxZckeyI
+Imperi Chiefdom||Sierra Rutile Hospital||L1YGybE1RPP
+Imperi Chiefdom||Victoria MCHP||Bsb8Kgtam16
+Imperi Chiefdom||Yargoi CHP||VuagxFUoyAe
+Jong Chiefdom||Barbar MCHP||cB0TNeTP4kw
+Jong Chiefdom||Gambia CHC||xZyX5ECp4UV
+Jong Chiefdom||Gbaninga CHP||KmiQacDahWa
+Jong Chiefdom||Henry Kormoi Community Hospital||aha8Pp6ypXA
+Jong Chiefdom||Jorma CHP||rI6RLtgCEUv
+Jong Chiefdom||Kabati CHP||RbtQIc0nRQG
+Jong Chiefdom||Komende (Jong) MCHP||jD24X7Uh6iL
+Jong Chiefdom||Mattru CHC||ynQ93yBzX0X
+Jong Chiefdom||Mattru UBC Hospital||U5qwUXl8Hta
+Jong Chiefdom||Mo-Savie MCHP||WaXXUDEeMdH
+Jong Chiefdom||Mogbwe MCHP||SmufKPM6F1S
+Jong Chiefdom||Mongerewa MCHP||yUtpM7AdkRJ
+Jong Chiefdom||Moyowa MCHP||AuR9VGx49lF
+Jong Chiefdom||Red Cross (Mattru) CHP||ckQjSzyWtBk
+Jong Chiefdom||Segbwema (Jong) CHP||b8DFgnIAInF
+Jong Chiefdom||Semabu (Jong) CHP||TR8BP4QLWFG
+Jong Chiefdom||Tissana (Jong) CHP||LqxbjRHa7M0
+Kpanda Kemoh Chiefdom||Gambia Popayma MCHP||UzlQqYE14P4
+Kpanda Kemoh Chiefdom||Gbongeh MCHP||G1acFFWS0Nm
+Kpanda Kemoh Chiefdom||Lawana (Kpanda Kemo) MCHP||wdAT9WFnMRG
+Kpanda Kemoh Chiefdom||Mottuo CHC||nBqgr8q4ru4
+Kpanda Kemoh Chiefdom||Senjehun MCHP||gNR9A0kNCrH
+Kwamebai Krim Chiefdom||Benduma CHC||npEUvVio8ii
+Kwamebai Krim Chiefdom||Hoya CHP||oVuIMrwY2K7
+Kwamebai Krim Chiefdom||Massah Kpoanguma CHP||TvmO7BdukmQ
+Kwamebai Krim Chiefdom||Mosenteh CHP||X4z4mWxt1hY
+Kwamebai Krim Chiefdom||Tei CHP||Vho0loUyisJ
+Kwamebai Krim Chiefdom||Topain CHP||FeVxJlCI7zn
+Nongoba Bullom Chiefdom||Batahall CHP||f8aIYL32iyY
+Nongoba Bullom Chiefdom||Gbamani CHP||TRq95dP8UMz
+Nongoba Bullom Chiefdom||Gbap CHC||oaSRZBMnZe2
+Nongoba Bullom Chiefdom||Maamu MCHP||krzYPeLAQYo
+Nongoba Bullom Chiefdom||Mbaoma Kpengeh CHC||GC5BuDMDVii
+Nongoba Bullom Chiefdom||Mbaoma Kpengeh CHP||vGa45jZb04e
+Nongoba Bullom Chiefdom||Minah CHP||nBBCfxE9HF0
+Nongoba Bullom Chiefdom||Ngaringa MCHP||RrktxfEZz4n
+Nongoba Bullom Chiefdom||Sembehun (Nongoba Bullom) MCHP||xXRuDCO3KCP
+Nongoba Bullom Chiefdom||Subu MCHP||wzGJPFKnpdg
+Nongoba Bullom Chiefdom||Torma Gbagba CHP||C0G2TiYnadO
+Nongoba Bullom Chiefdom||Waiba MCHP||xcaJwQnDgXQ
+Sittia Chiefdom||Delken CHC||hPLxMYcfmzm
+Sittia Chiefdom||Delken MCHP||H0ZvygklUsH
+Sittia Chiefdom||Mania MCHP||PPef1hL80Aw
+Sittia Chiefdom||Mbokie MCHP||DpZ69xKOqOm
+Sittia Chiefdom||Mo-Sandi CHP||qUMMYLkaM7z
+Sittia Chiefdom||Ngepay CHP||WthF78OKyDr
+Sittia Chiefdom||Sanhaya CHP||dSLGODFPGFJ
+Sittia Chiefdom||Yoni (Sittia) CHC||EUG8gAz4W8B
+Sogbini Chiefdom||Grima (Sogbini) CHP||mTm7KGnkEvM
+Sogbini Chiefdom||Kanga (Sogbini) MCHP||FeYyR1G7kSm
+Sogbini Chiefdom||Kpetema (Sogbini) MCHP||NH4V6SIF5sW
+Sogbini Chiefdom||Mandu CHP||YsSDNzWkPNJ
+Sogbini Chiefdom||Ngueh MCHP||fDsyaVsVXtP
+Sogbini Chiefdom||Tihun CHC||Ed883i2LSPl
+Yawbeko Chiefdom||Mobefa MCHP||HRgPgP7REiZ
+Yawbeko Chiefdom||Sargor CHP||wziv4AhFEKx
+Yawbeko Chiefdom||Senehun Gbloh MCHP||tjvAApiMzt9
+Yawbeko Chiefdom||Talia (Yawbeko) CHC||isvnRq6xErg
+Yawbeko Chiefdom||Tuakan CHP||jCXX7wjbjXZ
+Bagruwa Chiefdom||Benkeh MCHP||yofFvlFvTsj
+Bagruwa Chiefdom||Kawaya CHP||SH5HZ2VeDHC
+Bagruwa Chiefdom||Mokassie CHP||TMHW0e4brAF
+Bagruwa Chiefdom||Mosenegor MCHP||mR0Oxuvc3Ck
+Bagruwa Chiefdom||Ngiebu CHC||IbDblg2OmWQ
+Bagruwa Chiefdom||Sembehun (Bagruwa) CHC||usqoNUUysSb
+Bagruwa Chiefdom||Sembehunwo MCHP||ZCLa8KLzT7y
+Bumpeh Chiefdom||Belletin CHP||bC4V8f2PSZl
+Bumpeh Chiefdom||Bumpeh River CHP||oOzeViuMhSg
+Bumpeh Chiefdom||Mende Town MCHP||aVLwrBQCqwa
+Bumpeh Chiefdom||Moforay MCHP||DPeY2ZmVnhm
+Bumpeh Chiefdom||Mokaiyegbeh MCHP||T2ndMptANly
+Bumpeh Chiefdom||Mosella CHP||PVJfUqlqKBr
+Bumpeh Chiefdom||Motorbong MCHP||gxvlA4u8Bfq
+Bumpeh Chiefdom||Moyeamoh CHP||R45zyrXDMao
+Bumpeh Chiefdom||Rotifunk CHC||CTpI97UydOO
+Bumpeh Chiefdom||Sahun (Bumpeh) MCHP||tpp49XegPqp
+Bumpeh Chiefdom||Samu CHP||pownNNHCYhZ
+Bumpeh Chiefdom||Seweima MCHP||u7mA5SlAcwI
+Bumpeh Chiefdom||UMC Rotifunk Hospital||gysZXIVHrzY
+Bumpeh Chiefdom||Yenkessa MCHP||Oxir4GKFJNv
+Dasse Chiefdom||Bambuibu Tommy MCHP||m4jN7trCLoI
+Dasse Chiefdom||Hope Rising CHP||DebR9bmmrAN
+Dasse Chiefdom||Kabaima MCHP||ES1PqKGAySR
+Dasse Chiefdom||Kenema Gbandoma MCHP||LEopcbdWYkv
+Dasse Chiefdom||Laugh Out Loud Clinic||k5hMbks46E0
+Dasse Chiefdom||Laught Out Loud Clinic||jRmjGcBsAdw
+Dasse Chiefdom||Mano (Dasse) CHC||gB4a65YWQeV
+Dasse Chiefdom||Mogbaske CHP||ywjhytbQakY
+Dasse Chiefdom||Taninihun Kapuima MCHP||ObQF3ol9Q3r
+Fakunya Chiefdom||Falaba MCHP||dTHuI3mBVPD
+Fakunya Chiefdom||Gandorhun (Fakunya) CHC||ZcKEFm4KZic
+Fakunya Chiefdom||Mokalley MCHP||VTEh5a5L6ns
+Fakunya Chiefdom||Mokorewa MCHP||ZS5tHnbSyS4
+Fakunya Chiefdom||Moyamba Junction CHC||Lb2j5Jz1M7v
+Fakunya Chiefdom||Moyollo MCHP||gz29NRPuuM6
+Fakunya Chiefdom||Njagbahun (Fakunya) MCHP||JQHX6wOPUKl
+Fakunya Chiefdom||Rotawa CHP||hVX8qsOsX8R
+Kaiyamba Chiefdom||Gbonjeima MCHP||yVysLeYBG2J
+Kaiyamba Chiefdom||Kangahun CHC||LxpZQlIR30v
+Kaiyamba Chiefdom||Komende (Kaiyamba) MCHP||uy5nI2JV292
+Kaiyamba Chiefdom||Korgbotuma MCHP||KypTZzNDZdY
+Kaiyamba Chiefdom||Levuma (Kaiyamba) MCHP||TIOwvOTgR6W
+Kaiyamba Chiefdom||Moyamba Government Hospital||shxicAwesn1
+Kaiyamba Chiefdom||Moyamba Static 1 CHP||uzJVqi5wYdf
+Kaiyamba Chiefdom||Moyamba Static 2 CHC||Fsjt3s4bw7S
+Kaiyamba Chiefdom||Salina CHP||lpimQydyijo
+Kaiyamba Chiefdom||Yoyema MCHP||JhTDyrhbWwj
+Kamajei Chiefdom||Gondama (Kamajei) CHP||nPARkiIS8iF
+Kamajei Chiefdom||Joyah MCHP||ZGThBcdSOkk
+Kamajei Chiefdom||Mogbuama MCHP||rvR9kOXLpQH
+Kamajei Chiefdom||Senehun (Kamajei) CHC||A3GcBew4orK
+Kargboro Chiefdom||Bumpetoke (Kargboro) CHP||hdvksIOt06Q
+Kargboro Chiefdom||Mokaisumana CHP||Ma2U2kjFZqn
+Kargboro Chiefdom||Mokandoh CHP||HLcp45RA3l0
+Kargboro Chiefdom||Mokobo MCHP||SUaCsfdZhSU
+Kargboro Chiefdom||Mokonbetty MCHP||DlknJdmC8X2
+Kargboro Chiefdom||Mopailleh MCHP||y3WxvO0xKSk
+Kargboro Chiefdom||Ngeihun (Kargboro) MCHP||HD8ljkShOVG
+Kargboro Chiefdom||Plaintain Island MCHP||zFClhaAtatj
+Kargboro Chiefdom||Shenge CHC||NkrCs9vbXRT
+Kargboro Chiefdom||Yorgbofore CHC||coF2L7KvREd
+Kargboro Chiefdom||Yorgbofore MCHP||muwVrMzUYKH
+Kargboro Chiefdom||Youndu CHP||pmWucBbNz7v
+Kongbora Chiefdom||Bauya (Kongbora) CHC||QjQdgcF60pd
+Kongbora Chiefdom||Lawana (Kongbora) MCHP||TQbrRF6gjn5
+Kongbora Chiefdom||Levuma Nyomeh CHP||t0goEU0zajU
+Kongbora Chiefdom||Magbenka CHP||H2DJR9sZh5M
+Kongbora Chiefdom||Taninihun Mboka MCHP||B5r1qPpxngC
+Kori Chiefdom||Bai Largo MCHP||fEcMul1miAw
+Kori Chiefdom||Fogbo (Kori) CHP||GXO0sc8UbYF
+Kori Chiefdom||Gbuihun MCHP||s9gLF7qFI2k
+Kori Chiefdom||Judy Smith CHP||xPRDtKMkCQW
+Kori Chiefdom||Juma MCHP||zJ0XxHU5vZk
+Kori Chiefdom||Konda CHP||gElqpDtUsaC
+Kori Chiefdom||Manjeihun MCHP||F9VTlWW6qb7
+Kori Chiefdom||Mosongo MCHP||a3nYVTgslBy
+Kori Chiefdom||Njala (Kori) CHC||H7xLsOC2N3m
+Kori Chiefdom||Njala University Hospital||VlYuMygld6M
+Kori Chiefdom||Taiama (Kori) CHC||rc8w7wb6e0z
+Kori Chiefdom||United Methodist Church Taiama CHP||tBll4l0vIJc
+Kori Chiefdom||Waiima (Kori) MCHP||Vy1KsK7ndSv
+Kowa Chiefdom||Bendu (Kowa) MCHP||daVmo6SXi1Q
+Kowa Chiefdom||Mofombo MCHP||MpUzbE4uElL
+Kowa Chiefdom||Njama (Kowa) CHC||fMCvdQ7iXmK
+Kowa Chiefdom||Tabe MCHP||A0YEeEEZ0qk
+Lower Banta Chiefdom||Gbangbatoke CHC||XHHguFd7CEf
+Lower Banta Chiefdom||Kanga (Lower Banta) MCHP||UZJGNDdjB0W
+Lower Banta Chiefdom||Mokanji CHC||XgMtaugamtW
+Lower Banta Chiefdom||Mokotawa CHP||wbRQAfj7atb
+Lower Banta Chiefdom||Moriba Town (Lower Banta) CHC||L9c8GttwDSQ
+Lower Banta Chiefdom||Moriba Town (Lower Banta) CHP||WiNTyQyN3Zf
+Lower Banta Chiefdom||Mosenesie Junction CHP||aR7rHt3nwnh
+Lower Banta Chiefdom||Njagbahun (Lower Banta) MCHP||MwFefAhmNIt
+Lower Banta Chiefdom||St Mary's Clinic||gcIfzSrM2ST
+Ribbi Chiefdom||Bradford CHC||yjgwoAnmcFn
+Ribbi Chiefdom||Ferry CHP||gYXVxstIDSp
+Ribbi Chiefdom||Mabang (Ribbi) MCHP||Apxujc4njKT
+Ribbi Chiefdom||Mogbongisseh MCHP||QNEdBz16I4g
+Ribbi Chiefdom||Mokorbu MCHP||z8ap2iTMIx3
+Ribbi Chiefdom||Motoni CHC||PDhArwGhL5E
+Ribbi Chiefdom||Motoni MCHP||h1wK93rCpsA
+Ribbi Chiefdom||Motonkoh MCHP||x4Eed7qLRQM
+Ribbi Chiefdom||Rokolor MCHP||oMlGE1UbIkX
+Ribbi Chiefdom||Suen CHP||p7Oz8Q3uQ4w
+Timdale Chiefdom||Bomotoke CHC||odmRUOHCHpl
+Timdale Chiefdom||Mokaiyamba MCHP||OKaPGd5I1Wx
+Timdale Chiefdom||Mokpanabom MCHP||Yb3ITVSwWuW
+Timdale Chiefdom||Mosagbeh MCHP||yCxVqmqe5Sr
+Timdale Chiefdom||Mosanda CHP||y93XQ0qhM6Q
+Upper Banta Chiefdom||Children of the Nation Ngolala CHP||WoS6RQoMpis
+Upper Banta Chiefdom||Gondama (Upper Banta) MCHP||F97HfubuviQ
+Upper Banta Chiefdom||Modonkor CHP||b0qA5NkOT5X
+Upper Banta Chiefdom||Mogomgbe MCHP||P07Nrpuvlal
+Upper Banta Chiefdom||Mokelleh CHC||wPVKhcwmFb6
+Barri Chiefdom||Bandasuma (Barri) CHC||ZZ3df7Nzbn0
+Barri Chiefdom||Jeoma Barri MCHP||kaJ56XLzEsu
+Barri Chiefdom||Konia (Barri) MCHP||ZAnsifYcOA9
+Barri Chiefdom||Kundorwahun CHP||jRnF4IbWcts
+Barri Chiefdom||Njaluahun (Barri) CHP||JLnVLgfsYUT
+Barri Chiefdom||Potoru CHC||NB7youiWZyr
+Barri Chiefdom||Saahun (Barri) MCHP||CLy2PaLEwjS
+Barri Chiefdom||Tambeiyama MCHP||fU0xfQPlpj2
+Barri Chiefdom||Taninahun (Barri) MCHP||plGaCqBh6MY
+Barri Chiefdom||Vaama (Barri) CHP||jERc68Sr7Bp
+Barri Chiefdom||Waiima (Barri) MCHP||A77UrwwlYgE
+Galliness Chiefdom||Bandama (Galliness) MCHP||YhtEP5znngl
+Galliness Chiefdom||Blama Massaquoi CHC||F25TjQ4UIyz
+Galliness Chiefdom||Fonikoh MCHP||rjWTV80zbSD
+Galliness Chiefdom||Funyehun CHP||XwDJOPGcMaw
+Galliness Chiefdom||Kpetema (Galliness) MCHP||MuhGY1bu7C2
+Galliness Chiefdom||Kpowubu MCHP||lqnF0cmpWWn
+Galliness Chiefdom||Makorma CHP||APB73IIHig5
+Kabonde Chiefdom||Pehala CHC||IplEJtpNXvA
+Kpaka Chiefdom||Liya MCHP||OFMF56v7vl8
+Kpaka Chiefdom||Massam CHC||ADKnHIz8c7V
+Kpaka Chiefdom||Saahun (Kpaka) MCHP||UM7hg3e4Ybq
+Kpaka Chiefdom||Semabu (Kpaka) MCHP||EU7IzzJ2kj7
+Kpaka Chiefdom||Sumbuya Bessima CHP||uooiBFlG6t7
+Kpanga Chiefdom||Basalleh MCHP||Bx2bBA2kaq4
+Kpanga Chiefdom||Blama Puilla MCHP||GyE6d0nN2zC
+Kpanga Chiefdom||Bomu Samba MCHP||k6110nfGTK3
+Kpanga Chiefdom||Dandabu CHP||a0Va6xnQqOo
+Kpanga Chiefdom||Gbondapi CHC||nl0zlkXNtK4
+Kpanga Chiefdom||Gibina MCHP||UnP1GKv5J6R
+Kpanga Chiefdom||Mandeima MCHP||bdld6OpczDY
+Kpanga Chiefdom||Pujehun Government Hospital||s5ENsJuPvpg
+Kpanga Chiefdom||Pujehun Static CHC||P2B69vqfmxa
+Kpanga Chiefdom||Salima Samba MCHP||fU2KVlnGTZX
+Kpanga Chiefdom||Sawula MCHP||bplCwW6SjUc
+Kpanga Chiefdom||Sorbeh Grima MCHP||UAwYzKlBK0E
+Kpanga Chiefdom||Taninahun Makemuma MCHP||wQMG1rTATWt
+Kpanga Chiefdom||Tongay MCHP||cB061zWUDXv
+Kpanga Chiefdom||Vawahun Kayimba MCHP||pRXiahZiM40
+Kpanga Krim Chiefdom||Bayama MCHP||CUfQncws5Ud
+Kpanga Krim Chiefdom||Borborbu MCHP||W8Xzf1rTKzT
+Kpanga Krim Chiefdom||Gobaru CHC||t4q26ZD7SVl
+Kpanga Krim Chiefdom||Vaama (Kpanga Krim) MCHP||nhvmPdYeoPn
+Makpele Chiefdom||Dumagbe MCHP||G7wM7QVvS8d
+Makpele Chiefdom||Gbaa (Makpele) CHP||KNpzoeFA2EU
+Makpele Chiefdom||Gbahama (Makpele) MCHP||nOVDCt1XBZW
+Makpele Chiefdom||Gissiwolo MCHP||GnYxwvcZRpD
+Makpele Chiefdom||Gofor CHP||K58yvJ4lRbW
+Makpele Chiefdom||Ndombu MCHP||zX1No0QMgIJ
+Makpele Chiefdom||Pewa MCHP||sV6OY2OosjF
+Makpele Chiefdom||Zimmi CHC||OUYLNjlVh4I
+Malen Chiefdom||Bendu (Malen) MCHP||ODnJykZrHpb
+Malen Chiefdom||Hongai CHP||ZaROqAYis7T
+Malen Chiefdom||Jao (Malen) MCHP||jDsXJ6P1qOg
+Malen Chiefdom||Ngandorhun MCHP||yMOcEY5mgDG
+Malen Chiefdom||Nianyahun MCHP||X2mkAbwo1qM
+Malen Chiefdom||Nyandehun (Malen) MCHP||QAnWXN75i98
+Malen Chiefdom||Sahn (Malen) CHC||qwF3rNOGvcF
+Malen Chiefdom||Sengema (Malen) CHP||znTHynBmevB
+Malen Chiefdom||Taninahun (Malen) CHP||xuHkxQnlQA2
+Mano Sakrim Chiefdom||Bengani MCHP||TxXqh7Y5e1Q
+Mano Sakrim Chiefdom||Gombu MCHP||k98x1SvFnWU
+Mano Sakrim Chiefdom||Kassay MCHP||O7WrfXI1nXh
+Mano Sakrim Chiefdom||Mano Gbongema CHC||eBMjqEci2uQ
+Mano Sakrim Chiefdom||Mende MSK MCHP||t1mtYkirYZX
+Mano Sakrim Chiefdom||Nyandehun (Mano Sakrim) MCHP||LtWOymVnTgO
+Mano Sakrim Chiefdom||Senbengu MCHP||QhTiJHXYO2x
+Peje Chiefdom||Bongay MCHP||drhvYkZKMYZ
+Peje Chiefdom||Bumbeh MCHP||FiXxcjvXaVM
+Peje Chiefdom||Futa Pejeh CHC||AWVRtkpsFJ8
+Peje Chiefdom||Helebu Pejeh MCHP||QI7eMPnP51S
+Peje Chiefdom||Pejewa (Futa Peje) MCHP||B8yefN9qEls
+Perri Chiefdom||Blama Perri MCHP||gVErPrrfSWW
+Perri Chiefdom||Bomi MCHP||VzUdt9HYxoE
+Perri Chiefdom||Bumpeh (Perri) CHC||lkoD10P0NDq
+Perri Chiefdom||Falaba CHP||LvgtbOznv64
+Perri Chiefdom||Kowama (Perri) MCHP||raSPOCgaCx5
+Perri Chiefdom||Ngajubaoma/Missibu MCHP||bZlbWwavadR
+Perri Chiefdom||Saama Perri MCHP||AXGTJ4cJaBu
+Soro Gbeima Chiefdom||Fairo CHC||TCa2U58UIPj
+Soro Gbeima Chiefdom||Fanima (Soro) CHP||yd56mqK3qgA
+Soro Gbeima Chiefdom||Futa Golawoma MCHP||yhT1lmQpgzK
+Soro Gbeima Chiefdom||Gondama Massaquoi MCHP||fOUzROYFXB4
+Soro Gbeima Chiefdom||Jendema CHC||NpQOWFsdR4T
+Soro Gbeima Chiefdom||Koijeh MCHP||j1U9raUiUOL
+Soro Gbeima Chiefdom||Malema 1 MCHP||LPAOChzKFKC
+Soro Gbeima Chiefdom||Malema 2 MCHP||iIriwttJhFk
+Soro Gbeima Chiefdom||Navai MCHP||uuG5VaXr9Gv
+Soro Gbeima Chiefdom||Sengama Soro MCHP||ttyvGSNppGb
+Soro Gbeima Chiefdom||Sulima CHP||GADYugWr63V
+Soro Gbeima Chiefdom||Tindor MCHP||j0uj4kofmlz
+Soro Gbeima Chiefdom||Wai MCHP||fvMYYPOgoxo
+Sowa Chiefdom||Bandajuma Sowa CHC||o9K8HbQLJ7G
+Sowa Chiefdom||Geoma Jarjoh CHP||teWwA7D3KMq
+Sowa Chiefdom||Lower Komende MCHP||TAAlwsM0CS4
+Sowa Chiefdom||Upper Komende MCHP||sOaIriAT7O3
+Sowa Chiefdom||Vaawahun Sowa MCHP||PK4hVZjC95g
+Yakemoh Kpukumu Krim Chiefdom||Bangorma MCHP||HRmRSqv4ntJ
+Yakemoh Kpukumu Krim Chiefdom||Borma (Yakemu Kpukumu) MCHP||OC0RRU9OtGn
+Yakemoh Kpukumu Krim Chiefdom||Karlu CHC||AvfrLgCTL1W
+Yakemoh Kpukumu Krim Chiefdom||Kombeima MCHP||V0F3IjCwdkw
+Yakemoh Kpukumu Krim Chiefdom||Kombopi MCHP||mIKQuSz8xDG
+Yakemoh Kpukumu Krim Chiefdom||Messima MCHP||OJ5v39nYjSM
+Yakemoh Kpukumu Krim Chiefdom||Saama Sowunde MCHP||vetiyW2boAi
+Dama Chiefdom||Diamei MCHP||ow3mtDhTz5C
+Dama Chiefdom||Gao MCHP||xmP3u5q0GjB
+Dama Chiefdom||Giema (Dama) CHP||Is0PFc56H6v
+Dama Chiefdom||Konia (Dama) MCHP||kZarTiVyj3P
+Dama Chiefdom||Konjo (Dama) CHP||WnuFR4nHs7T
+Dama Chiefdom||Kpandebu CHC||Y5xsQXAwm31
+Dama Chiefdom||Lileima MCHP||FiTCoWAWPni
+Dama Chiefdom||Loppa CHP||Drxsn6jhKS1
+Dama Chiefdom||Majihun MCHP||ijwphOe9ZG3
+Dama Chiefdom||Patama MCHP||I8O6dOxTylu
+Dama Chiefdom||Tawahun MCHP||rFrbzNTdF1R
+Dama Chiefdom||Tokpombu (Dama) CHP||EOcSrvqasov
+Dodo Chiefdom||Dodo CHC||r9ZEPz2yNUU
+Dodo Chiefdom||Guala MCHP||zLSyvXxZMpb
+Dodo Chiefdom||Kundorma CHP||VQlG2chUska
+Dodo Chiefdom||Mbowohun CHP||tB9t0gbXOI7
+Gaura Chiefdom||Joru CHC||f0EypCBO8ud
+Gaura Chiefdom||Kokoru CHP||Yzyqai8BL3Z
+Gaura Chiefdom||Mendekelema (Gaura) CHP||HDieqft311e
+Gaura Chiefdom||Perrie MCHP||cdka7NBuKU1
+Gaura Chiefdom||Sandaru (Gaura) MCHP||A9FHPvMoD4U
+Gaura Chiefdom||Sembehun (Gaura) MCHP||Hte87xnkhfn
+Gaura Chiefdom||Tikonko (Gaura) MCHP||MJJg7lW1Cg1
+Gaura Chiefdom||Venima CHP||YKDmsZMBJXR
+Gorama Mende Chiefdom||Bambara Kaima CHP||MOt6CC5Kz1u
+Gorama Mende Chiefdom||Fomaya CHP||TqPtTCcUkBo
+Gorama Mende Chiefdom||Konta (Gorama Mende) CHP||dOpVarh7dOY
+Gorama Mende Chiefdom||Kortuhun (Gorama Mende) MCHP||o9Muza3JWxM
+Gorama Mende Chiefdom||Mondema CHC||fQXsdCbxl2B
+Gorama Mende Chiefdom||Ngiegboiye CHP||ki4r7X81kf6
+Gorama Mende Chiefdom||Njagbewema (Gorama Mende) MCHP||L0RV5IfUuoX
+Gorama Mende Chiefdom||Punduru CHP||IxjPnzxKfwK
+Gorama Mende Chiefdom||Tungie CHC||VwSr5CcZUIe
+Kandu Leppiama Chiefdom||Baoma Oil Mill CHC||AvhxI9eRYWU
+Kandu Leppiama Chiefdom||Diema MCHP||pvOwnzvQ1iv
+Kandu Leppiama Chiefdom||Gbado CHP||Xnv972xj5Jp
+Kandu Leppiama Chiefdom||Levuma (Kandu Leppiama) CHC||V7XGc26TT7i
+Kandu Leppiama Chiefdom||Sembehun (Kandu Leppiama) MCHP||L9elBGgiNhV
+Kenema City||African Muslim Agency Clinic||wCFXJI0sK7W
+Kenema City||Ahmadiyya Muslim (Nongowa) Hospital||J39phbbgPTW
+Kenema City||BL Services Clinic||IbBGf6WSmK9
+Kenema City||Burma 2 MCHP||qRMsZxscmAB
+Kenema City||Degbuama MCHP||FgdT0bf461U
+Kenema City||Direct Aid Orphanage (Kenema City) Clinic||gAR2gH69VVn
+Kenema City||Egyptian (Kenema City) Clinic||PsW8Pd0jtJI
+Kenema City||Ensah Foundation Clinic||YGcLwjTrUEv
+Kenema City||Friends For Lives Clinic||Nnmo8K6CYDG
+Kenema City||Gbo-Kakajama 1 MCHP||mme1YqRfkIj
+Kenema City||Gbo-Kakajama 2 MCHP||fu57aQzgJe1
+Kenema City||Gbo-Lambayama 1 CHC||stBlhBQabwG
+Kenema City||Gbo-Lambayama 2 MCHP||CgFzJoH5kZ3
+Kenema City||Kenema City Military Clinic||R8FHeJ8iTup
+Kenema City||Kenema Government Hospital||qhHbIYNPSfd
+Kenema City||Kenema Under Fives CHP||W4kIVirADsZ
+Kenema City||Kondebotihun MCHP||NWf5RYlO0Lv
+Kenema City||Koyagbema MCHP||KKUJDT0F4jd
+Kenema City||Kpayama 1 MCHP||xjKhziYHET0
+Kenema City||Kpayama 2 MCHP||XEGZv8nzxNz
+Kenema City||Kpetema (Kenema City) CHC||ExAIrgMYEXC
+Kenema City||Lango Town MCHP||fQNt3AIbPhU
+Kenema City||Malian Friendship Hospital||SEwGOBcp44x
+Kenema City||Marie Stopes (Kenema City) Clinic||DCLBeLxQFWC
+Kenema City||Nongowa Static MCHP||ZNAKNTWL9Y5
+Kenema City||Nyandeyama MCHP||NGBaOznYTwp
+Kenema City||Rainbow Clinic||JiAzy6jkxeW
+Kenema City||Red Cross (Kenema City) CHP||JpJYfgGL3V5
+Kenema City||Samai Town CHC||yR2kpnLodok
+Kenema City||Torkpombu MCHP||R5VBAk1VW5h
+Koya (Kenema) Chiefdom||Baoma (Koya) CHC||T5zA0G4sCX7
+Koya (Kenema) Chiefdom||Bongor (Koya) MCHP||t15PAiOZIYG
+Koya (Kenema) Chiefdom||Jui (Koya) CHP||s5RHLztI6s5
+Koya (Kenema) Chiefdom||Menima MCHP||ieWXFUGoiJN
+Koya (Kenema) Chiefdom||Njaluahun (Koya) MCHP||NccleAqUtKo
+Koya (Kenema) Chiefdom||Nyandehun (Koya) MCHP||BPpluF7TLmw
+Koya (Kenema) Chiefdom||Serabu (Koya) CHP||MHXEOUsDoAP
+Langroma Chiefdom||Woyama MCHP||RzhtkqNBzeH
+Langroma Chiefdom||Yabaima CHP||Hu6UzZClgNG
+Lower Bambara Chiefdom||Bomie MCHP||TuQCNqzX3Zw
+Lower Bambara Chiefdom||Foindu (Lower Bambara) CHC||WlGzE7izYuM
+Lower Bambara Chiefdom||Foindu (Lower Bambara) CHP||srC4XEvLGbx
+Lower Bambara Chiefdom||Kamboma (Lower Bambara) CHC||j6UVkCEMflc
+Lower Bambara Chiefdom||Kamboma (Lower Bambara) MCHP||Mlilb2xsjzq
+Lower Bambara Chiefdom||Komende Getewalu CHP||vmBdFic8UvD
+Lower Bambara Chiefdom||Komende Luyema MCHP||Yj5g2JRpKQ3
+Lower Bambara Chiefdom||Konjo (Lower Bambara) CHC||y9GoBDItucc
+Lower Bambara Chiefdom||Konjo (Lower Bambara) MCHP||ye6J3Xkz7FR
+Lower Bambara Chiefdom||Kornia Kpindema CHP||uVsQNlgcfsy
+Lower Bambara Chiefdom||Kpandebu (Lower Bambara) CHC||s0vSnVRY6kR
+Lower Bambara Chiefdom||Kpandebu (Lower Bambara) MCHP||jOjUH8lspDT
+Lower Bambara Chiefdom||Kpetema (Lower Bambara) CHP||AoPAE0CkS10
+Lower Bambara Chiefdom||Lowoma (Lower Bambara) CHC||q5hF4ux4F25
+Lower Bambara Chiefdom||Ngiehun (Lower Bambara) CHC||JYplir4MQ5b
+Lower Bambara Chiefdom||Njagbahun (Lower Bambara) MCHP||hQeheTJib1y
+Lower Bambara Chiefdom||Panguma CHC||R7Zp9nPTPWE
+Lower Bambara Chiefdom||Panguma Hospital||aT2LS3XTGKf
+Lower Bambara Chiefdom||Pelewahun (Lower Bambara) MCHP||WJofClMWBTW
+Lower Bambara Chiefdom||Saama CHP||O8ibSSGmX6C
+Lower Bambara Chiefdom||Sandeyiema MCHP||FdtKbXIbujs
+Lower Bambara Chiefdom||Sembiema MCHP||kUJZYakIfR1
+Lower Bambara Chiefdom||Semewabu MCHP||MIzubQlFHSe
+Lower Bambara Chiefdom||Tongo CHC||QigcvPZqahA
+Lower Bambara Chiefdom||Wiema CHC||P0eUvysuIXS
+Malegohun Chiefdom||Bendu (Malegohun) CHC||qWPdGtaBfx1
+Malegohun Chiefdom||Benduma (Malegohun) MCHP||kXS5DQz8W8j
+Malegohun Chiefdom||Helegombu MCHP||dzXuRA5v2DC
+Malegohun Chiefdom||Ngiehun Konjo CHP||fFv0ZSCRGcy
+Niawa Chiefdom||Bandawor MCHP||RURPKNA3cnL
+Niawa Chiefdom||Gandorhun (Niawa) CHP||lDUPzQqu85m
+Niawa Chiefdom||Sendumei CHC||QVZsnXMgNyh
+Nomo Chiefdom||Baoma (Nomo) CHP||wet35964SA0
+Nomo Chiefdom||Damabara MCHP||F0qOJmWvHK2
+Nomo Chiefdom||Faama CHC||rfbULbcHklf
+Nongowa Chiefdom||Bambawo MCHP||AUi2S4qGz0m
+Nongowa Chiefdom||Hangah CHC||fbCul3cFaWS
+Nongowa Chiefdom||Jormu (Nongowa) CHP||sbjrpfQqwxZ
+Nongowa Chiefdom||Komende (Nongowa) MCHP||untfxCaJcHF
+Nongowa Chiefdom||Konabu MCHP||RkDYca48joh
+Nongowa Chiefdom||Largo CHC||jYkxcQTZz0D
+Nongowa Chiefdom||Massahun MCHP||CUq243yEJ7W
+Nongowa Chiefdom||Medicins Sans Frontiere Hospital||ld2hDMk2ysO
+Nongowa Chiefdom||Ngelehun (Nongowa) MCHP||SfkfF3Bwb6q
+Nongowa Chiefdom||Niahun Buima MCHP||I5bNzPwI0lA
+Nongowa Chiefdom||Niekabu CHC||lnUHkOMpnrT
+Nongowa Chiefdom||Panderu MCHP||qhcmpAzCiE6
+Nongowa Chiefdom||Potehun MCHP||kcII6FgHB1L
+Nongowa Chiefdom||Talia (Nongowa) CHC||bajzUc4wZEf
+Nongowa Chiefdom||Vaahun MCHP||JHwoR0G6H2w
+Simbaru Chiefdom||Boajibu CHC||S2SEYaGMdrQ
+Simbaru Chiefdom||Gbageima MCHP||XRO0sJLkyNf
+Small Bo Chiefdom||Blama CHC||Q6sgqrcHVxP
+Small Bo Chiefdom||Doujo CHP||yq55xDCDqul
+Small Bo Chiefdom||Gelehun MCHP||Is505EOJnt8
+Small Bo Chiefdom||London (Blama) MCHP||FkxhhbamXjj
+Small Bo Chiefdom||Nyangbe-Bo MCHP||Mct9iB1mp46
+Small Bo Chiefdom||Sarabu CHP||Ttbz3sJwz3Z
+Small Bo Chiefdom||Tobanda CHC||JWOsdhOJSv6
+Tunkia Chiefdom||Belebu CHP||CVxUqFTWKWx
+Tunkia Chiefdom||Fayiema CHP||tlYxXnq3qSV
+Tunkia Chiefdom||Gbeworbu CHP||JM7lp3vq1Mz
+Tunkia Chiefdom||Gegbwema CHC||piJAfGlX7Ls
+Tunkia Chiefdom||Gorahun CHC||ne7UlbAXVcu
+Tunkia Chiefdom||Jao (Tunkia) CHP||gDL3Ywv64Dy
+Tunkia Chiefdom||Mano Ngiebla CHP||kY0MMrme1rN
+Tunkia Chiefdom||Ngiewahun CHP||xtK4Tc3GaO6
+Tunkia Chiefdom||Nyiemiga MCHP||L01TQZKu3ro
+Tunkia Chiefdom||Shenge MCHP||ba0s8lZbPwe
+Wandor Chiefdom||Baama CHC||WmFc36CE8ij
+Wandor Chiefdom||Bambara MCHP||R30mhbCwlMi
+Wandor Chiefdom||Faala CHP||erCgYT1GNKf
+Wandor Chiefdom||Gendema MCHP||ARFpFEYoy93
+Wandor Chiefdom||Kamboma (Wandor) MCHP||mRXDFEvWo3e
+Fiama Chiefdom||Bandasuma (Fiama) CHP||cmQzFPDcmNC
+Fiama Chiefdom||Bombordu CHP||UAX3oEBDqUE
+Fiama Chiefdom||Gbetema (Fiama) MCHP||UOPFJ0v4e4s
+Fiama Chiefdom||Njagbwema (Fiama) CHC||fdqgCiDLti1
+Fiama Chiefdom||Yekior MCHP||oDUaBvnWCmM
+Gbane Chiefdom||Bandama (Gbane) MCHP||w997XDqKoPM
+Gbane Chiefdom||Fembedu CHP||RNWUs6Uje3P
+Gbane Chiefdom||Foindu (Gbane) CHP||uqFg7rbQ0QX
+Gbane Chiefdom||Gandorhun (Gbane) CHC||AymkfSaKLOX
+Gbane Chiefdom||Kanekor MCHP||zncZSAhwbKO
+Gbane Chiefdom||Kuangor MCHP||s6alWUiEPhj
+Gbane Chiefdom||Mbaoma (Gbane) CHP||MqOaDCKQmY2
+Gbane Chiefdom||Sunga MCHP||u5JtsNNSRaZ
+Gbane Kandor Chiefdom||Koardu CHC||grdM2eLTJ3h
+Gbane Kandor Chiefdom||Sindadu MCHP||m10XWwwO9Wr
+Gbense Chiefdom||Boroma CHP||WAWAka52srX
+Gbense Chiefdom||Gbangadu MCHP||mYgmNo9nDt2
+Gbense Chiefdom||Koakor MCHP||f6YEbwnOLvH
+Gbense Chiefdom||Musa and Family CHC||fYFIiOzRO5K
+Gbense Chiefdom||Quidadu MCHP||mvnxz1DZhGA
+Gbense Chiefdom||Small Sefadu CHP||VjUcpUToqQS
+Gbense Chiefdom||Well Body Clinic||MbuVmYMo7J4
+Gorama Kono Chiefdom||Bunabu CHP||ejpecE9bKdx
+Gorama Kono Chiefdom||Kangama (Gorama Kono) CHC||gT8ibDlmzfO
+Gorama Kono Chiefdom||Njagbwema (Gorama Kono) CHP||OGvC4fXj01K
+Gorama Kono Chiefdom||Torkpumbu MCHP||zmGng9EjpqA
+Kamara Chiefdom||Peyima CHP||j9dHsffq9ZK
+Kamara Chiefdom||Samiquidu MCHP||scXf03Pb6te
+Kamara Chiefdom||Sukudu (Kamara) CHP||L7FPnzkisRq
+Kamara Chiefdom||Tombodu CHC||KgZWDR9KhEr
+Koidu New Sembehun City||Adama Martha Memorial CHC||d82Ux7MFpB9
+Koidu New Sembehun City||Arabic Clinic||xzR8f4Z0z2H
+Koidu New Sembehun City||Dabundeh Clinic||vDwBOngjfCq
+Koidu New Sembehun City||Egyptian (Koidu) Clinic||S7EU96dpDi7
+Koidu New Sembehun City||Gbongonlekeh Clinic||n6ehu1ZtE0a
+Koidu New Sembehun City||Gbongonleken Clinic||CgFWf0YtjtW
+Koidu New Sembehun City||Hussein Mackie Memorial Hospital||RL8ItDpHpgd
+Koidu New Sembehun City||In God Be Truth Clinic||cRnYhUzEriC
+Koidu New Sembehun City||Joanna Enterprise Clinic||mKsba7sTdUN
+Koidu New Sembehun City||Kamadu CHP||o3qT2NBSWHx
+Koidu New Sembehun City||Koeyor CHP||IXfyJkOjsvX
+Koidu New Sembehun City||Koidu Government Hospital||vUEBbGQdhOx
+Koidu New Sembehun City||Koidu Static CHC||XXMfxHq352I
+Koidu New Sembehun City||Koidu Static CHP||EUWEJQIRYVL
+Koidu New Sembehun City||Marie Stopes (Koidu) Clinic||UdIO3STRSoQ
+Koidu New Sembehun City||Obama Clinic||Aaf4fip4Od0
+Koidu New Sembehun City||Paul Sorie Farma's Hospital||oYfJTisSjCc
+Koidu New Sembehun City||Pessima Clinic||iWzv39MoYxx
+Koidu New Sembehun City||Simbakoro MCHP||VuhipbKgud9
+Lei Chiefdom||Foakor MCHP||wUY3a7aILUJ
+Lei Chiefdom||Gbongongor MCHP||fAy3VOuG3OR
+Lei Chiefdom||Kenewa MCHP||xg7vsnLX7ub
+Lei Chiefdom||Koima (Lei) MCHP||f03zdhM416p
+Lei Chiefdom||Komba Yendeh CHC||Q7tAtl0jrYC
+Lei Chiefdom||Kongoifeh CHP||St7RDQothqj
+Lei Chiefdom||Kulunbaya CHP||DvAFQU0M4Ep
+Lei Chiefdom||Kunundu MCHP||ZuJH7WeXUj0
+Lei Chiefdom||Saiama (Lei) CHP||HXqwVBjaAd1
+Mafindor Chiefdom||Kamiendor CHC||uLWZeTdiOPN
+Mafindor Chiefdom||Kamiendor MCHP||SZzdVn9Gjza
+Mafindor Chiefdom||Koindu-Kuteh MCHP||gyB7xhN7kaC
+Mafindor Chiefdom||Sambaya (Mafindor) CHP||djiVQ8YqEcd
+Nimikoro Chiefdom||Aiah Mass Clinic||mJhcGkAjWnD
+Nimikoro Chiefdom||Ashley Clinic||L3wvsVk1kTK
+Nimikoro Chiefdom||Bumpeh (Nimikoro) CHC||q38P4uBCoF9
+Nimikoro Chiefdom||Bumpeh (Nimikoro) CHP||vrl2Lp3OxQH
+Nimikoro Chiefdom||Gondama (Nimikoro) MCHP||grKgzABrZ0p
+Nimikoro Chiefdom||Jaiama CHC||j501PsE9i95
+Nimikoro Chiefdom||Mansundu (Nimikoro) MCHP||JYOtswYisji
+Nimikoro Chiefdom||Motema CHC||BtzVDVsQZ2q
+Nimikoro Chiefdom||Ngaiya MCHP||IvTAE6fJvND
+Nimikoro Chiefdom||Njagbwema (Nimikoro) CHC||YLJnUZGaIHb
+Nimikoro Chiefdom||Njagbwema (Nimikoro) CHP||fwCv3ymnO52
+Nimikoro Chiefdom||Njala (Nimikoro) CHC||rRfu1w4iZ91
+Nimikoro Chiefdom||Seidu MCHP||fxyTYHMCkrO
+Nimikoro Chiefdom||Senjekoro MCHP||eTBbB3sjjHM
+Nimikoro Chiefdom||Tongorma MCHP||GWn457MXF0A
+Nimikoro Chiefdom||United Methodist Church Jaiama Clinic||FhYNvkbLT3i
+Nimikoro Chiefdom||Yengema (Nimikoro) CHC||LBuWeXfQX4F
+Nimiyama Chiefdom||Condama CHP||r4E8qZ58gfY
+Nimiyama Chiefdom||Jaiama Sewafe CHC||IDpnk6gXn8X
+Nimiyama Chiefdom||Massabendu MCHP||w4FDzEDQhkU
+Nimiyama Chiefdom||Ngo Town CHP||G8UNWWXetNN
+Nimiyama Chiefdom||Peya MCHP||n2lL421337o
+Nimiyama Chiefdom||Sandia (Nimiyama) MCHP||GGydgcwM3II
+Nimiyama Chiefdom||Walihun (Nimiyama) MCHP||VOTsrkO71R4
+Sandor Chiefdom||Bangambaya CHP||vx83aS6PDbO
+Sandor Chiefdom||Dunamor CHP||jeq58PZnNxy
+Sandor Chiefdom||Fabandu MCHP||m9Lizj4WNMC
+Sandor Chiefdom||Fanema MCHP||kOPOqmIsU3c
+Sandor Chiefdom||Fensedu MCHP||c8Xh0vasO1g
+Sandor Chiefdom||Gbambiadu MCHP||ZzpzqNWJAvU
+Sandor Chiefdom||Gbeya MCHP||h2N2k5HYNR9
+Sandor Chiefdom||Kayima CHC||XiYUyensYFv
+Sandor Chiefdom||Kochero MCHP||garJFO6H5WN
+Sandor Chiefdom||Koima (Sandor) MCHP||k6aSQj3awgN
+Sandor Chiefdom||Kondeya (Sandor) MCHP||hv8La96CVY8
+Sandor Chiefdom||Mansundu (Sandor) MCHP||oKn04mLIfgu
+Sandor Chiefdom||Samandu MCHP||P6ij4ahzasm
+Sandor Chiefdom||Seidu Sandor MCHP||DXeXgZppnab
+Sandor Chiefdom||Taiya MCHP||bRx2s0nbgTg
+Sandor Chiefdom||Tefeya CHC||BDwr0cxGoAV
+Sandor Chiefdom||Tefeya CHP||H1qnvav7xSb
+Sandor Chiefdom||Wordu CHP||AGjvZ7DJrxL
+Sandor Chiefdom||Yardu CHC||pyWXwN1RRJC
+Sandor Chiefdom||Yardu MCHP||riMlIVhFbFZ
+Sandor Chiefdom||Yengema Sandor CHP||LbIYfznY9hl
+Sandor Chiefdom||Yormandu CHC||g0f6YnQ8pLV
+Soa Chiefdom||Bandasuma (Soa) MCHP||iBD6ErMyRtH
+Soa Chiefdom||Feuror MCHP||waHi4omRSc1
+Soa Chiefdom||Foindu Mongor CHP||YuxhRK0xSk7
+Soa Chiefdom||Gbamandu MCHP||y1Y43fOd04a
+Soa Chiefdom||Kainkordu CHC||RJMzEsch4DC
+Soa Chiefdom||Kainkordu CHP||u16yUUAIdfH
+Soa Chiefdom||Kamindu MCHP||TF4SZjTU8JK
+Soa Chiefdom||Manjama CHC||uRtAFFU60xB
+Soa Chiefdom||Manjama MCHP||Ljt4eLZISr0
+Soa Chiefdom||Semendu MCHP||kYmou62rreF
+Soa Chiefdom||Sukudu (Soa) MCHP||NkNoINnVrML
+Tankoro Chiefdom||Adama Marth Memorial CHC||eDBdN3Mpo5E
+Tankoro Chiefdom||Baiama CHC||A4NbJ8tYWsL
+Tankoro Chiefdom||Kensay CHP||R8xnUE7nPts
+Tankoro Chiefdom||Kimbadu CHC||Xq4RqQ1GHcC
+Tankoro Chiefdom||Kissi Bona CHP||shJGDeDcmmy
+Tankoro Chiefdom||Koakoyima CHC||dRbp5YD183P
+Tankoro Chiefdom||Koyadu CHC||saFnaq6iZFR
+Tankoro Chiefdom||Tongoro MCHP||Z5Ay4L9Ss56
+Tankoro Chiefdom||White House Clinic||HCFb5DY7W3j
+Tankoro Chiefdom||Woama CHP||yLm0Wrg3Lr6
+Toli Chiefdom||Kondewakoro MCHP||Bh46HEWySL9
+Toli Chiefdom||Kpetema (Toli) MCHP||eEzryzGLBEu
+Biriwa Chiefdom||Bumban CHP||NWPNH6OJo2k
+Biriwa Chiefdom||Bumbanday MCHP||V02MMGgzry8
+Biriwa Chiefdom||Kagbaneh CHC||vqbCyt5KvEk
+Biriwa Chiefdom||Kagbankona MCHP||r2cntyaXQ6O
+Biriwa Chiefdom||Kakorla MCHP||cjGgTK980hj
+Biriwa Chiefdom||Kamabai CHC||CstRgcSCRZ5
+Biriwa Chiefdom||Kamasikie CHP||nNkJ8CVpKo6
+Biriwa Chiefdom||Kamathudgu MCHP||FWwkySa2zYt
+Biriwa Chiefdom||Kanikay MCHP||hdfCH487PDp
+Biriwa Chiefdom||Karina CHP||RIq1hR5nBLv
+Biriwa Chiefdom||Kathakeya CHP||YXe0Hf6f9eE
+Biriwa Chiefdom||Kayainkassa CHP||EK8okJ2oKtj
+Biriwa Chiefdom||Kayonkoro CHP||NSED3nuJsv3
+Biriwa Chiefdom||Manjoro MCHP||cR6epFKRGYY
+Biriwa Chiefdom||Waridala Clinic||vQYHRsyXFhw
+Bombali Sebora Chiefdom||Arab (Makeni) Clinic||cK9krON0116
+Bombali Sebora Chiefdom||Maboleh CHP||sEmVsRGDt8N
+Bombali Sebora Chiefdom||Maforay (Bombali Sebora) CHP||gI75svSxF2i
+Bombali Sebora Chiefdom||Makama CHP||plnnTHIc46i
+Bombali Sebora Chiefdom||Makump CHP||HlDuhZvcrJy
+Bombali Sebora Chiefdom||Masory CHP||vbWYgvgK17P
+Bombali Sebora Chiefdom||Pate-Bana Masimbo CHP||UBLR5NqOYuY
+Bombali Sebora Chiefdom||Patebana CHC||euNewKRRaZX
+Bombali Sebora Chiefdom||Rescue International (Bombali Sebora) Clinic||kRRolmc0Q69
+Bombali Sebora Chiefdom||Robat CHP||gmW0oQZlgJM
+Bombali Serry Chiefdom||Manonkoh Clinic||mm2EunTHu1c
+Bombali Serry Chiefdom||Rokonta CHC||meDwwYJusjR
+Gbanti (Bombali) Chiefdom||Kunsho CHP||xp2Pw1nxZfu
+Gbanti (Bombali) Chiefdom||Panlap CHP||rGur3IRvLwQ
+Gbanti (Bombali) Chiefdom||Stocco CHP||norIW9BCIAm
+Gbanti (Bombali) Chiefdom||Yoni (Gbanti) CHP||v0BK5uWvhiD
+Gbendembu Chiefdom||Gbendembu CHC||MBHmQzi3yrq
+Gbendembu Chiefdom||Kortohun MCHP||NX324dhnzTN
+Gbendembu Chiefdom||Madina Loko CHP||ADKnKaaQoEQ
+Gbendembu Chiefdom||Mamaka (Gbendembu) MCHP||Z0cLo4fVIRH
+Gbendembu Chiefdom||Mambala MCHP||t46le9xpmfS
+Kamaranka Chiefdom||Kamaranka CHC||XHViXHilA0d
+Kamaranka Chiefdom||Makaiba MCHP||LngUQ9QUCS4
+Kamaranka Chiefdom||Makassa MCHP||tFpiMOjWzkp
+Kamaranka Chiefdom||Rosint MCHP||hZgOwTHrVju
+Kamaranka Chiefdom||Royeama CHP||QDPOh5Dwtr0
+Magbaimba Ndohahun Chiefdom||Hunduwa MCHP||bNtS0KQNAn8
+Magbaimba Ndohahun Chiefdom||Kagbere CHC||iu9LLXQMAgp
+Magbaimba Ndohahun Chiefdom||Mambiama MCHP||WJ8mkKQnEAa
+Magbaimba Ndohahun Chiefdom||Manjaka MCHP||Ok3GQlgeXIW
+Makarie Chiefdom||Fullah Town 1 (Makarie) CHP||OcMxWEBDFI7
+Makarie Chiefdom||Karefay Themne CHP||WE5xtWTkiyk
+Makarie Chiefdom||Kerefay Loko MCHP||tnGILq5FWnA
+Makarie Chiefdom||Kolisokoh CHP||McBDZGpDyZJ
+Makarie Chiefdom||Mabayo MCHP||C71RlmdGhce
+Makarie Chiefdom||Magbaikoli MCHP||fjBp0xYNhbJ
+Makarie Chiefdom||Magbenteh Hospital||ihthaseaNtV
+Makarie Chiefdom||Makarie MCHP||mEPZ1VrbS4B
+Makarie Chiefdom||Mangay Loko MCHP||xY8qAdHZOYv
+Makarie Chiefdom||Marie Stopes (Makarie) Clinic||bSdGjYL895R
+Makarie Chiefdom||Masongbo (Makarie) CHC||QS0SOQ49mP1
+Makarie Chiefdom||Mateneh MCHP||oJeCm9aHwyZ
+Makarie Chiefdom||Punthun MCHP||LtKvaIjrGX7
+Makarie Chiefdom||Thonkoba CHP||mGNcjWEjKk9
+Makarie Chiefdom||Yainkassa CHP||t9JPflyaxPA
+Makeni City||Bombali Police CHC||BSOznHUrK78
+Makeni City||Branda Medical Centre Hospital||eoz9Jh8DH7V
+Makeni City||Caring Hands Clinic||RqTLLofqxLV
+Makeni City||City Garden Clinic||UjSCMzVEIcC
+Makeni City||Fullah Town 2 (Makeni City) CHP||E2v3w7xzv3c
+Makeni City||Hamanda Clinic||XxuGUhyADUF
+Makeni City||Happy Kid and Adolescent (Makeni City) Clinic||ShUHSYtJNUe
+Makeni City||Holy Spirit Hospital||aQaVVRriCM3
+Makeni City||Holy Spirit Mobile Clinic||dDaejipOE3R
+Makeni City||Loreto Clinic||OVXaxL6ZwWG
+Makeni City||Makeni Correctional Centre Clinic||PYeNBbhDt7D
+Makeni City||Makeni Government Hospital||nCEIKkqoXLI
+Makeni City||Masuba Clinic||nAYtzA4jQMw
+Makeni City||Modern Clinic||w7BQAZkS41g
+Makeni City||Mordan Clinic||UNFj3dNHGCi
+Makeni City||New Hope Hospital||Mt5yoHtud5Q
+Makeni City||Red Cross (Makeni City) CHP||aHqJRhh4ciS
+Makeni City||Sanda Clinic||gQcCJewvDrs
+Makeni City||Stocco Leprosy and TB Hospital||L9PaFxlk9cD
+Makeni City||Teko Barracks CHP||ryrYHaw84NV
+Makeni City||Tonko CHP||s9RQESsizZx
+Mara Chiefdom||Kiampkakolo MCHP||NuxuDmv4g9j
+Mara Chiefdom||Manewa MCHP||Y5L0hAQCPoD
+Mara Chiefdom||Mara CHC||FOkOzu9gEvD
+Ngowahun Chiefdom||Kalangba (Ngowahun) CHC||faUZRXF94aA
+Ngowahun Chiefdom||Maharie CHP||o8iqas6O4OB
+Ngowahun Chiefdom||Makiteh (Ngowahun) MCHP||xHQCWYFvSeQ
+Ngowahun Chiefdom||Masongbo Loko CHP||A1omm3idnEM
+Ngowahun Chiefdom||Tambiama CHP||c3heq091U5f
+Paki Masabong Chiefdom||Kathanta Bana CHP||xL03lCv5c9Q
+Paki Masabong Chiefdom||Kathekeya Kaboli CHP||keSYXrOhSkJ
+Paki Masabong Chiefdom||Makeni Lol MCHP||mtaQnh4nW8p
+Paki Masabong Chiefdom||Makolor CHP||QmQ7FxJl55l
+Paki Masabong Chiefdom||Mapaki CHC||ssrfwyBj3Qg
+Paki Masabong Chiefdom||Masabong Pil MCHP||Pz7rAdkWBZQ
+Paki Masabong Chiefdom||Masingbi Lol MCHP||O4GbFBKll9f
+Safroko Limba Chiefdom||Binkolo CHC||lNtJOujPZVr
+Safroko Limba Chiefdom||Kabombeh MCHP||APp0oV91C4D
+Safroko Limba Chiefdom||Kabonka MCHP||RLfe0h6RwgK
+Safroko Limba Chiefdom||Kagbo MCHP||CwGEWKlGIaZ
+Safroko Limba Chiefdom||Kapethe MCHP||FDLFAWvutnN
+Safroko Limba Chiefdom||Kateneh MCHP||jvjdiyxFFyA
+Safroko Limba Chiefdom||Kayasie CHP||I0VCodIM4sj
+Safroko Limba Chiefdom||Mabonkani MCHP||WV6YkzMFp0w
+Safroko Limba Chiefdom||Maselleh MCHP||KfX0HBlrz3M
+Safroko Limba Chiefdom||Masongbo Limba MCHP||jKW3fJ4JKxS
+Barawa Wollay Chiefdom||Banadakafaia CHP||EvATG7CscIr
+Barawa Wollay Chiefdom||Bandakoro MCHP||mSazEPgLM30
+Barawa Wollay Chiefdom||Firawa CHC||ONGo1QeG8HA
+Barawa Wollay Chiefdom||Konombaia CHP||DsyedRL51Uy
+Barawa Wollay Chiefdom||Kulanko MCHP||ylyXf1ct0ea
+Delmandugu Chiefdom||Deldu Kamaron MCHP||bUXYaYZYGb2
+Delmandugu Chiefdom||Mansadu CHC||JXruIBcqShG
+Delmandugu Chiefdom||Masadu CHC||i8JDBzYcsbX
+Delmandugu Chiefdom||Mongo Kamaron CHP||IbLS2p6cMVS
+Delmandugu Chiefdom||Seremudu MCHP||jlfy1bszU9n
+Delmandugu Chiefdom||Tambalia Balia MCHP||SAnbMwZEXWb
+Dembelia-Sinkunia Chiefdom||Fullamansa MCHP||ZdiUFomsmdj
+Dembelia-Sinkunia Chiefdom||Gbindi CHP||K1yH8JFTnkq
+Dembelia-Sinkunia Chiefdom||Manna MCHP||Rx2eMXgH8iY
+Dembelia-Sinkunia Chiefdom||Sinkunia CHC||WPg3cuew857
+Folosaba Dembelia Chiefdom||Dogoloya CHP||AkXxPidOR1d
+Folosaba Dembelia Chiefdom||Koromasilaia MCHP||RyS7BYLJE8P
+Folosaba Dembelia Chiefdom||Largo MCHP||WriZVwdGRgK
+Folosaba Dembelia Chiefdom||Musaia (Dembelia) CHC||qnK7yqEEkKx
+Folosaba Kamba Chiefdom||Gbentu CHC||ILDNxcPoV2D
+Folosaba Kamba Chiefdom||Hamdalia MCHP||TAYiEB0pL10
+Folosaba Kamba Chiefdom||Kalia MCHP||PsQOAfpzam8
+Folosaba Kamba Chiefdom||Kamba Mamudia CHP||fFN1JcGQZeY
+Kabelia Chiefdom||Ganya CHP||cvgdZz8FOmQ
+Kamadugu Yiraia Chiefdom||Dankawalie CHC||UU7J9IyOjjG
+Kamadugu Yiraia Chiefdom||Kamadu Badala MCHP||klE98q2khAJ
+Kamadugu Yiraia Chiefdom||Kamadu Sokuralla CHP||n8kMIH8nfFT
+Kamadugu Yiraia Chiefdom||Yiraia CHP||EaenpD9dgUp
+Kulor Saradu Chiefdom||Bandapirie CHP||dNFgwAwxtsd
+Kulor Saradu Chiefdom||Durukoro MCHP||TaXwggLQ8Gc
+Kulor Saradu Chiefdom||Kulia CHP||eaRyL3OmBxO
+Kulor Saradu Chiefdom||Yarawadu MCHP||ZFuDLCJ2PSn
+Mongo Chiefdom||Mongo Bendugu CHC||ZSAGlpKRgIw
+Mongo Chiefdom||Mongo Karifaia MCHP||ATsW61y249Y
+Mongo Chiefdom||Seria CHP||ZST5FV6hq0K
+Mongo Chiefdom||Walia MCHP||YxtGtJyiR9o
+Morifindu Chiefdom||Gberefeh MCHP||F22KkbzAOEc
+Morifindu Chiefdom||Kombili CHP||UgTR6KgDTor
+Morifindu Chiefdom||Serekolia CHC||iKzNrOeqzbt
+Morifindu Chiefdom||Tubah MCHP||g75MhAh8ZhR
+Neya Chiefdom||Banboria MCHP||bl8Rib0Rmnn
+Neya Chiefdom||Kurubonla CHC||vNwhaVgQ7ul
+Neya Chiefdom||Mansofinia CHP||gi0BNng9pmc
+Neya Chiefdom||Porpon MCHP||FBsuCLFCjkg
+Nyedu Chiefdom||Bumbukoro CHC||VarXWAklKxE
+Nyedu Chiefdom||Masonia MCHP||DOgaT9ZihOY
+Sulima Chiefdom||Falaba CHC||IeNQ0Ie8tmJ
+Sulima Chiefdom||Gberia Timbakor CHP||fmV9t01ICzq
+Sulima Chiefdom||Kaliyereh MCHP||oT036su3Eht
+Sulima Chiefdom||Koindu Kura CHP||Bwyb6gqM76G
+Sulima Chiefdom||Sonkoya MCHP||HKJ4l2s1OPZ
+Diang Chiefdom||Badala MCHP||OjSFCxiZL7l
+Diang Chiefdom||Dalakuru CHP||uHRwEUxGijZ
+Diang Chiefdom||Diang Kamaron MCHP||U6TJeWewuG2
+Diang Chiefdom||Diang Sokurala MCHP||WwYfaEIUzfU
+Diang Chiefdom||Foria CHP||rVq2C0eJ55E
+Diang Chiefdom||Kania (Diang) CHP||nR9KXQ2n5Ay
+Diang Chiefdom||Kondembaia CHC||cl68IA56DMI
+Diang Chiefdom||Lengekoro CHP||Hs7XaJoD5Ld
+Diang Chiefdom||Nyawulia MCHP||gcWzHdkk4nP
+Diang Chiefdom||Solia MCHP||WUbqjGFE29f
+Diang Chiefdom||Waia MCHP||AXDZl8OJb1d
+Diang Chiefdom||Yara CHP||kqxYRa2fcBV
+Diang Chiefdom||Yiben MCHP||lzg30oxSDPi
+Gbonkorbor Kayaka Chiefdom||Kakarima MCHP||onrODn8Aaeg
+Gbonkorbor Kayaka Chiefdom||Kasassie CHP||E0CqXaBrGnj
+Gbonkorbor Kayaka Chiefdom||Madina Gbonkorbor CHP||A5Yp2oIbykp
+Kallian Chiefdom||Alkalia CHP||zUYV5ibHtSR
+Kallian Chiefdom||Kandeya MCHP||vqTuSwHNqsp
+Kallian Chiefdom||Kumala CHP||nSuMh7i5Wdd
+Kallian Chiefdom||Sesawulia MCHP||gzlQRWWRGWy
+Kallian Chiefdom||Tukolie CHP||CdsrCIaq3Wz
+Kallian Chiefdom||Worombalia MCHP||EZIiMdVDmkB
+Kamukeh Chiefdom||Kambalia MCHP||GdMJ5wxs9JS
+Kamukeh Chiefdom||Kambia MCHP||XGHUyHlw65P
+Kamukeh Chiefdom||Mandia MCHP||W8aDXPZlM1G
+Kamukeh Chiefdom||Thellia CHP||WQ2NGQz6F1x
+Kasunko Kakellay Chiefdom||Fadugu CHC||nnti5H0cFMe
+Kasunko Kakellay Chiefdom||Kagbasia MCHP||EgYueZ25k0B
+Kasunko Kakellay Chiefdom||Kassasie Kakeleh MCHP||nceWPi2hCQW
+Kasunko Kakellay Chiefdom||Madina Kamandie MCHP||cgERQTZXdhV
+Kasunko Kakellay Chiefdom||Sawuria CHP||eeSYOPm7onS
+Nieni Chiefdom||Fankoya CHP||NWVbZbVA7Pn
+Nieni Chiefdom||Kaya MCHP||lReqn6KC4C4
+Nieni Chiefdom||Krutor CHP||q30bcW53L48
+Nieni Chiefdom||Mangae MCHP||MRYOp6crsPk
+Nieni Chiefdom||Safinia MCHP||jTKE2olSvC8
+Nieni Chiefdom||Sumbaria CHP||n8p3PcdebNs
+Nieni Chiefdom||Yiffin CHC||eUPpo8WSmPF
+Sengbeh Chiefdom||Arab (Sengbeh) Clinic||yD2ATHcylTT
+Sengbeh Chiefdom||Bambukoro CHP||D89Q1DmXpxq
+Sengbeh Chiefdom||Bambukura MCHP||aa2AkQxUFGs
+Sengbeh Chiefdom||Gbenikoro MCHP||bhTwYHjXnGd
+Sengbeh Chiefdom||Koinadugu 2 CHC||w1nJXo8ePXS
+Sengbeh Chiefdom||Kondeya (Sengbeh) MCHP||sZJF5afwSy6
+Sengbeh Chiefdom||Momorimaria MCHP||i4clSdgc3Wx
+Sengbeh Chiefdom||Nasarah Clinic||pFjtjU8eBhd
+Sengbeh Chiefdom||Red Cross (Sengbeh) Clinic||fTJY9w4MfI4
+Thamiso Chiefdom||Kamathoi MCHP||C3Eps98om4X
+Thamiso Chiefdom||Karasa MCHP||G3iTeEGIrae
+Thamiso Chiefdom||Kasanikoro CHP||WIy0y4p2JeU
+Wara Wara Bafodia Chiefdom||Bafodia CHC||Ao9ZCn6cPhz
+Wara Wara Bafodia Chiefdom||Kadanso MCHP||UQgPgBrzHn9
+Wara Wara Bafodia Chiefdom||Kakoya MCHP||honhBcPaGAS
+Wara Wara Bafodia Chiefdom||Karpakie MCHP||uVSFyGXtgtt
+Wara Wara Bafodia Chiefdom||Sakuta MCHP||nIZ7tjpkCOo
+Wara Wara Bafodia Chiefdom||Samamaia MCHP||MQqwXUfWgkd
+Wara Wara Yagala Chiefdom||Arab (Wara Wara Yagala) Clinic||p0eENSXQaZT
+Wara Wara Yagala Chiefdom||Heremakono CHP||yrwCuG2IaPz
+Wara Wara Yagala Chiefdom||Kabala Government Hospital||cY7VxZxoDWW
+Wara Wara Yagala Chiefdom||Kabala Static CHC||f53DpFfxmuK
+Wara Wara Yagala Chiefdom||Kayako MCHP||gnhCr9FbPdY
+Wara Wara Yagala Chiefdom||Konkoba MCHP||jcQnUUPejjg
+Wara Wara Yagala Chiefdom||Mamudia Koro MCHP||xv66gWkSkDO
+Wara Wara Yagala Chiefdom||Marie Stopes (Kabala) Clinic||LDUFpa1m5wf
+Wara Wara Yagala Chiefdom||Sarakoh MCHP||tsbZq6WM0kH
+Wara Wara Yagala Chiefdom||Senekedugu CHP||cd6CZereN6F
+Wara Wara Yagala Chiefdom||Wara Wara Faith Clinic||KjMTWPOhVOG
+Wara Wara Yagala Chiefdom||Yataya CHP||glwYIEmK13b
+Dansogoia Chiefdom||Bassaia MCHP||MruySdjmYcF
+Dansogoia Chiefdom||Bumbuna CHC||rbLfU9MBSfQ
+Dansogoia Chiefdom||Kemedugu MCHP||hmLRY7q3loI
+Dansogoia Chiefdom||New Ferengbeya CHP||qxf6R0aacsO
+Gbokolenken Masankong Chiefdom||Mansumana CHP||e3bdNOqpgDv
+Gbokolenken Masankong Chiefdom||Warrima (Gbonkolenken) MCHP||NtzB9AoMaAu
+Gbokolenken Mayeppoh Chiefdom||Makonkorie CHP||xskCozNDXur
+Gbokolenken Mayeppoh Chiefdom||Mayepoh CHC||HJNIG65chNn
+Gbokolenken Mayeppoh Chiefdom||Mayepoh CHP||L8rgO2OLlR1
+Gbokolenken Mayeppoh Chiefdom||Petifu Mayepoh MCHP||peQE8mz4aXV
+Gbokolenken Polie Chiefdom||Mabankra MCHP||SWIuO49eLKP
+Gbokolenken Polie Chiefdom||Mabarr Polie MCHP||nHoSkn8eK7r
+Gbokolenken Polie Chiefdom||Magbolu Ferry MCHP||Pv21NucOUv9
+Gbokolenken Polie Chiefdom||Maraka MCHP||OLw8Jpzhraw
+Gbokolenken Polie Chiefdom||Mathamp MCHP||YsyWDGuzBgw
+Gbokolenken Yele Chiefdom||Lion Heart Hospital||quT8BodNDZv
+Gbokolenken Yele Chiefdom||Mafay MCHP||ayDPmd1hpQ3
+Gbokolenken Yele Chiefdom||Manowo CHC||cAfLiICsiAZ
+Gbokolenken Yele Chiefdom||Yeben MCHP||s7sHUXwttPh
+Gbokolenken Yele Chiefdom||Yele CHC||O4DGoyo8JFA
+Kafe Chiefdom||Kamarugu MCHP||gdnqiACUBbv
+Kalantuba Chiefdom||Kamasaypana MCHP||Gn3Db6pkXVG
+Kalantuba Chiefdom||Kathombo MCHP||OOyFtVAbxt9
+Kholifa Mabang Chiefdom||Komrabai Station MCHP||dp19NB5gjv4
+Kholifa Mabang Chiefdom||Mabai (Kholifa Mabang) MCHP||cbGmQDkS8qx
+Kholifa Mabang Chiefdom||Mabang (Kholifa Mabang) CHC||flfeWhFM1mt
+Kholifa Mabang Chiefdom||Mamanso Kafla MCHP||N76JqpbBnJW
+Kholifa Mabang Chiefdom||Marunia MCHP||bBFRsSIYZqP
+Kholifa Mabang Chiefdom||Mathinkalol MCHP||d1YhCc9nHfm
+Kholifa Mamuntha Chiefdom||Maborie MCHP||wkiqIeQi4re
+Kholifa Mamuntha Chiefdom||Magbass CHP||fvyDkrO6Pm9
+Kholifa Mamuntha Chiefdom||Mamuntha MCHP||h9KnOYreUNg
+Kholifa Mamuntha Chiefdom||Masagbill MCHP||hWikOPNiTUs
+Kholifa Mamuntha Chiefdom||Masoko MCHP||b3aKcxuThmu
+Kholifa Mamuntha Chiefdom||Mayossoh MCHP||ujZ8ePVg2Zt
+Kholifa Rowalla Chiefdom||Alim MCHP||v7UxmKdJTjP
+Kholifa Rowalla Chiefdom||Family (Magburaka) Clinic||TTGahQYrOWh
+Kholifa Rowalla Chiefdom||Mabai (Kholifa Rowalla) MCHP||Qtl63saTESv
+Kholifa Rowalla Chiefdom||Mabom CHC||utJm0Br9hlb
+Kholifa Rowalla Chiefdom||Magburaka Government Hospital||KIdRlOkwDvJ
+Kholifa Rowalla Chiefdom||Magburaka Under Fives Clinic||RlFqOzfg9zc
+Kholifa Rowalla Chiefdom||Malone MCHP||A4uyUrzW4Wl
+Kholifa Rowalla Chiefdom||Masanga Hospital||TbpwmcJ767K
+Kholifa Rowalla Chiefdom||Masanga MCHP||I4iPo9a45bN
+Kunike Barina Chiefdom||Makali CHC||o0a71NWX1r9
+Kunike Barina Chiefdom||Makoni Line MCHP||xnawBkfuxA7
+Kunike Barina Chiefdom||Mapamurie MCHP||jBWRi8K01OS
+Kunike Barina Chiefdom||Massaba MCHP||wNsV8kRZBMS
+Kunike Barina Chiefdom||Wonkibor MCHP||a5AUatGipwo
+Kunike Fulawusu Chiefdom||Fothaneh Bana MCHP||yqqPgYfijfB
+Kunike Fulawusu Chiefdom||Mafulka MCHP||V6ZKVuxmrc2
+Kunike Fulawusu Chiefdom||Magbanabom MCHP||T4vJt71ZvmK
+Kunike Fulawusu Chiefdom||Magbanto Bana MCHP||yXlEJPaEjiH
+Kunike Fulawusu Chiefdom||Mamanso Sanka CHP||uGZQuw8wCVS
+Kunike Fulawusu Chiefdom||Petifu Mandugu MCHP||fTWRP8UQDjK
+Kunike Sanda Chiefdom||Fothaneh Junction MCHP||cEzSncU6cRl
+Kunike Sanda Chiefdom||Kamanthor MCHP||wJmE3s3GKkc
+Kunike Sanda Chiefdom||Mabineh MCHP||hY0Bye62OSa
+Kunike Sanda Chiefdom||Maconteh Tama MCHP||iWGqVY9JVey
+Kunike Sanda Chiefdom||Masiaka (Kunike Sanda) MCHP||hGBqz1unbAr
+Kunike Sanda Chiefdom||Masingbi CHC||Nuru0EinxO4
+Kunike Sanda Chiefdom||Matholey MCHP||ZrZ3xI7CTx0
+Kunike Sanda Chiefdom||Petifuline CHP||qUX8nghVFUa
+Malal Chiefdom||Makoba Bana MCHP||ibmBQhEFMH1
+Malal Chiefdom||Robina CHP||TjWaQZ5HF2X
+Malal Chiefdom||Rochen Malal CHP||wbP0j93ZWu0
+Sambaya Bendugu Chiefdom||Bendugu CHC||veCM7ojGdja
+Sambaya Bendugu Chiefdom||Dankawalia CHP||V5GPf5buSPK
+Sambaya Bendugu Chiefdom||Kholifaga MCHP||juzWeLGsfQa
+Sambaya Bendugu Chiefdom||Kunya CHP||hwCt8Yu2o0x
+Sambaya Bendugu Chiefdom||Ninkikoro MCHP||lsvISbrbAd0
+Simiria Chiefdom||Mabontor CHC||nKPtB8nbv4Z
+Simiria Chiefdom||Mabontor CHP||RbItlf2SocX
+Simiria Chiefdom||Makonthanday MCHP||MX5WU4pOlCw
+Simiria Chiefdom||Masumbrie CHC||lpHrylTbwM6
+Simiria Chiefdom||Mayassoh MCHP||vrnh8vPvMTy
+Tane Chiefdom||Makelleh MCHP||SzJ55kk944s
+Tane Chiefdom||Makona MCHP||ac2mIHg2JHz
+Tane Chiefdom||Makrugbeh CHP||VMd3cTKlcde
+Tane Chiefdom||Mananthelie MCHP||FTWpEERQqpj
+Tane Chiefdom||Mangaybana MCHP||Iviq5RIaGoM
+Tane Chiefdom||Masankoro MCHP||HFEr7JwUcMg
+Tane Chiefdom||Mathonkara MCHP||KnAFXE9O8Jv
+Tane Chiefdom||Mathufulie MCHP||fYtU6ouryAk
+Tane Chiefdom||Matotoka CHC||IvNTycVSW9o
+Tane Chiefdom||Rosengbeh MCHP||LoBFlCoxeyz
+Yoni Mabanta Chiefdom||Bakeloko CHP||dpGdiBppgUC
+Yoni Mabanta Chiefdom||Bath Bana MCHP||krxjNNiHGLb
+Yoni Mabanta Chiefdom||Magbaesa MCHP||XQThchwThsj
+Yoni Mabanta Chiefdom||Magbaft MCHP||ghw076FkTo8
+Yoni Mabanta Chiefdom||Magbassabana MCHP||LCcybB0x6YX
+Yoni Mabanta Chiefdom||Makeni-Rokfullah MCHP||AyQOfZsU4na
+Yoni Mabanta Chiefdom||Makundu MCHP||ckrtlvz5FYe
+Yoni Mabanta Chiefdom||Matawa MCHP||TcddGFKegTi
+Yoni Mabanta Chiefdom||Petifu Fulamasa CHP||f5mpEccZ9LM
+Yoni Mabanta Chiefdom||Robarie MCHP||h9eaGHFqa0a
+Yoni Mabanta Chiefdom||Ronietta MCHP||qj4Ye9QOjYt
+Yoni Mabanta Chiefdom||Rorocks CHC||CzbDD0pf6ss
+Yoni Mamala Chiefdom||Ahmadiyya Muslim (Yoni Mamala) Hospital||fZJUeDKzsFU
+Yoni Mamala Chiefdom||Bonkababay CHP||GT2qK3cqtLD
+Yoni Mamala Chiefdom||Community Health Foundation (Mile 91) Hospital||grhRThowBxP
+Yoni Mamala Chiefdom||Foindu (Yoni Mamala) MCHP||loctvSFJ1Xs
+Yoni Mamala Chiefdom||Hinistas CHC||mZ6Hel8V1eZ
+Yoni Mamala Chiefdom||Kumrabai Yoni CHP||MTaGEqO1cXI
+Yoni Mamala Chiefdom||Macrogba CHP||emRv3ReiVbw
+Yoni Mamala Chiefdom||Magboki Road Mile 91 CHP||SgZaXCecXL6
+Yoni Mamala Chiefdom||Magbosie MCHP||Rr8F6eT9RTu
+Yoni Mamala Chiefdom||Makelleh CHP||G0BAkTC06C2
+Yoni Mamala Chiefdom||Mamaka (Yoni Mamala) MCHP||p38CVUDFTEM
+Yoni Mamala Chiefdom||Mananie MCHP||BKHSTpHoxlp
+Yoni Mamala Chiefdom||Masengbeh CHP||FLOn0bpJOGi
+Yoni Mamala Chiefdom||Maseperr MCHP||Zb2V5PVNP70
+Yoni Mamala Chiefdom||Mathoir CHC||vMbb2ZuJ3fy
+Yoni Mamala Chiefdom||Mayorgbor MCHP||fnWObEOBTRi
+Yoni Mamala Chiefdom||Our Lady of Guadalupe Clinic||w8feOSzVXU9
+Yoni Mamala Chiefdom||Rochen Kamandao CHP||eE4cA9kqfwu
+Yoni Mamala Chiefdom||Rokimbi MCHP||NLCKnfXHa6k
+Yoni Mamala Chiefdom||United Methodist Church Yonibana CHC||NliPj50nuEu
+Yoni Mamala Chiefdom||Yonibana MCHP||cC4KlK4LM2u
+Yoni Mamala Chiefdom||Yonibana Sai Hospital||DpqWCwgDH5D
+Bramaia Chiefdom||Gbolon MCHP||w0phqFeDbMN
+Bramaia Chiefdom||Kanku Bramaia MCHP||KGTNAO8fJdJ
+Bramaia Chiefdom||Kukuna CHC||y9QoJW9RsIl
+Bramaia Chiefdom||Shekaia MCHP||Vgei1C2Okpb
+Dixon Chiefdom||Fodaya MCHP||zq6qoTEB47H
+Dixon Chiefdom||Mafaray CHP||pQhRXRjOo8a
+Gbinleh Chiefdom||Gbalamuya CHC||xBDJ3LJR4rB
+Gbinleh Chiefdom||Madamaya Good Grace Clinic||TWrgiv4R7Qf
+Gbinleh Chiefdom||Magbengbeh MCHP||taoMTPEnnX2
+Gbinleh Chiefdom||Tawuya MCHP||yB0oXL1Tvmq
+Gbinleh Chiefdom||Worreh MCHP||HdYdeFQ6LWe
+Konimaka Chiefdom||Barakuya MCHP||rDXxCXSi0Xb
+Konimaka Chiefdom||Konta (Bramaia) CHP||XDQZ8GCPFaM
+Magbema Chiefdom||Ahmadiyya Mission Clinic||Vnb7x6Zhlnh
+Magbema Chiefdom||Arab (Magbema) Clinic||k3uhasgrBxx
+Magbema Chiefdom||Barmoi Luma CHP||gw57BZP2CrE
+Magbema Chiefdom||Dibia CHP||AnoY6hWtCe5
+Magbema Chiefdom||Gbonkomaria CHP||G5LFKPhEpZV
+Magbema Chiefdom||Kamba MCHP||vjR2lpjOAKc
+Magbema Chiefdom||Kambia Government Hospital||UY7m1cfb6vt
+Magbema Chiefdom||Magbema Under Fives Clinic||FEn52ijJU1F
+Magbema Chiefdom||Magbethy MCHP||Y34sp6JEDkk
+Magbema Chiefdom||Mathuraneh MCHP||oaBmU6MBlOq
+Magbema Chiefdom||Menicurve MCHP||MepD09V9L6D
+Magbema Chiefdom||Mile 18 MCHP||kpbBpseIuH3
+Magbema Chiefdom||Modia MCHP||f9jnoR0syoo
+Magbema Chiefdom||Red Cross (Magbema) CHP||STC9AUfAXTn
+Magbema Chiefdom||Rokupr CHC||a4QmU3RAFLM
+Magbema Chiefdom||Senthai MCHP||VMaj4uIoHig
+Magbema Chiefdom||Wullah Thenkle MCHP||qEy8CB2GtL4
+Mambolo Chiefdom||Kalainkay MCHP||pClGlRTXa7m
+Mambolo Chiefdom||Macoth MCHP||GaphShZAIli
+Mambolo Chiefdom||Mambolo (Kambia) CHC||R3EWlTUlP1f
+Mambolo Chiefdom||Mayakie MCHP||LNtjP0INqJS
+Mambolo Chiefdom||Rokel (Mambolo) MCHP||CQSAutN7Lnp
+Mambolo Chiefdom||Romando MCHP||U0flOPA7iXI
+Mambolo Chiefdom||Rotain Bana CHP||vQA4taIzNfU
+Mambolo Chiefdom||Tombo Wallah CHP||uN5lB4D3CqC
+Masumgbala Chiefdom||Kania CHC||fQ4KXfdo0Zc
+Masumgbala Chiefdom||Kawula CHC||k0wVqBfZjZK
+Munu Thalla Chiefdom||Banka Makuloh MCHP||FEgeptbtRPx
+Munu Thalla Chiefdom||Barmoi Munu CHC||I4E9dy25bj7
+Munu Thalla Chiefdom||Gbalan Thallan MCHP||y8bub0rU0NG
+Samu Chiefdom||Bapuya CHP||eVtbsXWbRR2
+Samu Chiefdom||Kangbor MCHP||xji3AOPYWbl
+Samu Chiefdom||Kassirie CHC||fLhUptav709
+Samu Chiefdom||Kortimoh MCHP||TewJUJv1TiI
+Samu Chiefdom||Koya (Samu) MCHP||HOnNqfXBpnV
+Samu Chiefdom||Kychom CHC||brCoE9VZWDt
+Samu Chiefdom||Mafufuneh CHC||cwilI9VrLfK
+Samu Chiefdom||Mange Bissan MCHP||w7ZEz8EdJfk
+Samu Chiefdom||Mapotolon CHC||bhvMiwyYSYg
+Samu Chiefdom||Moribaya MCHP||TM0IrZvmKV7
+Samu Chiefdom||Rokai MCHP||F1QFCS4BXZL
+Samu Chiefdom||Rosinor CHP||WiJdeGsCc4j
+Samu Chiefdom||Soriebolomia MCHP||mYssEVoYjMm
+Samu Chiefdom||Yelieboya CHP||KU2FN6DJ1MB
+Tonko Limba Chiefdom||Bubuya MCHP||Q6WiIuJoERm
+Tonko Limba Chiefdom||Kamagbewu MCHP||UEa0M9mAjyc
+Tonko Limba Chiefdom||Kamassasa CHC||hk5oSgg6IcD
+Tonko Limba Chiefdom||Kamawala MCHP||d6kTuYk6rKp
+Tonko Limba Chiefdom||Kasoria CHP||lbWRRDguJUI
+Tonko Limba Chiefdom||Katherie MCHP||fRn4P1x88x9
+Tonko Limba Chiefdom||Layia Gboray CHP||cXgjfgzmjae
+Tonko Limba Chiefdom||Madina (Tonko Limba) CHC||OUm5tEfOFPj
+Tonko Limba Chiefdom||Madina Wesleyan Clinic||GEzF5gmCXle
+Tonko Limba Chiefdom||Masaralie MCHP||tpxYCg5osgC
+Tonko Limba Chiefdom||Masselleh CHP||bCJR4FBMmED
+Tonko Limba Chiefdom||Masunthun CHP||K49TI5tm05n
+Tonko Limba Chiefdom||Mile 14 CHP||QWR59EtDsXF
+Tonko Limba Chiefdom||Numea CHP||itD21OvOQgJ
+Tonko Limba Chiefdom||Samaia MCHP||XOsPp5T34kF
+Tonko Limba Chiefdom||Sellah Kafta MCHP||fUiCzPCKyIe
+Tonko Limba Chiefdom||Timbo MCHP||MrkiQhh18Ti
+Tonko Limba Chiefdom||Yebaya MCHP||wQ8FGKZeGhG
+Buya Chiefdom||Kamasondo CHC||pEhR0RuAh5c
+Buya Chiefdom||Manumtheneh MCHP||oN9Dq0yznWL
+Buya Chiefdom||Masamboi MCHP||eyArb1TZzr6
+Buya Chiefdom||Rosint Buya MCHP||H2Yvei6re9Z
+Dibia Chiefdom||Gbinti CHC||WjCFNiMfFup
+Dibia Chiefdom||Gbombana MCHP||GzOUmaURPJJ
+Dibia Chiefdom||Magborognor MCHP||GMRl5FnZ3KG
+Dibia Chiefdom||Roctolon MCHP||jO7nt0vanxd
+Dibia Chiefdom||Rogballan (Dibia) CHP||STgmkA2VKiE
+Gbanti (Karene) Chiefdom||Borongoh Makarankay MCHP||fxGWtHPzKBZ
+Gbanti (Karene) Chiefdom||Gbainkfay MCHP||dgGDNLqhQaZ
+Gbanti (Karene) Chiefdom||Gbanti CHP||D1gDLZGsSO4
+Gbanti (Karene) Chiefdom||Gbinti Maria MCHP||RxXsqG6gW3n
+Gbanti (Karene) Chiefdom||Gbonkobana MCHP||hscD8RjNTmT
+Gbanti (Karene) Chiefdom||Kambia CHP||t5B2dU1MtXI
+Gormbahun Chiefdom||BatKanu CHC||teubFUJTFK2
+Gormbahun Chiefdom||Kiamunday MCHP||cOZgVKiR7H5
+Gormbahun Chiefdom||Magbaingba MCHP||TFb2EqtHy6V
+Gormbahun Chiefdom||Matoto MCHP||y25LxABhBXK
+Mafonda Makerembay Chiefdom||Gbonkonka MCHP||w5N2lG3yENJ
+Mafonda Makerembay Chiefdom||Rochain Loko CHP||FNIO7HvNZx7
+Romende Chiefdom||Foredugu MCHP||zcfWkZ6miAm
+Romende Chiefdom||Gbomsamba MCHP||e4qS8FCpaGW
+Romende Chiefdom||Mabureh Mende MCHP||Vfo0zrAl0Ll
+Romende Chiefdom||Rokamba MCHP||CjpUgPKTJRS
+Romende Chiefdom||Worreh Bana MCHP||gUk83gEEewp
+Safroko Chiefdom||Maron CHP||Vj12zkm5HRi
+Sanda Loko Chiefdom||Kamalo CHC||FPqEDEhiWS8
+Sanda Loko Chiefdom||Laiya MCHP||HNNrJhmE17d
+Sanda Loko Chiefdom||Laminaya CHP||wywwI99QY2A
+Sanda Loko Chiefdom||Madina Fullah MCHP||klwo6p4U1DV
+Sanda Loko Chiefdom||Maharibo CHP||ZVcnXn4X4YQ
+Sanda Loko Chiefdom||Marcorba Loko MCHP||RVBg2256xdt
+Sanda Loko Chiefdom||Mayolla CHP||YAQi5UD2vCl
+Sanda Loko Chiefdom||Rochain Salcost CHP||b2mdpNAr3rx
+Sanda Loko Chiefdom||Rothatha MCHP||ciDxAQRIP15
+Sanda Magbolonthor Chiefdom||Gbogbodo MCHP||dfA80uGvZqY
+Sanda Magbolonthor Chiefdom||Kantia MCHP||dQQg4ByFhs2
+Sanda Magbolonthor Chiefdom||Komneh CHP||cryulrAwD6Y
+Sanda Magbolonthor Chiefdom||Magbolonthor MCHP||rypCZH9UeNQ
+Sanda Magbolonthor Chiefdom||Sendugu CHC||opCSygfebVX
+Sanda Tendaren Chiefdom||Mabunduka CHC||vETB31eIOJV
+Sanda Tendaren Chiefdom||Malontho MCHP||uqCW2GGBjFe
+Sanda Tendaren Chiefdom||Manack MCHP||QTHzoy9jp7V
+Sanda Tendaren Chiefdom||Mateboi CHC||WQPJz6zMlUF
+Sanda Tendaren Chiefdom||Rogbin MCHP||PbSaut4vCnK
+Sanda Tendaren Chiefdom||Rokulan CHC||cXpTXLWUI9k
+Sanda Tendaren Chiefdom||Royanka Lol CHP||OeIhw1yMnEL
+Sella Limba Chiefdom||Kabba Ferry CHP||sTuedz2WHFh
+Sella Limba Chiefdom||Kagboray MCHP||EZDulW0TFIC
+Sella Limba Chiefdom||Kamabaio MCHP||aImv6PeTmkl
+Sella Limba Chiefdom||Kamakwie CHP||spIcDRuGkbw
+Sella Limba Chiefdom||Kamakwie Wesleyan Hospital||BejA24Ls5wu
+Sella Limba Chiefdom||Kamawornie MCHP||RjdUlNvAst7
+Sella Limba Chiefdom||Kaponkie MCHP||j89TsihmJmU
+Sella Limba Chiefdom||Kathanta Yimbor CHC||Q0cKCZxDQYS
+Sella Limba Chiefdom||Masankorie CHP||tUwMCEWaJag
+Tambaka Simibungie Chiefdom||Komoya CHP||ZcyDsJqhpBK
+Tambaka Simibungie Chiefdom||Samaya MCHP||KAScyUKVwcY
+Tambaka Yobangie Chiefdom||Dombaya CHP||jVqsUaqYa88
+Tambaka Yobangie Chiefdom||Fintonia CHC||b44n43VVICf
+Tambaka Yobangie Chiefdom||Sanya MCHP||mvrZbQ09lFb
+Bake-Loko Chiefdom||Arab (Bake-Loko) Clinic||aqCJCOdbGBn
+Bake-Loko Chiefdom||Ernest Bai Koroma University (EBK-PL) Clinic||TzbIXNBOUcL
+Bake-Loko Chiefdom||Gbonkoh Kereneh MCHP||XsTSr66uWMu
+Bake-Loko Chiefdom||Kamaranka Under Fives CHP||DSxIZDLhQB6
+Bake-Loko Chiefdom||Malal CHP||cjGscwNpvH9
+Bake-Loko Chiefdom||Sierra Leone Church Maforki CHP||mLu8U5ZXpAw
+Bureh Chiefdom||Bureh MCHP||iYF7Ma3QQHb
+Bureh Chiefdom||Kalangba (Bureh) MCHP||LSjPUapVsGI
+Bureh Chiefdom||Mange CHC||TQthW1EVbvd
+Bureh Chiefdom||Masseseh MCHP||Fm4g12Y7Itn
+Kaffu Bullom Chiefdom||Al-Amin Clinic||EX6lDVkkpRV
+Kaffu Bullom Chiefdom||Alimamy Amara Clinic||xzE2aUnbWq3
+Kaffu Bullom Chiefdom||Arab (Lungi) Clinic||eqRVUALTNYd
+Kaffu Bullom Chiefdom||Bai Bureh Memorial Hospital||GZaa09bTIio
+Kaffu Bullom Chiefdom||Conakry Dee CHC||cR6NQuAuMeh
+Kaffu Bullom Chiefdom||Direct Aid Orphanage (Port Loko) Clinic||Qt4OsqWIomv
+Kaffu Bullom Chiefdom||Evans CHC||lDdZBEzzTfn
+Kaffu Bullom Chiefdom||Gbaneh Bana CHP||nTSATjfVN6x
+Kaffu Bullom Chiefdom||Gbaneh Lol MCHP||ooSkGwtcTkh
+Kaffu Bullom Chiefdom||Grace Community Clinic||QpBRkeDh969
+Kaffu Bullom Chiefdom||Kasongha CHP||NC5TzXSPvn5
+Kaffu Bullom Chiefdom||Long Life Centre Clinic||zJGK0GKkRs2
+Kaffu Bullom Chiefdom||Lungi Airport Centre Clinic||rHhFGmo0sFO
+Kaffu Bullom Chiefdom||Lungi Government Hospital||jxTwpuPtLYK
+Kaffu Bullom Chiefdom||Lungi Under Fives CHP||kTzPeTZouJ4
+Kaffu Bullom Chiefdom||Mahera CHC||tA11pAObnVg
+Kaffu Bullom Chiefdom||Mamankie MCHP||Xq7vKXBrpYN
+Kaffu Bullom Chiefdom||Mkamsondo MCHP||B05ZWA6rhOC
+Kaffu Bullom Chiefdom||Modia CHC||oIi685xQI9Z
+Kaffu Bullom Chiefdom||Modia General Clinic||F18VgDppnkw
+Kaffu Bullom Chiefdom||St John of God CHP||P3t2VPt2fsl
+Kaffu Bullom Chiefdom||Tagrin CHC||FsddIKismfv
+Kaffu Bullom Chiefdom||Yongoro CHC||jL7J8KLuL22
+Kamasondo Chiefdom||Benkia MCHP||atD74vGjq7o
+Kamasondo Chiefdom||Bundulai MCHP||SIzwpyLOnLz
+Kamasondo Chiefdom||Katongha MCHP||SQIkowAJQBO
+Kamasondo Chiefdom||Konta Wallah CHC||WTBMcHAM3eA
+Kamasondo Chiefdom||Malap CHP||mQejLxHFSBp
+Kamasondo Chiefdom||Mana 2 CHP||HLNXd6CFK57
+Kamasondo Chiefdom||Mapillah MCHP||PMq1u3VpkJf
+Kamasondo Chiefdom||Pepel CHC||y8dOBCXyzbe
+Kasseh Chiefdom||Barmoi CHP||BWWJlRB1GqT
+Kasseh Chiefdom||Kagbantama CHP||zyKqcRZZMXE
+Kasseh Chiefdom||Kawengha MCHP||PeXbY4IWpJA
+Kasseh Chiefdom||Rogballan (Kasseh) MCHP||BIai4vlZesy
+Kasseh Chiefdom||Romeni MCHP||UskuXyH5bsi
+Koya (Port Loko) Chiefdom||Kissy Koya MCHP||Yu910MimzYh
+Koya (Port Loko) Chiefdom||Komrabai Ngolla CHP||IL2YYhMa5NO
+Koya (Port Loko) Chiefdom||Kurankoh CHP||RuhOjudsLt5
+Koya (Port Loko) Chiefdom||M'baimba Adama MCHP||MyYPMOH2JEl
+Koya (Port Loko) Chiefdom||Mabora MCHP||f47Iss2QAUa
+Koya (Port Loko) Chiefdom||Magbeni MCHP||FjoB3AbXHTs
+Koya (Port Loko) Chiefdom||Makalie MCHP||sJaw4IZhFll
+Koya (Port Loko) Chiefdom||Makarankay CHP||f1Ik9Wa4Rmo
+Koya (Port Loko) Chiefdom||Makiteh (Koya) CHP||W3hf8IQNLXr
+Koya (Port Loko) Chiefdom||Malenki MCHP||KseI2PWOBgl
+Koya (Port Loko) Chiefdom||Masiaka (Koya) CHC||HRXpJ7J8zP3
+Koya (Port Loko) Chiefdom||Masumana CHP||P4bUiAVvRjq
+Koya (Port Loko) Chiefdom||Mawoma MCHP||IVVRPE5aaZW
+Koya (Port Loko) Chiefdom||Mile 38 CHC||SSv5OO5tBIJ
+Koya (Port Loko) Chiefdom||Rofoindu CHP||wt4HRO6ySB7
+Koya (Port Loko) Chiefdom||Rokon MCHP||tFQfjtaVGf1
+Koya (Port Loko) Chiefdom||Sumbuya (Koya) CHP||OzWtZOJhi3V
+Koya (Port Loko) Chiefdom||Warima (Koya) MCHP||rP63QJOAHNj
+Lokomasama Chiefdom||Babara CHC||Xn6xhreKZ0j
+Lokomasama Chiefdom||Bailor CHP||Ea9vN5eSY3j
+Lokomasama Chiefdom||Gbainty Wallah CHP||xgaDP3NB4cT
+Lokomasama Chiefdom||Kalangba (Lokomasama) MCHP||uUCf04ZolWb
+Lokomasama Chiefdom||Kargbulor CHP||DoYPVz3mtjS
+Lokomasama Chiefdom||Love Bridge Hospital||rZc9CN05rEo
+Lokomasama Chiefdom||Masulamani CHP||lyUfw1thDJP
+Lokomasama Chiefdom||Mathen MCHP||PJm3fCNgWtm
+Lokomasama Chiefdom||Menika CHP||TkwHunQaw6A
+Lokomasama Chiefdom||Musaia (Lokomasama) CHP||en2UYo78a9r
+Lokomasama Chiefdom||Petifu Junction CHC||EShXYhdOhce
+Maconteh Chiefdom||Mabain MCHP||v76NekAxhVC
+Maconteh Chiefdom||Minthomore CHP||Gk4aRzBpTGn
+Maforki Chiefdom||Mabonie CHP||LoiipauBQzW
+Maforki Chiefdom||Mafoimara CHP||lp8mC2Pfc9n
+Maforki Chiefdom||Maforay (Maforki) MCHP||tv2Aot6W9Bu
+Maforki Chiefdom||Magbengbenra MCHP||XlYoycopy9F
+Maforki Chiefdom||Makaba MCHP||Id8ar00boH5
+Maforki Chiefdom||Mapawn MCHP||mjx0GEUOidG
+Maforki Chiefdom||Maronko MCHP||AZf5ebTl04q
+Maforki Chiefdom||New Maforki CHP||msnabqdOhYy
+Maforki Chiefdom||Petifu (Maforki) MCHP||LnnOd9rnfAy
+Maforki Chiefdom||Rogbere Junction CHC||dFuuTGek23x
+Makama Chiefdom||Kambia Makama CHP||x1KOWyciabF
+Makama Chiefdom||Malekuray CHC||xGCdpa6xZeJ
+Marampa Chiefdom||Arab (Lunsar) Clinic||evRhqA5sm5r
+Marampa Chiefdom||Baptist Eye Hospital||I4S8oQzHR7L
+Marampa Chiefdom||Lunsar CHC||LVqCY9DzqEc
+Marampa Chiefdom||Magbele MCHP||vYAyE4Z0P3o
+Marampa Chiefdom||Magbill CHP||ot5VbjQd2Ge
+Marampa Chiefdom||Makabo MCHP||gyH1KNaAe57
+Marampa Chiefdom||Mamusa MCHP||KFuAZURA4t9
+Marampa Chiefdom||Mange Acre CHC||QOuz5XNJRL4
+Marampa Chiefdom||Pincer's Lunsar Clinic||zC28Pq87DFQ
+Marampa Chiefdom||Poor Man's Clinic||g5dz0pL0C8e
+Marampa Chiefdom||Rolembray MCHP||TojpgKRZ1Uf
+Marampa Chiefdom||St John of God Hospital||R9EY2kvkInM
+Marampa Chiefdom||St John of God Under Fives Clinic||e1IXoP1dxex
+Masimera Chiefdom||Katick CHP||SrrDhxqCmVJ
+Masimera Chiefdom||Konta Line CHC||UEannxHRX5I
+Masimera Chiefdom||Mamaligie MCHP||TVWQNitquDa
+Masimera Chiefdom||Masimera CHC||jceBN4hbDh8
+Masimera Chiefdom||Mathineh CHP||jcBHS2pqtnw
+Masimera Chiefdom||Mayola Lal Ratun MCHP||OVkhV4l3IWU
+Masimera Chiefdom||Mayombo MCHP||KsDtqPAopUX
+Masimera Chiefdom||Nonkoba CHP||a7Msz4pNOuL
+Masimera Chiefdom||Rokassa CHC||c439aCQU9Mx
+Masimera Chiefdom||Rokel (Masimera) MCHP||VDkowve4NjV
+Masimera Chiefdom||Rotheren MCHP||s0WDEwInCYy
+Masimera Chiefdom||Rothuma MCHP||qwBzxrQHR6u
+Masimera Chiefdom||Royeiben CHP||PPuE6RBcWop
+Port Loko City||Arab (Port Loko) Clinic||Q7v3TWOG6gi
+Port Loko City||Port Loko Government Hospital||SBL4N9w39m3
+Port Loko City||Port Loko Under Fives CHP||hMpOTaeTrEl
+Tainkatopa Chiefdom||Asheea MCHP||GXMaTQx8yEl
+Tainkatopa Chiefdom||Robaka MCHP||fXyyzuwfqm6
+Tainkatopa Chiefdom||Rogbaneh MCHP||nB2f7MJ77DW
+Koya Rural Zone||Crossing MCHP||F0T2qaVbqPf
+Koya Rural Zone||Fogbo (Koya Rural) MCHP||a6d78z8tcnm
+Koya Rural Zone||Madaka MCHP||tKRforgZNJF
+Koya Rural Zone||Makobeh MCHP||KSCn9W8QpdS
+Koya Rural Zone||Makonkonday MCHP||D0ZVGju8U5A
+Koya Rural Zone||Malambay CHP||Pl1SYI47oUv
+Koya Rural Zone||Masorie CHP||wAp3gIqPjpM
+Koya Rural Zone||Newton CHC||WChcGV8B9AT
+Koya Rural Zone||Songo CHC||Q2hrJgbTuFt
+Mountain Rural Zone||Charlotte CHP||ztGZQw9XKYY
+Mountain Rural Zone||Fourah Bay College CHC||NKtGYG0HKmA
+Mountain Rural Zone||Gloucester CHP||pFSrJAfIbLV
+Mountain Rural Zone||Leicester (Mountain Rural) CHP||n9AZfHJuxfN
+Mountain Rural Zone||Regent (Mountain Rural) CHC||FfezwWV0BhZ
+Waterloo Rural Zone||ADRA Mobile Clinic||mtSSVj1AzKi
+Waterloo Rural Zone||Adra Hospital||eEogTlAtojL
+Waterloo Rural Zone||African Christian Fellowship (ACF) Clinic||LwS6P6tgCUq
+Waterloo Rural Zone||Afro Arab Clinic||cVxLgNHSlkJ
+Waterloo Rural Zone||Arab (Waterloo) Clinic||gsBtpTGHcXD
+Waterloo Rural Zone||Benguema Grassfield MCHP||W86FmMCp7hu
+Waterloo Rural Zone||Benguema Military (MI Room) Clinic||BOxkivS05Q4
+Waterloo Rural Zone||Biola Wright Memorial Clinic||nQquMpqPBh0
+Waterloo Rural Zone||Borah Maternity Clinic||sjpnuNrP6SD
+Waterloo Rural Zone||Brown Memorial Clinic||k4WFiMV3Lwa
+Waterloo Rural Zone||Campbell Town CHP||uGTBUOA330T
+Waterloo Rural Zone||Cashew Farm MCHP||YJ0uhBudlbq
+Waterloo Rural Zone||Christ the King Clinic||ZXobQOLI1ND
+Waterloo Rural Zone||Deep Eye Water MCHP||kCKGn6CYEpa
+Waterloo Rural Zone||El-Shaddai (Waterloo Rural) Clinic||NLzJqUB2gpO
+Waterloo Rural Zone||Evangelical College of Theology Clinic||uXvzek0C4gd
+Waterloo Rural Zone||Freetown Teachers College Clinic||fWOcApt6NbN
+Waterloo Rural Zone||Gift of Life Clinic||yn1uKKfWCfV
+Waterloo Rural Zone||Grafton CHC||KgWpK3QRkZh
+Waterloo Rural Zone||Hastings CHC||THSdNXfYvKR
+Waterloo Rural Zone||Heart and Hands Care Clinic||zkTe1pzhnVE
+Waterloo Rural Zone||Jays Clinic||mVMBmIBcGhj
+Waterloo Rural Zone||John Thorpe MCHP||zHTuYTQdp05
+Waterloo Rural Zone||Jui Police (MI Room) Clinic||J4DR1a2JlG1
+Waterloo Rural Zone||Kissy Town CHP||TtchK5FAlS2
+Waterloo Rural Zone||Lumpa CHP||IGe3t4oorbA
+Waterloo Rural Zone||Mabureh CHP||GLMGqesSSnl
+Waterloo Rural Zone||MacDonald MCHP||DC1oMBlnhYU
+Waterloo Rural Zone||Maila Clinic||b5S5HFviXwo
+Waterloo Rural Zone||Mapac Grafton Clinic||o0ora7M8RQU
+Waterloo Rural Zone||Margaret and Johnny MCHP||CQvQhGMqQRr
+Waterloo Rural Zone||Mariama Hassan Hospital||ICrvP1fYHWi
+Waterloo Rural Zone||Matainkay and Masantigie MCHP||uSfrRCEh2S4
+Waterloo Rural Zone||MedZain MCHP||M0Fd8kDojYQ
+Waterloo Rural Zone||Monsignor Daniel Sullivan Health Clinic||C1TlUvChkMt
+Waterloo Rural Zone||New London MCHP||L2Ny0YnJS1n
+Waterloo Rural Zone||Rogbangba MCHP||bR25KNK0yYo
+Waterloo Rural Zone||Rokel (Waterloo Rural) CHP||iVXrem2HQvR
+Waterloo Rural Zone||Rokel Arab (Waterloo) Clinic||il3Aol3SGm7
+Waterloo Rural Zone||SWAKAB (Waterloo) Clinic||xJiyVLWgWZV
+Waterloo Rural Zone||Salifu Kondeh Clinic||Qoz5tcLxgTA
+Waterloo Rural Zone||Sierra Leone-China Teaching Hospital||FaSDDhb547x
+Waterloo Rural Zone||TECT Jui CHP||DM0eMEHx9Gl
+Waterloo Rural Zone||Waterloo CHC||dLIKxNqbduR
+Waterloo Rural Zone||Waterloo People's Clinic||uvoZWQmwbwS
+Waterloo Rural Zone||Waterloo Rural Community Hospital||lDbZyjieo1k
+Waterloo Rural Zone||White Stone MCHP||jgxZmfL9X7M
+Waterloo Rural Zone||Women in National Development AAPDEP Clinic||zSlAecXZIQd
+Waterloo Rural Zone||Yams Farm CHP||ZgYTngHjxTk
+York Rural Zone||Adonkia CHP||viJDSo3QSGu
+York Rural Zone||Banana Island MCHP||l7fonvXxb2t
+York Rural Zone||Bethlehem Clinic||J9pGNZzDYCG
+York Rural Zone||Emergency (Goderich) Hospital||GMDMwNOnF4r
+York Rural Zone||Friends of God Clinic||Km75DRDedtK
+York Rural Zone||Goderich CHC||iUyKZ1Uitmm
+York Rural Zone||Goderich Military (MI Room) Clinic||dzuLAWKTRsI
+York Rural Zone||Hamilton MCHP||LNsfgDy1yOn
+York Rural Zone||Kent CHP||w7nauH0SVXq
+York Rural Zone||Lakka Government Hospital||mdA4NWUekFS
+York Rural Zone||Lakka/Ogoo Farm CHC||FIUuEd72qts
+York Rural Zone||Lion for Lion Clinic||qwv0bNz2axC
+York Rural Zone||Mambo CHP||bwF3ogXwHfB
+York Rural Zone||Metchen MCHP||MC3QWVT3Nt6
+York Rural Zone||Milton Margai College (MMCET) Clinic||t3chMyjCOz9
+York Rural Zone||Mutual Faith Clinic||vyJGZrWQhmM
+York Rural Zone||Sussex MCHP||uaO0tq7uFwV
+York Rural Zone||Tissana (York Rural) MCHP||vx6ciXQUXzT
+York Rural Zone||Tokeh MCHP||sTC7RXBv5Ha
+York Rural Zone||Tombo (York Rural) CHC||N6vCjzPBMca
+York Rural Zone||York CHC||Q45TYMEnuRW
+Central 1 Zone||Abernita Hospital||bMZ0Wcuol7Z
+Central 1 Zone||Blessed Mokaba Central CHP||KKcl2jv4Yo0
+Central 1 Zone||Bojojo Clinic||OPjzYMEsiJp
+Central 1 Zone||Don Bosco Fambul Clinic||JsC2K79kyjf
+Central 1 Zone||Dr A Edwin Clinic||XBiiAVs77j5
+Central 1 Zone||Dr Abdulai Jalloh Clinic||w0DDOfCGVek
+Central 1 Zone||Dr Donald Harding Clinic||NnfQPA3IxKe
+Central 1 Zone||Dr Dunstan Thomas Clinic||rheWcMH5myJ
+Central 1 Zone||Dr Finda Ngongor Clinic||bREVzQjStXb
+Central 1 Zone||Dr Hassan Hariri Clinic||sR0LAPIfqny
+Central 1 Zone||Farm Care Clinic||bF6UmXh2ZxJ
+Central 1 Zone||Macauley Street Government Hospital||KPC0ebnFtsO
+Central 1 Zone||Marina House Birth Centre Clinic||c6MkUiAgaob
+Central 1 Zone||Parliament CHC||jHMv3ihozxf
+Central 1 Zone||Susan's Bay CHC||aCMcHY4R2rJ
+Central 1 Zone||Takish Clinic||AevnIVCYs06
+Central 1 Zone||Women Health Centre Clinic||iPnAwTMaKg0
+Central 2 Zone||Central 2 Medical Clinic||LXBlLNdQ9Cj
+Central 2 Zone||Connaught Chest Clinic||hjAxE8UUSOM
+Central 2 Zone||Connaught Hospital||UljcamBVFMr
+Central 2 Zone||Dr ADO Wright Clinic||zezrVkskFcM
+Central 2 Zone||Dr Asale Ganda Clinic||jBadCJy5lUM
+Central 2 Zone||Dr Effie Gooding Clinic||VBZbuSs9iUm
+Central 2 Zone||Dr Frazer Whitfield Clinic||RGjkFGlxUjv
+Central 2 Zone||Dr Isatou Hyde-Forster Clinic||ajSOceOdv2I
+Central 2 Zone||Dr J Russel Clinic||viJgDuch0Te
+Central 2 Zone||Dr Kelvin Nicolls Clinic||GjLNk7yhYZF
+Central 2 Zone||Dr Len-Gordon Harris Clinic||EY8HuYDtdHw
+Central 2 Zone||Dr Patrick Coker Clinic||jsJHXZ9wJfR
+Central 2 Zone||Dr Shuman Medical Clinic and Laboratory||tcU9GA6y7Og
+Central 2 Zone||Dr Taquis Clinic||MYOmvASmwq9
+Central 2 Zone||Dr VR Willoughby Clinic||njPnoAd7nve
+Central 2 Zone||Dr Victor Willoughby Memorial Hospital||aT6IabeZZPb
+Central 2 Zone||Khadijah Clinic||GpzyegHmFWE
+Central 2 Zone||Kroo Bay CHC||AsuCpymx7vt
+Central 2 Zone||Liverpool Street (Jimmy Pratt) Clinic||A1FjR9iKmIo
+Central 2 Zone||Mano River Countries Clinic||wssWEO0gXnt
+Central 2 Zone||NASSIT Mobile Clinic||MrjUvNLXh1J
+Central 2 Zone||Pikin Welbodi Centre Clinic||ROIRtVMrvTD
+Central 2 Zone||Prime Care Clinic||LSoaVBFizIY
+Central 2 Zone||Red Cross (Pultney Street) Clinic||buATRu8a2Ri
+Central 2 Zone||Shuman (Kroo Bay) Hospital||T9Ct0HmjeHC
+Central 2 Zone||Sing Song Hospital||Ar47sbhA5Nz
+Central 2 Zone||St Mary's Immaculate Hospital||VmmvpZtKo3w
+Central 2 Zone||West End Clinic||tSgaQtk0BLe
+East 1 Zone||Arab (Ferry Junction) Clinic||K6tERjSgcbY
+East 1 Zone||China Friendship Clinic||ElM318J1Kwf
+East 1 Zone||Fourah Bay Community MCHP||b7z7jR7QZqL
+East 1 Zone||Guoji (Cline Town) Clinic||W4SxFObuRUe
+East 1 Zone||Happy Kid and Adolescence (East 1 Zone) Clinic||C0yRvmQjtJq
+East 1 Zone||Jenner Wright Clinic||sCwIjtcJE82
+East 1 Zone||Kargbo Dockyard CHP||kPExe1KVpyV
+East 1 Zone||Mayorba Hospital||B5wVHCBZJqX
+East 1 Zone||Ola During Children's Hospital||nr6yMfOPqcn
+East 1 Zone||Ola During Under Fives CHP||oEENiImOS5R
+East 1 Zone||Princess Christian Maternity Hospital||pX4cHNAgRsz
+East 1 Zone||Principal Medical Office (Cline Town) CHP||SpwhT7NXexE
+East 1 Zone||Ross Road CHC||K8LrZdWrClH
+East 1 Zone||Sierra Leone Port Authority Clinic||rYIZzWwM0M8
+East 1 Zone||Thullahs Community Health Clinic||DmBkL783iMR
+East 2 Zone||Arab (Shad) Clinic||RZ4UbIVBDQW
+East 2 Zone||Better Health Clinic||qNWuCEJhNag
+East 2 Zone||Coconut Farm MCHP||uFZaxn7tIDT
+East 2 Zone||Dr Songo Williams Clinic||JFh5BbTDknr
+East 2 Zone||Ginger Hall CHC||MLKp9J812RM
+East 2 Zone||Julipha Ashobie Corner MCHP||tHGlNerxRAs
+East 2 Zone||Mabella CHC||Awe0cU0QVyc
+East 2 Zone||New Harvest Clinic||Q0dPsif0Vvn
+East 2 Zone||Quarry MCHP||V050cnbKjdJ
+East 3 Zone||AWAKE CHP||Nhb6coFCfuq
+East 3 Zone||Ad-Bangs Quarry MCHP||CNvhEBpETeC
+East 3 Zone||Ahmadiyya Muslim (Calaba Town) Hospital||rFEJGHSNKLP
+East 3 Zone||Al-Khatab CHC||f6eWnsXKNyh
+East 3 Zone||Allen Town CHC||j3gUQY31PpT
+East 3 Zone||Approved School CHC||MxXeA9ExeSG
+East 3 Zone||Arab (Calaba Town) Clinic||KLR8nuaLQWu
+East 3 Zone||Arab (Shell) Clinic||lQlWMUDhljX
+East 3 Zone||Blessed Mokaba East Clinic||JodYzzSSqQn
+East 3 Zone||Calaba Town CHC||rPpe2RzcrEI
+East 3 Zone||Edemsil Hospital||yZu9axRuPuR
+East 3 Zone||Egyptian (Calaba Town) Clinic||pJZ3AxYs9di
+East 3 Zone||Egyptian (Shell) Clinic||OiZC3eRfX48
+East 3 Zone||Esther Faith Healing Clinic||Z4Z0CaM8JGA
+East 3 Zone||Evangelical Lutheran Clinic||ajnl68FoQRK
+East 3 Zone||Faith Community Clinic||UyYCEUgTeEl
+East 3 Zone||Family Home Movement CHP||wxnmXx8xqbr
+East 3 Zone||Gbaneh Hospital||VoA8Up8MMiA
+East 3 Zone||Haja Neneh CHC||T7icxJCONxV
+East 3 Zone||Hamdalaye Mission Clinic||gGAFT7ZWvlO
+East 3 Zone||Holy Mary Clinic||uKMA9UiVPJO
+East 3 Zone||Iscon CHP||EuEH1EC08V7
+East 3 Zone||Kamba of Charity Clinic||Mv8pg12P2HI
+East 3 Zone||Kissy CHC||M3qEMtJnzk8
+East 3 Zone||Kissy Dockyard Missionary Clinic||Ri8iYb7tfJf
+East 3 Zone||Kola Tree MCHP||HGCWlOk8OG7
+East 3 Zone||Konikay Clinic||s2MLK1sG2qj
+East 3 Zone||Koya Town CHC||ArmsAjCH1uF
+East 3 Zone||Kuntorloh CHP||p108acmsFGi
+East 3 Zone||Life Care (Kissy) Hospital||oWAr76t1IHp
+East 3 Zone||Looking Town MCHP||f5akoMIbHaZ
+East 3 Zone||Lowell and Ruth Gess UMC Eye Hospital||oEhh4ZoxOmu
+East 3 Zone||Madina (East 3) CHC||IiJtg3Zp40S
+East 3 Zone||Marie Stopes (Kissy) Clinic||BhGOCi2ZvBM
+East 3 Zone||Mayemi MCHP||FBCUH9YEeWN
+East 3 Zone||Methodist Church Sierra Leone Clinic||oU55fEqWjhf
+East 3 Zone||Moyiba CHC||N7ul9GVtsIl
+East 3 Zone||Orugu MCHP||ctimCNzYrsV
+East 3 Zone||Philip Street Clinic||GiWSQdrkmdS
+East 3 Zone||Rokupa Government Hospital||MLvN660mLom
+East 3 Zone||Rokupa Under Fives CHP||VygFeEzqmvn
+East 3 Zone||SLIMS Clinic||NIUqFOBuGkW
+East 3 Zone||Shuman (Kissy) Hospital||jlLc4WlGcvE
+East 3 Zone||Sierra Leone Psychiatric Hospital||ECQhHp0tn0k
+East 3 Zone||St Joseph's CHC||HGGhkuzrimC
+East 3 Zone||St Luke's Wellington Clinic||V2bINakOflz
+East 3 Zone||Tasley Global Clinic||GTbdSxPIP3D
+East 3 Zone||Tassoh MCHP||CA2P4bSoan9
+East 3 Zone||Thunder Hill MCHP||p6ObeMuiXnK
+East 3 Zone||UPAL MCHP||mxFk0HcPzQO
+East 3 Zone||United Methodist Church PLHA Kissy Clinic||FevrboFBa7y
+East 3 Zone||United Methodist Church Urban Centre Hospital||a1RXLiroIbW
+East 3 Zone||Up-Wata CHP||tUkG2RCttaB
+East 3 Zone||Wellington CHC||uCyeKOml41g
+East 3 Zone||Wesleyan Health Clinic||nDEOmWeMH8e
+West 1 Zone||Affordable Health Clinic||fieUSSscMhi
+West 1 Zone||Childrens Day Clinic||IuWs18RVYEW
+West 1 Zone||Cupid Health Centre Clinic||spo8EoqWviH
+West 1 Zone||Day Krim Clinic||PgNAiCj4XFa
+West 1 Zone||Dr Claudius Cole Clinic||N9XuKfhqKt8
+West 1 Zone||God Grace Clinic||TAty6FOFX3I
+West 1 Zone||Kingtom Police Hospital||XK95pnwasGF
+West 1 Zone||Kingtom Police Under Fives CHP||jJr5UUD4yF3
+West 1 Zone||Marie Stopes (Waterloo Street) Clinic||i9wu6wIZPq2
+West 1 Zone||Rejanic Clinic||Ehs2wnvrEBF
+West 1 Zone||St Anthony's CHC||haOQfkhmJi5
+West 2 Zone||AMI Expeditionary Healthcare Clinic||jDymMd8zNlo
+West 2 Zone||Al-Farouk Clinic||LZtxhCBk9nJ
+West 2 Zone||Arab (Dwarzak) Clinic||DHvrOETHo1R
+West 2 Zone||Blue Shield Hospital||PLa3hz1oyXE
+West 2 Zone||Dr Daniel Bash Taqi Clinic||yjA4kJlzI9I
+West 2 Zone||EPI Headquarter (New England) CHP||Vlr1EO1q9BP
+West 2 Zone||EcoMed Medical Centre Clinic||zgANsgZ6qfY
+West 2 Zone||George Brook CHC||KoLcrS0hAdA
+West 2 Zone||Grey Bush CHC||LrCUeOqzmvc
+West 2 Zone||Hope and New Life Clinic||ALOvYaZZzGH
+West 2 Zone||Kingharman Road Hospital||r9bIsjn0UuS
+West 2 Zone||Kingharman Road Under Fives CHP||aKvaUqt6VYC
+West 2 Zone||Methodist Community Health Clinic||h2Km5Ak4Kgq
+West 2 Zone||Mubarak Clinic||B1i2DhdnbRc
+West 2 Zone||NACTIB New Life Hospital||CEBKq6gWklN
+West 2 Zone||New England CHP||UExvO8F8L3n
+West 2 Zone||PPASL Clinic||sYOKDRMakPG
+West 2 Zone||Pademba Correctional Hospital||SGQ24AUm8st
+West 2 Zone||Redeemer Health Clinic||ocwad3VvKxD
+West 2 Zone||Rina Clinic||VODr5HUJZaj
+West 2 Zone||St John Clinic and Nursing Home||wirBZQXelQQ
+West 2 Zone||Treasure Health Hospital||jD0XGTN3db1
+West 3 Zone||AIDS Health Foundation (AHF) Clinic||vqxHvxZ1Z0r
+West 3 Zone||Aberdeen Women Centre Hospital||Oekey0ZrvJf
+West 3 Zone||Al-Sheefa Arab Clinic||AlVFHnPotOB
+West 3 Zone||Arab (Malama) Clinic||cOUWg16T6UX
+West 3 Zone||Cheaper Land Clinic||LiZzhKEtZnj
+West 3 Zone||Choithrams Memorial Hospital||UgHEt4f6QoR
+West 3 Zone||Christ Healing Center And Community College Clinic||p9OSwdk6fHc
+West 3 Zone||Christ Healing Centre and Community College Clinic||LnEQrAssFjI
+West 3 Zone||Davidson Nicol Medical Centre Hospital||PsnH43ZpOhx
+West 3 Zone||Dr DJO Robin-Coker Clinic||qcVQjJwkI5D
+West 3 Zone||Family CHP||Z5uT8ILPpah
+West 3 Zone||Good Shepherd Hospital||NDOTV3lpW59
+West 3 Zone||Healing Clinic||q1MhJb8nngN
+West 3 Zone||Healthy Step Paediatric Clinic||rGLcKGnhRJH
+West 3 Zone||Hill Station CHP||LMvEYZD07lx
+West 3 Zone||Iranian Red Crescent Clinic||CXsvFNk2hPK
+West 3 Zone||Juba Military (MI Room) CHP||EzEplXulIAF
+West 3 Zone||Life Care (Lumley) Hospital||KMB1oXG0sB7
+West 3 Zone||Lumley Government Hospital||rPY2eN1msrL
+West 3 Zone||Lumley Under Fives CHP||SXUgzEXCbuq
+West 3 Zone||Malama MCHP||PAUaw0ZMCB5
+West 3 Zone||Marie Stopes (Aberdeen Rd) Clinic||IAQm1FNZC20
+West 3 Zone||Marie Stopes (Ahmed Drive) Clinic||dgjn2BIFFWd
+West 3 Zone||Marie Stopes (Ahmed Drive) EPI Clinic||D2RZGD7511d
+West 3 Zone||Mariposa Hospital||ENtOxsIYaEo
+West 3 Zone||Mercy Ships (Aberdeen Fistula Centre) Clinic||zgmVh3ELQuL
+West 3 Zone||Murray Town (MI Room) CHP||pmEBX6tsMEX
+West 3 Zone||Murray Town CHC||HlnmeUdHaFP
+West 3 Zone||No 9 Community Clinic||sP374JzGthA
+West 3 Zone||PAYCY's Clinic||qs92p4wOAOo
+West 3 Zone||Pentagon CHP||ApIga5gMAAe
+West 3 Zone||Samaritan Hospital||zIxI650x3Sp
+West 3 Zone||Satu's Clinic||PmAiUngWbW8
+West 3 Zone||Scan Drive MCHP||Yikb93ssS2R
+West 3 Zone||Sea Coach Aberdeen CHC||qgd6yZhFh9O
+West 3 Zone||Signal Hill MCHP||rxWKJonFrOY
+West 3 Zone||St Mark Evangelical Lutheran Health Centre Clinic||jbI8pVNEDCP
+West 3 Zone||Stella Maris Clinic||kdIRbEUq9EG
+West 3 Zone||Sunshine MCHP||rWPGxUy1TFn
+West 3 Zone||Thompson Bay MCHP||ObXlGJOBMJt
+West 3 Zone||UN Joint Medical Services Clinic||Dt3jZIlm74P
+West 3 Zone||Well Woman Clinic||Jal3Y0BAmvN
+West 3 Zone||Wellness (West 3) Clinic||s3FtaWzY3WL
+West 3 Zone||Wilberforce 34 Military Hospital||Jgbuqu4WOpT
+West 3 Zone||Wilberforce CHC||VoSbC4e70YM`;
 
-console.log('Cascading data loaded');
+// ============================================
+// CASCADING DATA PARSER
+// ============================================
+
+function parseCascadingData() {
+    const lines = CASCADING_DATA.trim().split('\n');
+    const data = {
+        regions: [],
+        regionToDistricts: {},
+        districtToChiefdoms: {},
+        chiefdomToFacilities: {}
+    };
+    
+    const regionsSet = new Set();
+    const districtsSet = new Set();
+    
+    lines.forEach(line => {
+        const parts = line.split('||').map(p => p.trim());
+        
+        if (parts.length === 2) {
+            const [parent, child] = parts;
+            
+            // Check if parent is a region (ends with "Region" or "Area")
+            if (parent.endsWith('Region') || parent.endsWith('Area')) {
+                regionsSet.add(parent);
+                if (!data.regionToDistricts[parent]) {
+                    data.regionToDistricts[parent] = [];
+                }
+                if (!data.regionToDistricts[parent].includes(child)) {
+                    data.regionToDistricts[parent].push(child);
+                }
+                districtsSet.add(child);
+            } 
+            // Check if parent is a district (ends with "District")
+            else if (parent.endsWith('District')) {
+                if (!data.districtToChiefdoms[parent]) {
+                    data.districtToChiefdoms[parent] = [];
+                }
+                if (!data.districtToChiefdoms[parent].includes(child)) {
+                    data.districtToChiefdoms[parent].push(child);
+                }
+            }
+        } 
+        else if (parts.length === 3) {
+            // Chiefdom||Facility||UID format
+            const [chiefdom, facility, uid] = parts;
+            if (!data.chiefdomToFacilities[chiefdom]) {
+                data.chiefdomToFacilities[chiefdom] = [];
+            }
+            data.chiefdomToFacilities[chiefdom].push({
+                name: facility,
+                uid: uid
+            });
+        }
+    });
+    
+    data.regions = Array.from(regionsSet).sort();
+    
+    return data;
+}
+
+// Parse data on load
+const CASCADING_PARSED = parseCascadingData();
+
+// ============================================
+// HELPER FUNCTIONS FOR CASCADING DROPDOWNS
+// ============================================
+
+function getRegions() {
+    return CASCADING_PARSED.regions;
+}
+
+function getDistrictsByRegion(region) {
+    return CASCADING_PARSED.regionToDistricts[region] || [];
+}
+
+function getChiefdomsByDistrict(district) {
+    return CASCADING_PARSED.districtToChiefdoms[district] || [];
+}
+
+function getFacilitiesByChiefdom(chiefdom) {
+    return CASCADING_PARSED.chiefdomToFacilities[chiefdom] || [];
+}
+
+function getFacilityByName(chiefdom, facilityName) {
+    const facilities = CASCADING_PARSED.chiefdomToFacilities[chiefdom] || [];
+    return facilities.find(f => f.name === facilityName);
+}
+
+function getFacilityUID(chiefdom, facilityName) {
+    const facility = getFacilityByName(chiefdom, facilityName);
+    return facility ? facility.uid : null;
+}
+
+// Get all facilities as flat array with full hierarchy info
+function getAllFacilities() {
+    const allFacilities = [];
+    
+    for (const region of CASCADING_PARSED.regions) {
+        const districts = CASCADING_PARSED.regionToDistricts[region] || [];
+        for (const district of districts) {
+            const chiefdoms = CASCADING_PARSED.districtToChiefdoms[district] || [];
+            for (const chiefdom of chiefdoms) {
+                const facilities = CASCADING_PARSED.chiefdomToFacilities[chiefdom] || [];
+                for (const facility of facilities) {
+                    allFacilities.push({
+                        region: region,
+                        district: district,
+                        chiefdom: chiefdom,
+                        name: facility.name,
+                        uid: facility.uid
+                    });
+                }
+            }
+        }
+    }
+    
+    return allFacilities;
+}
+
+// Search facilities by name (partial match)
+function searchFacilities(searchTerm) {
+    const allFacilities = getAllFacilities();
+    const term = searchTerm.toLowerCase();
+    return allFacilities.filter(f => f.name.toLowerCase().includes(term));
+}
+
+// Get facility count statistics
+function getFacilityStats() {
+    const stats = {
+        totalRegions: CASCADING_PARSED.regions.length,
+        totalDistricts: Object.keys(CASCADING_PARSED.districtToChiefdoms).length,
+        totalChiefdoms: Object.keys(CASCADING_PARSED.chiefdomToFacilities).length,
+        totalFacilities: 0,
+        facilitiesByDistrict: {}
+    };
+    
+    for (const chiefdom in CASCADING_PARSED.chiefdomToFacilities) {
+        stats.totalFacilities += CASCADING_PARSED.chiefdomToFacilities[chiefdom].length;
+    }
+    
+    return stats;
+}
+
+// ============================================
+// LOGGING
+// ============================================
+console.log('Cascading data parsed successfully');
+console.log('Regions:', getRegions().length);
+console.log('Districts:', Object.keys(CASCADING_PARSED.districtToChiefdoms).length);
+console.log('Chiefdoms/Zones:', Object.keys(CASCADING_PARSED.chiefdomToFacilities).length);
+
+// Count total facilities
+let totalFacilities = 0;
+for (const chiefdom in CASCADING_PARSED.chiefdomToFacilities) {
+    totalFacilities += CASCADING_PARSED.chiefdomToFacilities[chiefdom].length;
+}
+console.log('Total Facilities:', totalFacilities);
