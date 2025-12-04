@@ -1,3 +1,7 @@
+/* ============================================ */
+/* HEALTH FACILITY DATA COLLECTION - IRS STYLE */
+/* ============================================ */
+
 * {
     margin: 0;
     padding: 0;
@@ -5,19 +9,25 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
-    background-color: #0d1117;
-    color: #e6edf3;
-    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    font-family: 'Oswald', Arial, sans-serif;
+    color: #000000;
+    font-weight: 700;
     padding: 20px;
+    line-height: 1.6;
     min-height: 100vh;
 }
 
 .container {
-    max-width: 900px;
+    max-width: 650px;
     margin: 0 auto;
 }
 
+/* ============================================ */
+/* LOGIN SCREEN */
+/* ============================================ */
 .login-screen {
     display: flex;
     align-items: center;
@@ -27,14 +37,15 @@ body {
 }
 
 .login-card {
-    background: #161b22;
-    border: 1px solid #30363d;
+    background: #ffffff;
+    border: 4px double #004080;
     border-radius: 12px;
     padding: 50px;
     width: 100%;
-    max-width: 500px;
+    max-width: 650px;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     animation: fadeInUp 0.6s ease-out;
 }
 
@@ -45,7 +56,7 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #2ea043, #58a6ff, #7c3aed);
+    background: linear-gradient(90deg, #004080, #0056b3, #004080);
 }
 
 .logo-container {
@@ -59,8 +70,8 @@ body {
 .logo-box {
     width: 120px;
     height: 120px;
-    background: #21262d;
-    border: 2px solid #30363d;
+    background: #f8f9fa;
+    border: 2px solid #004080;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -71,8 +82,8 @@ body {
 }
 
 .logo-box:hover {
-    border-color: #58a6ff;
-    background: rgba(88, 166, 255, 0.05);
+    border-color: #0056b3;
+    background: #e7f3ff;
     transform: scale(1.05);
 }
 
@@ -90,13 +101,14 @@ body {
 .login-header h1 {
     font-size: 28px;
     font-weight: 700;
-    color: #58a6ff;
+    color: #004080;
     margin-bottom: 10px;
 }
 
 .login-header p {
-    color: #8b949e;
+    color: #666666;
     font-size: 14px;
+    font-weight: 700;
 }
 
 .login-form-group {
@@ -105,61 +117,65 @@ body {
 
 .login-label {
     display: block;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 8px;
-    color: #e6edf3;
+    color: #000000;
     font-size: 14px;
 }
 
 .login-input {
     width: 100%;
     padding: 14px 16px;
-    background: #21262d;
-    border: 1px solid #30363d;
+    background: #f8f9fa;
+    border: 2px solid #004080;
     border-radius: 6px;
-    color: #e6edf3;
+    color: #000000;
     font-size: 16px;
     transition: all 0.3s ease;
-    font-family: inherit;
+    font-family: 'Oswald', Arial, sans-serif;
+    font-weight: 700;
 }
 
 .login-input:focus {
     outline: none;
-    border-color: #58a6ff;
-    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+    border-color: #0056b3;
+    box-shadow: 0 0 0 3px rgba(0, 64, 128, 0.1);
 }
 
 .login-btn {
     width: 100%;
     padding: 14px 24px;
-    background: #58a6ff;
+    background: #004080;
     color: #ffffff;
-    border: none;
+    border: 2px solid #004080;
     border-radius: 6px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-top: 10px;
+    font-family: 'Oswald', Arial, sans-serif;
 }
 
 .login-btn:hover {
-    background: #388bfd;
+    background: #0056b3;
+    border-color: #0056b3;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(88, 166, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 64, 128, 0.3);
 }
 
 .login-error {
-    background: rgba(248, 81, 73, 0.1);
-    border: 1px solid #f85149;
-    color: #f85149;
+    background: rgba(220, 53, 69, 0.1);
+    border: 2px solid #dc3545;
+    color: #dc3545;
     padding: 12px;
     border-radius: 6px;
     margin-bottom: 20px;
     font-size: 14px;
     display: none;
+    font-weight: 700;
 }
 
 .login-error.show {
@@ -167,6 +183,9 @@ body {
     animation: shake 0.5s;
 }
 
+/* ============================================ */
+/* MAIN CONTENT */
+/* ============================================ */
 .main-content {
     display: none;
 }
@@ -184,13 +203,14 @@ body {
 .header h1 {
     font-size: 32px;
     font-weight: 700;
-    color: #58a6ff;
+    color: #004080;
     margin-bottom: 10px;
 }
 
 .header p {
-    color: #8b949e;
+    color: #666666;
     font-size: 18px;
+    font-weight: 700;
 }
 
 .logout-container {
@@ -203,37 +223,43 @@ body {
 }
 
 .logout-btn, .view-data-btn {
-    background: transparent;
-    color: #8b949e;
-    border: 1px solid #30363d;
+    background: #ffffff;
+    color: #004080;
+    border: 2px solid #004080;
     padding: 8px 16px;
     border-radius: 6px;
     font-size: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
+    font-family: 'Oswald', Arial, sans-serif;
+    font-weight: 700;
 }
 
 .logout-btn:hover, .view-data-btn:hover {
-    background: #30363d;
-    border-color: #58a6ff;
-    color: #e6edf3;
+    background: #004080;
+    border-color: #004080;
+    color: #ffffff;
 }
 
 .view-data-btn {
-    background: #58a6ff;
+    background: #004080;
     color: #ffffff;
-    border-color: #58a6ff;
+    border-color: #004080;
 }
 
 .view-data-btn:hover {
-    background: #388bfd;
+    background: #0056b3;
+    border-color: #0056b3;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(88, 166, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 64, 128, 0.3);
 }
 
+/* ============================================ */
+/* STATUS BAR */
+/* ============================================ */
 .status-bar {
-    background: rgba(13, 17, 23, 0.6);
-    border: 1px solid #30363d;
+    background: #ffffff;
+    border: 2px solid #004080;
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 30px;
@@ -259,38 +285,42 @@ body {
 }
 
 .status-indicator.online {
-    background: #2ea043;
-    box-shadow: 0 0 0 3px rgba(46, 160, 67, 0.3);
+    background: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.3);
 }
 
 .status-indicator.offline {
-    background: #f85149;
-    box-shadow: 0 0 0 3px rgba(248, 81, 73, 0.3);
+    background: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.3);
 }
 
 .status-text {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 14px;
-    color: #e6edf3;
+    color: #000000;
 }
 
 .pending-count {
-    background: #58a6ff;
+    background: #004080;
     color: #ffffff;
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
+/* ============================================ */
+/* FORM CARD */
+/* ============================================ */
 .form-card {
-    background: #161b22;
-    border: 1px solid #30363d;
+    background: #ffffff;
+    border: 4px double #004080;
     border-radius: 12px;
     padding: 40px;
     position: relative;
     overflow: hidden;
     animation: fadeInUp 0.6s ease-out 0.3s both;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .form-card::before {
@@ -300,9 +330,12 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #2ea043, #58a6ff, #7c3aed);
+    background: linear-gradient(90deg, #004080, #0056b3, #004080);
 }
 
+/* ============================================ */
+/* FORM SECTIONS */
+/* ============================================ */
 .form-section {
     display: none;
 }
@@ -315,31 +348,36 @@ body {
 .section-header {
     margin-bottom: 30px;
     padding-bottom: 15px;
-    border-bottom: 2px solid #30363d;
+    border-bottom: 2px solid #004080;
 }
 
 .section-title {
     font-size: 24px;
     font-weight: 700;
-    color: #58a6ff;
+    color: #004080;
     margin-bottom: 5px;
 }
 
 .section-description {
-    color: #8b949e;
+    color: #666666;
     font-size: 14px;
+    font-weight: 700;
 }
 
+/* ============================================ */
+/* PROGRESS BAR */
+/* ============================================ */
 .progress-bar {
-    background: #21262d;
+    background: #f8f9fa;
     height: 8px;
     border-radius: 4px;
     margin-bottom: 30px;
     overflow: hidden;
+    border: 2px solid #004080;
 }
 
 .progress-fill {
-    background: linear-gradient(90deg, #2ea043, #58a6ff, #7c3aed);
+    background: linear-gradient(90deg, #004080, #0056b3);
     height: 100%;
     transition: width 0.3s ease;
     border-radius: 4px;
@@ -347,12 +385,16 @@ body {
 
 .progress-text {
     text-align: center;
-    color: #8b949e;
+    color: #666666;
     font-size: 12px;
     margin-top: 8px;
     margin-bottom: 20px;
+    font-weight: 700;
 }
 
+/* ============================================ */
+/* NAVIGATION BUTTONS */
+/* ============================================ */
 .navigation-buttons {
     display: flex;
     gap: 15px;
@@ -362,48 +404,52 @@ body {
 .btn-nav {
     flex: 1;
     padding: 14px 24px;
-    border: none;
+    border: 2px solid #004080;
     border-radius: 6px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    font-family: 'Oswald', Arial, sans-serif;
 }
 
 .btn-back {
-    background: transparent;
-    color: #8b949e;
-    border: 1px solid #30363d;
+    background: #ffffff;
+    color: #004080;
+    border: 2px solid #004080;
 }
 
 .btn-back:hover {
-    background: #30363d;
-    border-color: #58a6ff;
-    color: #e6edf3;
+    background: #004080;
+    border-color: #004080;
+    color: #ffffff;
 }
 
 .btn-next {
-    background: #58a6ff;
+    background: #004080;
     color: #ffffff;
 }
 
 .btn-next:hover {
-    background: #388bfd;
+    background: #0056b3;
+    border-color: #0056b3;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(88, 166, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 64, 128, 0.3);
 }
 
 .btn-primary {
-    background: #58a6ff;
+    background: #004080;
     color: #ffffff;
+    border-color: #004080;
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: #388bfd;
+    background: #0056b3;
+    border-color: #0056b3;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(88, 166, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 64, 128, 0.3);
 }
 
 .btn-primary:disabled {
@@ -411,22 +457,25 @@ body {
     cursor: not-allowed;
 }
 
+/* ============================================ */
+/* FORM ELEMENTS */
+/* ============================================ */
 .form-group {
     margin-bottom: 25px;
 }
 
 .form-label {
     display: block;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 8px;
-    color: #e6edf3;
+    color: #000000;
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .form-label .required {
-    color: #f85149;
+    color: #dc3545;
 }
 
 .form-input,
@@ -434,27 +483,28 @@ body {
 .form-textarea {
     width: 100%;
     padding: 12px 16px;
-    background: #21262d;
-    border: 1px solid #30363d;
+    background: #f8f9fa;
+    border: 2px solid #004080;
     border-radius: 6px;
-    color: #e6edf3;
+    color: #000000;
     font-size: 16px;
     transition: all 0.3s ease;
-    font-family: inherit;
+    font-family: 'Oswald', Arial, sans-serif;
+    font-weight: 700;
 }
 
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
     outline: none;
-    border-color: #58a6ff;
-    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+    border-color: #0056b3;
+    box-shadow: 0 0 0 3px rgba(0, 64, 128, 0.1);
 }
 
 .form-select:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    background: #161b22;
+    background: #e9ecef;
 }
 
 .form-textarea {
@@ -468,6 +518,9 @@ body {
     gap: 20px;
 }
 
+/* ============================================ */
+/* RADIO BUTTONS */
+/* ============================================ */
 .radio-group {
     display: flex;
     gap: 30px;
@@ -482,8 +535,8 @@ body {
     gap: 20px;
     cursor: pointer;
     padding: 30px 50px;
-    background: linear-gradient(135deg, #21262d 0%, #161b22 100%);
-    border: 3px solid #30363d;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 3px solid #004080;
     border-radius: 12px;
     transition: all 0.3s ease;
     font-size: 20px;
@@ -492,14 +545,14 @@ body {
     min-width: 280px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .radio-label:hover {
-    border-color: #58a6ff;
-    background: linear-gradient(135deg, rgba(88, 166, 255, 0.2) 0%, rgba(88, 166, 255, 0.1) 100%);
+    border-color: #0056b3;
+    background: linear-gradient(135deg, #e7f3ff 0%, #cce5ff 100%);
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(88, 166, 255, 0.4);
+    box-shadow: 0 8px 25px rgba(0, 64, 128, 0.3);
 }
 
 .radio-label input[type="radio"] {
@@ -508,25 +561,25 @@ body {
     -moz-appearance: none;
     width: 35px;
     height: 35px;
-    border: 3px solid #30363d;
+    border: 3px solid #004080;
     border-radius: 50%;
     cursor: pointer;
     position: relative;
     flex-shrink: 0;
-    background: #0d1117;
+    background: #ffffff;
     transition: all 0.3s ease;
 }
 
 .radio-label input[type="radio"]:hover {
-    border-color: #58a6ff;
-    box-shadow: 0 0 10px rgba(88, 166, 255, 0.6);
+    border-color: #0056b3;
+    box-shadow: 0 0 10px rgba(0, 64, 128, 0.4);
     transform: scale(1.1);
 }
 
 .radio-label input[type="radio"]:checked {
-    border-color: #58a6ff;
+    border-color: #004080;
     border-width: 4px;
-    box-shadow: 0 0 18px rgba(88, 166, 255, 1);
+    box-shadow: 0 0 18px rgba(0, 64, 128, 0.6);
 }
 
 .radio-label input[type="radio"]:checked::before {
@@ -538,30 +591,30 @@ body {
     width: 21px;
     height: 21px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #58a6ff 0%, #388bfd 100%);
-    box-shadow: 0 0 10px rgba(88, 166, 255, 1);
+    background: linear-gradient(135deg, #004080 0%, #0056b3 100%);
+    box-shadow: 0 0 10px rgba(0, 64, 128, 0.6);
     animation: radioGlow 1.5s ease-in-out infinite;
 }
 
 @keyframes radioGlow {
     0%, 100% { 
-        box-shadow: 0 0 10px rgba(88, 166, 255, 1);
+        box-shadow: 0 0 10px rgba(0, 64, 128, 0.6);
         transform: translate(-50%, -50%) scale(1);
     }
     50% { 
-        box-shadow: 0 0 15px rgba(88, 166, 255, 1);
+        box-shadow: 0 0 15px rgba(0, 64, 128, 0.8);
         transform: translate(-50%, -50%) scale(1.05);
     }
 }
 
 .radio-label input[type="radio"]:checked + span {
-    color: #58a6ff;
+    color: #004080;
 }
 
 .radio-label:has(input[type="radio"]:checked) {
-    border-color: #58a6ff;
-    background: linear-gradient(135deg, rgba(88, 166, 255, 0.3) 0%, rgba(88, 166, 255, 0.15) 100%);
-    box-shadow: 0 0 30px rgba(88, 166, 255, 0.6), 0 8px 25px rgba(88, 166, 255, 0.4);
+    border-color: #004080;
+    background: linear-gradient(135deg, #e7f3ff 0%, #cce5ff 100%);
+    box-shadow: 0 0 30px rgba(0, 64, 128, 0.4), 0 8px 25px rgba(0, 64, 128, 0.3);
     transform: scale(1.05);
 }
 
@@ -572,11 +625,11 @@ body {
 .form-type-section {
     margin-top: 50px;
     margin-bottom: 30px;
-    background: linear-gradient(135deg, #1a1f26 0%, #0d1117 100%);
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     padding: 40px;
     border-radius: 12px;
-    border: 2px solid #30363d;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    border: 2px solid #004080;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .form-type-section::before {
@@ -586,18 +639,51 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #2ea043, #58a6ff, #7c3aed);
+    background: linear-gradient(90deg, #004080, #0056b3, #004080);
 }
 
+/* ============================================ */
+/* UID DISPLAY */
+/* ============================================ */
+.uid-display {
+    background: #e7f3ff;
+    border: 2px solid #004080;
+    border-radius: 6px;
+    padding: 10px 15px;
+    margin-top: 10px;
+    display: none;
+}
+
+.uid-display.show {
+    display: block;
+}
+
+.uid-label {
+    font-size: 11px;
+    color: #666666;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+
+.uid-value {
+    font-size: 14px;
+    color: #004080;
+    font-family: monospace;
+    font-weight: 700;
+}
+
+/* ============================================ */
+/* NOTIFICATION */
+/* ============================================ */
 .notification {
     position: fixed;
     top: 20px;
     right: 20px;
-    background: #161b22;
-    border: 1px solid #30363d;
+    background: #ffffff;
+    border: 2px solid #004080;
     padding: 16px 20px;
     border-radius: 8px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     display: none;
     align-items: center;
     gap: 12px;
@@ -611,22 +697,26 @@ body {
 }
 
 .notification.success {
-    border-left: 4px solid #2ea043;
+    border-left: 4px solid #28a745;
 }
 
 .notification.error {
-    border-left: 4px solid #f85149;
+    border-left: 4px solid #dc3545;
 }
 
 .notification.info {
-    border-left: 4px solid #58a6ff;
+    border-left: 4px solid #004080;
 }
 
 .notification-text {
-    color: #e6edf3;
+    color: #000000;
     font-size: 14px;
+    font-weight: 700;
 }
 
+/* ============================================ */
+/* ANIMATIONS */
+/* ============================================ */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -670,7 +760,14 @@ body {
     75% { transform: translateX(10px); }
 }
 
+/* ============================================ */
+/* RESPONSIVE */
+/* ============================================ */
 @media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
     .login-card {
         padding: 30px;
     }
@@ -703,10 +800,29 @@ body {
     }
 
     .logout-container {
+        flex-direction: column;
         text-align: center;
     }
 
-    .logout-btn {
+    .logout-btn,
+    .view-data-btn {
         width: 100%;
+    }
+
+    .navigation-buttons {
+        flex-direction: column;
+    }
+
+    .btn-nav {
+        width: 100%;
+    }
+
+    .radio-group {
+        flex-direction: column;
+    }
+
+    .radio-label {
+        min-width: 100%;
+        padding: 20px 30px;
     }
 }
