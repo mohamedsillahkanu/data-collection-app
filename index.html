@@ -128,6 +128,15 @@
                                 <select class="form-select" name="healthFacility" id="healthFacilitySelect" required disabled>
                                     <option value="">Select chiefdom first...</option>
                                 </select>
+                                <!-- Hidden field to store facility name -->
+                                <input type="hidden" id="healthFacilityName" name="healthFacilityName">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Health Facility UID</label>
+                                <input type="text" class="form-input" id="healthFacilityUID" name="healthFacilityUID" readonly style="background: #161b22; color: #58a6ff; font-family: monospace; cursor: not-allowed;">
                             </div>
                         </div>
 
@@ -182,6 +191,6 @@
     </div>
     
     <script src="config.js"></script>
-    <script src="main.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
