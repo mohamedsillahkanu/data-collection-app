@@ -99,11 +99,6 @@
                                 <label class="form-label">Region <span class="required">*</span></label>
                                 <select class="form-select" name="region" id="regionSelect" required>
                                     <option value="">Select region...</option>
-                                    <option value="Eastern Region">Eastern Region</option>
-                                    <option value="Northern Region">Northern Region</option>
-                                    <option value="North West Region">North West Region</option>
-                                    <option value="Southern Region">Southern Region</option>
-                                    <option value="Western Area">Western Area</option>
                                 </select>
                             </div>
 
@@ -128,7 +123,6 @@
                                 <select class="form-select" name="healthFacility" id="healthFacilitySelect" required disabled>
                                     <option value="">Select chiefdom first...</option>
                                 </select>
-                                <!-- Hidden field to store facility name -->
                                 <input type="hidden" id="healthFacilityName" name="healthFacilityName">
                             </div>
                         </div>
@@ -145,12 +139,10 @@
                             <p class="section-description">Choose the appropriate form for data entry</p>
                         </div>
 
-                        <div style="position: relative; background: linear-gradient(135deg, #1a1f26 0%, #0d1117 100%); padding: 50px; border-radius: 12px; border: 3px solid #58a6ff; box-shadow: 0 0 40px rgba(88, 166, 255, 0.3);">
-                            <div style="text-align: center; margin-bottom: 40px;">
-                                <h3 style="font-size: 26px; color: #58a6ff; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">
-                                    CHOOSE YOUR FORM TYPE
-                                </h3>
-                                <p style="color: #8b949e; font-size: 16px; margin-top: 10px;">Select one option below to continue</p>
+                        <div class="form-type-container">
+                            <div class="form-type-header">
+                                <h3>Choose Your Form Type</h3>
+                                <p>Select one option below to continue</p>
                             </div>
 
                             <div class="radio-group">
