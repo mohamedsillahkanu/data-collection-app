@@ -1,5 +1,5 @@
 // ============================================    
-// DATA COLLECTION APP - CORRECTED VERSION
+// DATA COLLECTION APP - NO HFUID VERSION
 // ============================================
 
 // Data maps for cascading dropdowns
@@ -153,7 +153,7 @@ function setupCascadingListeners() {
 }
 
 // ============================================
-// CASCADING DATA PARSER (Local version)
+// CASCADING DATA PARSER (NO UID)
 // ============================================
 function parseCascadingDataLocal() {
     // Check if CASCADING_DATA exists from config.js
@@ -172,19 +172,8 @@ function parseCascadingDataLocal() {
     lines.forEach(line => {
         const parts = line.split('||').map(p => p.trim());
         
-        // 3-column format: Chiefdom||Facility||UID
-        if (parts.length === 3) {
-            const [chiefdom, facilityName, uid] = parts;
-            if (!chiefdomFacilityMap[chiefdom]) {
-                chiefdomFacilityMap[chiefdom] = [];
-            }
-            chiefdomFacilityMap[chiefdom].push({
-                name: facilityName,
-                uid: uid
-            });
-        }
         // 2-column format: Parent||Child
-        else if (parts.length === 2) {
+        if (parts.length === 2) {
             const [parent, child] = parts;
             
             // Region||District mapping
@@ -197,12 +186,21 @@ function parseCascadingDataLocal() {
                 }
             }
             // District||Chiefdom mapping
-            else if (child.includes('Chiefdom') || child.includes('City') || child.includes('Town') || child.includes('Zone')) {
+            else if (parent.includes('District')) {
                 if (!districtChiefdomMap[parent]) {
                     districtChiefdomMap[parent] = [];
                 }
                 if (!districtChiefdomMap[parent].includes(child)) {
                     districtChiefdomMap[parent].push(child);
+                }
+            }
+            // Chiefdom||Facility mapping (no UID)
+            else {
+                if (!chiefdomFacilityMap[parent]) {
+                    chiefdomFacilityMap[parent] = [];
+                }
+                if (!chiefdomFacilityMap[parent].includes(child)) {
+                    chiefdomFacilityMap[parent].push(child);
                 }
             }
         }
@@ -349,7 +347,7 @@ function handleRegionChange(e) {
     facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
     facilitySelect.disabled = true;
     
-    // Clear UID and name fields
+    // Clear name field
     clearFacilityFields();
     
     if (region && regionDistrictMap[region]) {
@@ -380,7 +378,7 @@ function handleDistrictChange(e) {
     facilitySelect.innerHTML = '<option value="">Select chiefdom first...</option>';
     facilitySelect.disabled = true;
     
-    // Clear UID and name fields
+    // Clear name field
     clearFacilityFields();
     
     if (district && districtChiefdomMap[district]) {
@@ -408,36 +406,28 @@ function handleChiefdomChange(e) {
     // Reset facility dropdown
     facilitySelect.innerHTML = '<option value="">Select health facility...</option>';
     
-    // Clear UID and name fields
+    // Clear name field
     clearFacilityFields();
     
     if (chiefdom && chiefdomFacilityMap[chiefdom]) {
         facilitySelect.disabled = false;
         
-        // Sort facilities alphabetically by name
-        const facilities = [...chiefdomFacilityMap[chiefdom]].sort((a, b) => a.name.localeCompare(b.name));
+        // Sort facilities alphabetically
+        const facilities = [...chiefdomFacilityMap[chiefdom]].sort();
         
         facilities.forEach(facility => {
             const option = document.createElement('option');
-            option.value = facility.uid;
-            option.textContent = facility.name;
-            option.dataset.name = facility.name;
+            option.value = facility;
+            option.textContent = facility;
             facilitySelect.appendChild(option);
         });
         
-        // Add change listener to update UID field
+        // Add change listener to update hidden name field
         facilitySelect.onchange = function() {
-            const selectedOption = this.options[this.selectedIndex];
-            const selectedUID = this.value;
-            const selectedName = selectedOption.dataset.name || selectedOption.textContent;
-            
-            const uidField = document.getElementById('healthFacilityUID');
+            const selectedName = this.value;
             const nameField = document.getElementById('healthFacilityName');
-            
-            if (uidField) uidField.value = selectedUID;
             if (nameField) nameField.value = selectedName;
-            
-            console.log('Selected facility:', selectedName, 'UID:', selectedUID);
+            console.log('Selected facility:', selectedName);
         };
         
         console.log('Facilities loaded for', chiefdom, ':', facilities.length);
@@ -448,9 +438,7 @@ function handleChiefdomChange(e) {
 }
 
 function clearFacilityFields() {
-    const uidField = document.getElementById('healthFacilityUID');
     const nameField = document.getElementById('healthFacilityName');
-    if (uidField) uidField.value = '';
     if (nameField) nameField.value = '';
 }
 
@@ -739,7 +727,6 @@ async function handleFormSubmit(e) {
 
     const formData = new FormData(e.target);
     const facilitySelect = document.getElementById('healthFacilitySelect');
-    const selectedOption = facilitySelect.options[facilitySelect.selectedIndex];
     
     const data = {
         timestamp: new Date().toISOString(),
@@ -749,8 +736,7 @@ async function handleFormSubmit(e) {
         region: formData.get('region'),
         district: formData.get('district'),
         chiefdom: formData.get('chiefdom'),
-        healthFacility: selectedOption ? (selectedOption.dataset.name || selectedOption.textContent) : '',
-        healthFacilityUID: facilitySelect.value || ''
+        healthFacility: facilitySelect.value || ''
     };
     
     // Add all variable fields
@@ -922,57 +908,6 @@ function showNotification(message, type) {
     }
     
     console.log(`[${type.toUpperCase()}] ${message}`);
-}
-
-// ============================================
-// HELPER FUNCTIONS
-// ============================================
-
-// Get facility by UID
-function getFacilityByUID(uid) {
-    for (const chiefdom in chiefdomFacilityMap) {
-        const facility = chiefdomFacilityMap[chiefdom].find(f => f.uid === uid);
-        if (facility) {
-            return {
-                ...facility,
-                chiefdom: chiefdom
-            };
-        }
-    }
-    return null;
-}
-
-// Search facilities by name
-function searchFacilitiesByName(searchTerm) {
-    const results = [];
-    const term = searchTerm.toLowerCase();
-    
-    for (const chiefdom in chiefdomFacilityMap) {
-        chiefdomFacilityMap[chiefdom].forEach(facility => {
-            if (facility.name.toLowerCase().includes(term)) {
-                results.push({
-                    ...facility,
-                    chiefdom: chiefdom
-                });
-            }
-        });
-    }
-    
-    return results;
-}
-
-// Get all facilities as flat array
-function getAllFacilitiesFlat() {
-    const all = [];
-    for (const chiefdom in chiefdomFacilityMap) {
-        chiefdomFacilityMap[chiefdom].forEach(facility => {
-            all.push({
-                ...facility,
-                chiefdom: chiefdom
-            });
-        });
-    }
-    return all;
 }
 
 // ============================================
