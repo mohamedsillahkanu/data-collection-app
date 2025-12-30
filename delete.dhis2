@@ -1,0 +1,10 @@
+$serverUrl = "https://icf-nmdr.onrender.com"
+$auth = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("admin:SajeedIslam@2025"))
+$headers = @{ Authorization = "Basic $auth"; "Content-Type" = "application/json" }
+
+# Get all IDs
+$ids = (Invoke-RestMethod "$serverUrl/api/dataElements?fields=id&paging=false" -Headers $headers).dataElements
+
+# Bulk delete
+$payload = @{ dataElements = $ids } | ConvertTo-Json
+Invoke-RestMethod "$serverUrl/api/metadata?importStrategy=DELETE" -Method Post -Headers $headers -Body $payload
